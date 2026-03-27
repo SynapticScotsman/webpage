@@ -96,8 +96,6 @@
         .partner-card:hover .partner-icon { color:#22d3ee; }
         .partner-icon { color:#334155; transition:color .3s ease; }
         .bar-col { transition:height .5s ease; }
-        @keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
-        .radar-line { position:absolute;top:50%;left:50%;width:48%;height:1px;transform-origin:left center;animation:spin 2s linear infinite;z-index:15;pointer-events:none; }
         #vsa-log { overflow-y:auto; max-height:320px; }
         #vsa-log::-webkit-scrollbar { width:2px; }
         #vsa-log::-webkit-scrollbar-thumb { background:#334155; border-radius:2px; }
@@ -148,11 +146,11 @@
             <div id="three-canvas"></div>
             <!-- Pre-rendered HUD: 5 fixed slots -->
             <div id="hud-overlay">
-                <div class="hud-slot" id="hud-0"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-                <div class="hud-slot" id="hud-1"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-                <div class="hud-slot" id="hud-2"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-                <div class="hud-slot" id="hud-3"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-                <div class="hud-slot" id="hud-4"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
+                <div class="hud-slot" id="hud-0"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="bind">STABLE</span></div></div>
+                <div class="hud-slot" id="hud-1"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="bind">STABLE</span></div></div>
+                <div class="hud-slot" id="hud-2"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="bind">STABLE</span></div></div>
+                <div class="hud-slot" id="hud-3"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="bind">STABLE</span></div></div>
+                <div class="hud-slot" id="hud-4"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="bind">STABLE</span></div></div>
             </div>
         </div>
 
@@ -218,18 +216,9 @@
     <!-- DASHBOARD -->
     <section id="dashboard" class="py-32 bg-slate-950 relative overflow-hidden border-t border-white/5">
         <div class="max-w-7xl mx-auto px-6 relative z-10">
-            <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-                <div>
-                    <h2 class="text-xs font-bold text-emerald-500 uppercase tracking-[0.3em] mb-4">Live Telemetry Emulation</h2>
-                    <h3 class="text-4xl md:text-5xl font-black tracking-tighter uppercase italic">Decision Engine</h3>
-                </div>
-                <div class="flex items-center gap-3 text-[10px] font-mono shrink-0">
-                    <span class="text-slate-400 uppercase tracking-widest whitespace-nowrap">Global System Stress</span>
-                    <div class="w-32 h-2 bg-slate-950 rounded-full overflow-hidden border border-white/10">
-                        <div id="stress-bar" class="h-full rounded-full transition-all duration-500" style="width:0%;background:#06b6d4"></div>
-                    </div>
-                    <span id="stress-pct" class="text-cyan-400 font-bold tabular-nums w-8 text-right">0%</span>
-                </div>
+            <div class="mb-16">
+                <h2 class="text-xs font-bold text-emerald-500 uppercase tracking-[0.3em] mb-4">Live Telemetry Emulation</h2>
+                <h3 class="text-4xl md:text-5xl font-black tracking-tighter uppercase italic">Decision Engine</h3>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
@@ -271,7 +260,6 @@
                             <span class="text-emerald-500 text-[10px] font-mono animate-pulse border border-emerald-500/30 px-2 py-0.5 rounded bg-emerald-500/10">LIVE TRACKING</span>
                         </div>
                         <div id="cog-map" class="flex-1 rounded-lg border border-white/10" style="min-height:360px;position:relative;overflow:hidden;">
-                            <div id="radar-line" class="radar-line" style="background:rgba(52,211,153,0.35);box-shadow:0 0 6px rgba(52,211,153,0.4);"></div>
                             <div style="position:absolute;top:50%;left:50%;z-index:20;transform:translate(-50%,-50%)">
                                 <div style="width:16px;height:16px;background:white;transform:rotate(45deg);box-shadow:0 0 15px white;"></div>
                                 <div style="position:absolute;top:50%;left:50%;width:220px;height:220px;transform:translate(-50%,-100%);background:linear-gradient(to top,rgba(34,211,238,.08),transparent);clip-path:polygon(50% 100%,12% 0,88% 0);pointer-events:none;"></div>
@@ -432,20 +420,8 @@
         tick(); setInterval(tick,100);
     })();
 
-    // ── MODULE-LEVEL GLOBALS ──────────────────────────────────────────────
-    let scrollProgress=0;
-    let gVel=0;  // exposed from Three.js loop
-    let stress=0;
-    setInterval(()=>{
-        stress=Math.min(100,Math.round(gVel*1.5));
-        // Update stress bar UI
-        const sb=document.getElementById('stress-bar');
-        const sp=document.getElementById('stress-pct');
-        if(sb){sb.style.width=stress+'%';sb.style.background=stress>60?'#ef4444':'#06b6d4';}
-        if(sp){sp.textContent=stress+'%';sp.className='font-bold tabular-nums w-8 text-right '+(stress>60?'text-red-400':'text-cyan-400');}
-    },500);
-
     // ── SCROLL PROGRESS (rAF throttled) ──────────────────────────────────
+    let scrollProgress=0;
     (function(){
         const bar=document.getElementById('progress-bar');
         let ticking=false;
@@ -572,26 +548,14 @@
         const mat=new THREE.PointsMaterial({size:.08,vertexColors:true,transparent:true,opacity:.8,blending:THREE.AdditiveBlending,depthWrite:false});
         scene.add(new THREE.Points(geo,mat));
 
-        // Mouse + Touch input
+        // Mouse
         let tgtVel=0,vel=0,tgtRX=0,tgtRY=0;
-        let lastTouchX=null,lastTouchY=null;
         window.addEventListener('mousemove',e=>{
             tgtVel=Math.min(Math.sqrt(e.movementX*e.movementX+e.movementY*e.movementY),100);
             const r=container.getBoundingClientRect();
             tgtRY=((e.clientX-r.left)/r.width -.5)*-1.2;
             tgtRX=((e.clientY-r.top) /r.height-.5)*-.6;
         });
-        window.addEventListener('touchstart',e=>{lastTouchX=e.touches[0].clientX;lastTouchY=e.touches[0].clientY;},{passive:true});
-        window.addEventListener('touchmove',e=>{
-            if(lastTouchX===null)return;
-            const dx=e.touches[0].clientX-lastTouchX,dy=e.touches[0].clientY-lastTouchY;
-            tgtVel=Math.min(Math.sqrt(dx*dx+dy*dy)*1.5,100);
-            const r=container.getBoundingClientRect();
-            tgtRY=((e.touches[0].clientX-r.left)/r.width -.5)*-1.2;
-            tgtRX=((e.touches[0].clientY-r.top) /r.height-.5)*-.6;
-            lastTouchX=e.touches[0].clientX;lastTouchY=e.touches[0].clientY;
-        },{passive:true});
-        window.addEventListener('touchend',()=>{lastTouchX=null;lastTouchY=null;},{passive:true});
 
         // Pre-rendered HUD slots (no DOM create/destroy)
         const hudSlots=Array.from({length:5},(_,i)=>document.getElementById('hud-'+i));
@@ -621,8 +585,6 @@
                     slot.style.opacity='1';
                     slot.querySelector('.hud-type').textContent=targetCenters[i].type;
                     slot.querySelector('.hud-dist').textContent=rawDist.toFixed(1);
-                    const bs=slot.querySelector('.target-bind');
-                    if(bs){if(vel>30){bs.textContent='UNSTABLE';bs.className='target-bind text-red-400';}else{bs.textContent='STABLE';bs.className='target-bind text-emerald-400';}}
                     visible++;
                 }
             }
@@ -634,7 +596,7 @@
         (function animate(){
             requestAnimationFrame(animate);
             const delta=clock.getDelta();
-            vel+=(tgtVel-vel)*10*delta; tgtVel=0; gVel=vel;
+            vel+=(tgtVel-vel)*10*delta; tgtVel=0;
             wz+=15*delta; if(wz>WORLD_DEPTH)wz-=WORLD_DEPTH;
             const tb=Math.max(0,Math.min(1,(scrollProgress-5)/20));
             blend+=(tb-blend)*5*delta;
@@ -683,10 +645,8 @@
             w.appendChild(h);w.appendChild(d);w.appendChild(l);mapEl.appendChild(w);
         });
         function render(){
-            const radar=document.getElementById('radar-line');
-            if(radar){const rc=stress>60?'rgba(239,68,68,0.5)':'rgba(52,211,153,0.35)';radar.style.background=rc;radar.style.boxShadow=`0 0 6px ${rc}`;}
             landmarks.forEach(lm=>{
-                const u=Math.min(99,lm.baseUnc+unc.epistemic*.4+stress*.3),hi=u>65,rs=hi?70+u*.6:35;
+                const u=Math.min(99,lm.baseUnc+unc.epistemic*.4),hi=u>65,rs=hi?70+u*.6:35;
                 document.getElementById('halo-'+lm.id).style.cssText=`position:absolute;border-radius:50%;border:1px dashed;pointer-events:none;width:${rs}px;height:${rs}px;top:50%;left:50%;border-color:${hi?'rgba(239,68,68,.5)':'rgba(52,211,153,.5)'};background:${hi?'rgba(239,68,68,.1)':'rgba(52,211,153,.1)'};animation:halo-spin ${hi?2:6}s linear infinite;`;
                 document.getElementById('dot-'+lm.id).style.cssText=`position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;border-radius:50%;width:10px;height:10px;background:${hi?'#f87171':'#34d399'};box-shadow:0 0 10px ${hi?'#ef4444':'#10b981'};`;
                 document.getElementById('lbl-'+lm.id).innerHTML=`<div style="color:white;font-weight:700;font-size:10px;margin-bottom:2px">${lm.type}</div><div style="color:#94a3b8;font-size:9px">UNC_LVL: ${u.toFixed(1)}%</div><div style="color:${hi?'#f87171':'#34d399'};font-weight:700;font-size:9px;margin-top:3px">VSA: ${hi?'AMBIGUOUS':'BOUND'}</div>`;
@@ -706,38 +666,20 @@
     // ── AER EVENT STREAM ──────────────────────────────────────────────────
     (function(){
         const term=document.getElementById('event-terminal');
-        // Find AER card parent for stressed border
-        const aerCard=term.closest('.dash-card');
         const MAX=6;
-        let aerTimer=null;
         function add(){
-            const isErr=stress>60&&Math.random()>.4;
-            let line;
-            if(isErr){
-                line=document.createElement('div');
-                line.style.opacity='1';
-                line.innerHTML=`<span style="color:#f87171;font-weight:700">ERR:[x:----, y:----] | POL: WARN | TS: ${Date.now()} | EGO_MOTION_CRITICAL</span>`;
-            }else{
-                const x=Math.floor(Math.random()*1280).toString().padStart(4,'0');
-                const y=Math.floor(Math.random()*720 ).toString().padStart(3,'0');
-                const pol=Math.random()>.5?'+1':'-1';
-                line=document.createElement('div');
-                line.style.opacity='1';
-                line.innerHTML=`<span style="color:${pol==='+1'?'#22d3ee':'#f87171'}">EVT:[x:${x}, y:${y}] | POL: ${pol}</span>`;
-            }
+            const x=Math.floor(Math.random()*1280).toString().padStart(4,'0');
+            const y=Math.floor(Math.random()*720 ).toString().padStart(3,'0');
+            const pol=Math.random()>.5?'+1':'-1';
+            const line=document.createElement('div');
+            line.style.opacity='1';
+            line.innerHTML=`<span style="color:${pol==='+1'?'#22d3ee':'#f87171'}">EVT:[x:${x}, y:${y}] | POL: ${pol}</span>`;
             term.insertBefore(line,term.firstChild);
             while(term.children.length>MAX)term.removeChild(term.lastChild);
             Array.from(term.children).forEach((el,i)=>{el.style.opacity=i===0?'1':'0.25';});
-            // Update card border for stress
-            if(aerCard){
-                if(stress>60){aerCard.style.background='rgba(127,29,29,0.2)';aerCard.style.borderColor='rgba(239,68,68,0.3)';}
-                else{aerCard.style.background='';aerCard.style.borderColor='';}
-            }
-            // Schedule next with dynamic rate
-            const rate=Math.max(30,150-stress);
-            aerTimer=setTimeout(add,rate);
         }
         for(let i=0;i<MAX;i++)add();
+        setInterval(add,150);
     })();
 
     // ── UNCERTAINTY BARS ──────────────────────────────────────────────────
@@ -751,10 +693,9 @@
             bc.appendChild(b);bars.push(b);
         }
         function update(){
-            const ep=unc.epistemic,hot=ep>60||stress>60;
+            const ep=unc.epistemic,hot=ep>60;
             bars.forEach(b=>{b.style.height=Math.random()*100+'%';b.style.background=hot?'rgba(248,113,113,.4)':'rgba(52,211,153,.3)';});
-            const valDisp=Math.min(99,ep+stress*.5);
-            uv.textContent='VAL: '+valDisp.toFixed(2);
+            uv.textContent='VAL: '+ep.toFixed(2);
             us.textContent=hot?'TRIG: SPAD':'NOMINAL';
             us.className='font-bold '+(hot?'text-red-400':'text-emerald-400');
             ud.style.cssText=hot?'width:.75rem;height:.75rem;border-radius:50%;background:#ef4444;box-shadow:0 0 10px #ef4444':'width:.75rem;height:.75rem;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981';
@@ -767,10 +708,10 @@
         const log=document.getElementById('vsa-log');
         const T=[
             (ts)  =>({cls:'border-cyan-500/30',  txt:`<span class="text-slate-500">[${ts}]</span><br><span class="text-cyan-400">PHASOR_BIND: [TARGET_0${Math.ceil(Math.random()*9)}] @ [Phase: ${(Math.random()*2).toFixed(2)}π]</span>`}),
-            (ts)  =>({cls:'border-slate-700',    txt:`<span class="text-slate-500">[${ts}]</span><br><span class="${stress>60?'text-red-300':'text-slate-300'}">RESONATOR_PASS: ${stress>60?'0.21':(0.8+Math.random()*.19).toFixed(2)} CONFIDENCE</span>`}),
-            (ts,v)=>({cls:v>40||stress>40?'border-red-500/50':'border-emerald-500/50',txt:`<span class="text-slate-500">[${ts}]</span><br><span class="${v>40||stress>40?'text-red-400':'text-emerald-400'}">ALEATORIC_CHECK: ${(v+stress*.3).toFixed(2)} (Limit: 40.00)</span>`}),
+            (ts)  =>({cls:'border-slate-700',    txt:`<span class="text-slate-500">[${ts}]</span><br><span class="text-slate-300">RESONATOR_PASS: ${(0.8+Math.random()*.19).toFixed(2)} CONFIDENCE</span>`}),
+            (ts,v)=>({cls:v>40?'border-red-500/50':'border-emerald-500/50',txt:`<span class="text-slate-500">[${ts}]</span><br><span class="${v>40?'text-red-400':'text-emerald-400'}">ALEATORIC_CHECK: ${v.toFixed(2)} (Limit: 40.00)</span>`}),
             (ts)  =>({cls:'border-purple-500/30',txt:`<span class="text-slate-500">[${ts}]</span><br><span class="text-purple-400">SSP_UPDATE: DIM_10K_COMMITTED</span>`}),
-            (ts)  =>({cls:stress>60?'border-red-500/30':'border-emerald-500/30',txt:`<span class="text-slate-500">[${ts}]</span><br><span class="${stress>60?'text-red-400':'text-emerald-400'}">VSA_GRAPH: ${stress>60?'RESOLVING_AMBIGUITY...':'MAP_STABLE'}</span>`}),
+            (ts)  =>({cls:'border-emerald-500/30',txt:`<span class="text-slate-500">[${ts}]</span><br><span class="text-emerald-400">VSA_GRAPH: MAP_STABLE</span>`}),
         ];
         function add(){
             const fn=T[Math.floor(Math.random()*T.length)];
