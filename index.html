@@ -1,754 +1,390 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paul Kirkland — Neuromorphic Engineering</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0c0f;
-    --surface: #111318;
-    --surface2: #181c23;
-    --border: #232830;
-    --accent: #00e5c0;
-    --accent2: #ff6b35;
-    --accent3: #7c9eff;
-    --text: #e8eaf0;
-    --text-muted: #6b7280;
-    --text-dim: #9ca3af;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Instrument Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* Noise grain overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 1000;
-    opacity: 0.4;
-  }
-
-  /* ---- HEADER ---- */
-  header {
-    position: relative;
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    overflow: hidden;
-  }
-
-  .header-left {
-    padding: 80px 60px 80px 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-  }
-
-  .header-right {
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Animated sensor grid on the right */
-  .sensor-canvas {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-columns: repeat(24, 1fr);
-    grid-template-rows: repeat(32, 1fr);
-    gap: 2px;
-    padding: 20px;
-    opacity: 0.7;
-  }
-
-  .pixel {
-    border-radius: 1px;
-    background: var(--surface2);
-    transition: background 0.3s, opacity 0.3s;
-    animation: spike var(--dur) var(--delay) infinite;
-  }
-
-  @keyframes spike {
-    0%, 90%, 100% { background: var(--surface2); opacity: 0.3; }
-    95% { background: var(--accent); opacity: 1; box-shadow: 0 0 6px var(--accent); }
-  }
-
-  .header-right::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, var(--bg) 0%, transparent 40%);
-    z-index: 1;
-  }
-
-  .eyebrow {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .eyebrow::before {
-    content: '';
-    display: block;
-    width: 32px;
-    height: 1px;
-    background: var(--accent);
-  }
-
-  h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(3rem, 5vw, 5.5rem);
-    line-height: 1.0;
-    color: var(--text);
-    margin-bottom: 8px;
-  }
-
-  h1 em {
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  .title-role {
-    font-family: 'DM Mono', monospace;
-    font-size: 13px;
-    color: var(--text-muted);
-    letter-spacing: 0.05em;
-    margin-bottom: 36px;
-    margin-top: 16px;
-  }
-
-  .bio {
-    font-size: 15px;
-    color: var(--text-dim);
-    max-width: 480px;
-    line-height: 1.8;
-    margin-bottom: 48px;
-  }
-
-  .tag-cluster {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 48px;
-  }
-
-  .tag {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    padding: 5px 12px;
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text-dim);
-    letter-spacing: 0.05em;
-    transition: all 0.2s;
-  }
-
-  .tag:hover { border-color: var(--accent); color: var(--accent); }
-  .tag.hot { border-color: var(--accent2); color: var(--accent2); }
-  .tag.blue { border-color: var(--accent3); color: var(--accent3); }
-
-  .links-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-
-  .link-btn {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    padding: 10px 20px;
-    text-decoration: none;
-    transition: all 0.2s;
-    border-radius: 2px;
-  }
-
-  .link-btn.primary {
-    background: var(--accent);
-    color: var(--bg);
-    font-weight: 500;
-  }
-
-  .link-btn.primary:hover { background: #00ffda; }
-
-  .link-btn.ghost {
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-  }
-
-  .link-btn.ghost:hover { border-color: var(--text-dim); color: var(--text); }
-
-  /* ---- SECTION LAYOUT ---- */
-  section {
-    padding: 100px 80px;
-    max-width: 1200px;
-    margin: 0 auto;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-
-  section.visible { opacity: 1; transform: translateY(0); }
-
-  .section-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 48px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-
-  .section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    color: var(--text);
-    margin-bottom: 48px;
-    line-height: 1.15;
-  }
-
-  /* ---- RESEARCH AREAS ---- */
-  .research-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2px;
-  }
-
-  .research-card {
-    background: var(--surface);
-    padding: 36px 32px;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s;
-    cursor: default;
-  }
-
-  .research-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--accent);
-    transform: scaleY(0);
-    transform-origin: bottom;
-    transition: transform 0.3s;
-  }
-
-  .research-card:hover { background: var(--surface2); }
-  .research-card:hover::before { transform: scaleY(1); }
-
-  .research-card:nth-child(2)::before { background: var(--accent2); }
-  .research-card:nth-child(3)::before { background: var(--accent3); }
-  .research-card:nth-child(4)::before { background: var(--accent); }
-
-  .card-num {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-  }
-
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.4rem;
-    color: var(--text);
-    margin-bottom: 14px;
-    line-height: 1.2;
-  }
-
-  .card-body {
-    font-size: 14px;
-    color: var(--text-dim);
-    line-height: 1.7;
-  }
-
-  /* ---- PROJECTS ---- */
-  .projects-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .project-item {
-    display: grid;
-    grid-template-columns: 80px 1fr auto;
-    align-items: center;
-    gap: 32px;
-    padding: 28px 32px;
-    background: var(--surface);
-    transition: background 0.2s;
-    cursor: default;
-  }
-
-  .project-item:hover { background: var(--surface2); }
-
-  .project-status {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 4px 8px;
-    border-radius: 2px;
-    text-align: center;
-  }
-
-  .status-active { background: rgba(0,229,192,0.1); color: var(--accent); border: 1px solid rgba(0,229,192,0.3); }
-  .status-open { background: rgba(255,107,53,0.1); color: var(--accent2); border: 1px solid rgba(255,107,53,0.3); }
-  .status-dev { background: rgba(124,158,255,0.1); color: var(--accent3); border: 1px solid rgba(124,158,255,0.3); }
-
-  .project-name {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.15rem;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-
-  .project-desc {
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  .project-arrow {
-    color: var(--text-muted);
-    font-size: 20px;
-    transition: color 0.2s, transform 0.2s;
-  }
-
-  .project-item:hover .project-arrow { color: var(--accent); transform: translateX(4px); }
-
-  /* ---- PUBLICATIONS ---- */
-  .pub-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .pub-item {
-    padding: 28px 0;
-    border-bottom: 1px solid var(--border);
-    display: grid;
-    grid-template-columns: 60px 1fr;
-    gap: 24px;
-  }
-
-  .pub-year {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-muted);
-    padding-top: 4px;
-  }
-
-  .pub-title {
-    font-size: 15px;
-    color: var(--text);
-    margin-bottom: 6px;
-    line-height: 1.4;
-  }
-
-  .pub-meta {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .pub-meta span {
-    color: var(--accent3);
-  }
-
-  /* ---- JOIN US ---- */
-  .join-block {
-    background: var(--surface);
-    padding: 60px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .join-block::after {
-    content: 'JOIN';
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'DM Serif Display', serif;
-    current-color: rgba(255,255,255,0.02);
-    /* fixed typo above, current-color should be color */
-    color: rgba(255,255,255,0.02);
-    font-size: 160px;
-    line-height: 1;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .join-block h2 {
-    margin-bottom: 20px;
-  }
-
-  .join-block p {
-    font-size: 15px;
-    color: var(--text-dim);
-    max-width: 560px;
-    line-height: 1.8;
-    margin-bottom: 36px;
-  }
-
-  .positions-row {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 36px;
-  }
-
-  .position-pill {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    padding: 8px 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 2px;
-    color: var(--text-dim);
-  }
-
-  .position-pill.open {
-    border-color: var(--accent2);
-    color: var(--accent2);
-  }
-
-  /* ---- FOOTER ---- */
-  footer {
-    padding: 48px 80px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    color: var(--text-muted);
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-
-  footer a { color: var(--text-muted); text-decoration: none; }
-  footer a:hover { color: var(--accent); }
-
-  /* ---- NAV ---- */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    padding: 20px 80px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(10,12,15,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.3s;
-  }
-
-  nav.scrolled { border-bottom-color: var(--border); }
-
-  .nav-logo {
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    color: var(--text-dim);
-    letter-spacing: 0.1em;
-  }
-
-  .nav-logo strong { color: var(--accent); }
-
-  .nav-links {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-
-  .nav-links a {
-    font-family: 'DM Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .nav-links a:hover { color: var(--accent); }
-
-  /* divider */
-  .full-divider {
-    width: 100%;
-    height: 1px;
-    background: var(--border);
-    margin: 0;
-  }
-
-  @media (max-width: 768px) {
-    header { grid-template-columns: 1fr; }
-    .header-right { display: none; }
-    .header-left { padding: 120px 32px 80px; }
-    section { padding: 60px 32px; }
-    nav { padding: 16px 32px; }
-    .nav-links { display: none; }
-    footer { padding: 32px; }
-    .project-item { grid-template-columns: 1fr; }
-    .join-block { padding: 40px 32px; }
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paul Kirkland | Neuromorphic Engineering</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        acid:   '#00e5c0',
+                        darkBg: '#050505',
+                        cardBg: '#111111'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.51/build/spline-viewer.js"></script>
+
+    <style>
+        body {
+            background-color: #050505;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        spline-viewer { width: 100%; height: 100%; }
+
+        .reveal-mask { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+        .reveal-text {
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease-out;
+        }
+        .reveal-text.active { transform: translateY(0); opacity: 1; }
+
+        .delay-1 { transition-delay: 0.1s !important; }
+        .delay-2 { transition-delay: 0.2s !important; }
+        .delay-3 { transition-delay: 0.35s !important; }
+        .delay-4 { transition-delay: 0.5s !important; }
+
+        .glass-card {
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Noise grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+            opacity: 0.4;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #00e5c0; }
+    </style>
 </head>
-<body>
+<body class="antialiased selection:bg-acid selection:text-black">
 
-<nav id="nav">
-  <div class="nav-logo"><strong>NCI</strong> / Neuromorphic Computational Imaging</div>
-  <ul class="nav-links">
-    <li><a href="#research">Research</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#publications">Publications</a></li>
-    <li><a href="#join">Join</a></li>
-  </ul>
-</nav>
+    <!-- HUD Navigation -->
+    <nav id="nav" class="fixed top-0 w-full z-50 flex justify-between items-center px-6 md:px-12 py-5 transition-all duration-300">
+        <div class="font-mono text-xs text-acid tracking-widest">
+            <span class="inline-block w-2 h-2 bg-acid rounded-full animate-pulse mr-2"></span>
+            NCI // NEUROMORPHIC COMPUTATIONAL IMAGING
+        </div>
+        <div class="font-mono text-xs text-gray-500 tracking-widest hidden md:flex gap-8">
+            <a href="#research" class="hover:text-white transition-colors">RESEARCH</a>
+            <a href="#projects" class="hover:text-white transition-colors">PROJECTS</a>
+            <a href="#publications" class="hover:text-white transition-colors">PUBLICATIONS</a>
+            <a href="#join" class="hover:text-white transition-colors">COLLABORATE</a>
+        </div>
+    </nav>
 
-<header>
-  <div class="header-left">
-    <div class="eyebrow">Western Sydney University · ICNS</div>
-    <h1>Paul<br><em>Kirkland</em></h1>
-    <div class="title-role">Research Fellow · Neuromorphic Engineering</div>
-    <p class="bio">
-      Exploring what happens when computers stop behaving like calculators and start thinking like brains.
-      My work blends brain-inspired hardware with AI, building event-driven systems that sense and react in real time.
-      I’m building smarter, faster, leaner AI by giving machines a little more “brainpower” — minus the energy bill.
-    </p>
-    <div class="tag-cluster">
-      <span class="tag hot">Neuromorphic Engineering</span>
-      <span class="tag">Spiking Neural Networks</span>
-      <span class="tag blue">Computer Vision</span>
-      <span class="tag">Robotics</span>
-      <span class="tag blue">Signal Processing</span>
-      <span class="tag hot">Event Cameras</span>
-      <span class="tag">Bioinspired Systems</span>
-    </div>
-    <div class="links-row">
-      <a class="link-btn primary" href="mailto:p.kirkland@westernsydney.edu.au">Get in Touch</a>
-      <a class="link-btn ghost" target="_blank" href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en">Google Scholar</a>
-      <a class="link-btn ghost" target="_blank" href="https://au.linkedin.com/in/paul-kirkland-618ab096">LinkedIn</a>
-    </div>
-  </div>
-  <div class="header-right">
-    <div class="sensor-canvas" id="sensorCanvas"></div>
-  </div>
-</header>
+    <!-- ═══════════════════════════════════════════════ HERO -->
+    <section class="relative w-full h-screen flex items-center px-6 md:px-12">
 
-<div class="full-divider"></div>
+        <!-- Left Content -->
+        <div class="z-10 w-full md:w-1/2 flex flex-col gap-5 mt-20 md:mt-0">
 
-<!-- RESEARCH -->
-<section id="research">
-  <div class="section-label">01 — Research Areas</div>
-  <h2>What I focus on</h2>
-  <div class="research-grid">
-    <div class="research-card">
-      <div class="card-num">01</div>
-      <div class="card-title">Event-driven Systems & Perception</div>
-      <p class="card-body">Combining the feature extraction benefits of CNNs with the low latency processing of SCNNs. Utilizing Neuromorphic Vision Sensors for asynchronous processing and semantic segmentation of dynamic scenes.</p>
-    </div>
-    <div class="research-card">
-      <div class="card-num">02</div>
-      <div class="card-title">Spiking Neural Networks</div>
-      <p class="card-body">Developing SNN models and low-power, robust learning frameworks to tackle challenges across machine learning, computer vision, robotics, and signal processing.</p>
-    </div>
-    <div class="research-card">
-      <div class="card-num">03</div>
-      <div class="card-title">Single Photon 3D Imaging</div>
-      <p class="card-body">Driving high-speed LiDAR-based imaging modalities using the time-of-arrival of individual photons reconstructed asynchronously by SCNNs for robust 3D tracking.</p>
-    </div>
-    <div class="research-card">
-      <div class="card-num">04</div>
-      <div class="card-title">AI at the Network Edge</div>
-      <p class="card-body">Creating deployable intelligence that is powerful, efficient, and adaptive for out-in-the-wild deployment applications spanning from defence and aerospace to everyday robotics.</p>
-    </div>
-  </div>
-</section>
+            <div class="reveal-mask">
+                <div class="reveal-text font-mono text-xs text-gray-400 tracking-widest delay-1">
+                    DR. PAUL KIRKLAND &nbsp;//&nbsp; WESTERN SYDNEY UNIVERSITY · ICNS
+                </div>
+            </div>
 
-<div class="full-divider"></div>
+            <div class="reveal-mask">
+                <h1 class="reveal-text text-5xl md:text-7xl lg:text-8xl font-black uppercase leading-[0.9] tracking-tighter delay-2">
+                    Brain-Inspired<br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-acid to-teal-700">Intelligence.</span>
+                </h1>
+            </div>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="section-label">02 — Active Projects</div>
-  <h2>Current work</h2>
-  <div class="projects-list">
-    <div class="project-item">
-      <span class="project-status status-active">Active</span>
-      <div>
-        <div class="project-name">Single Photon Event-Driven 3D Imaging</div>
-        <p class="project-desc">A novel LiDAR modality paired with a Spiking CNN to track objects asynchronously through atmospheric obscurants in real time using the arrival of individual photons.</p>
-      </div>
-      <span class="project-arrow">→</span>
-    </div>
-    <div class="project-item">
-      <span class="project-status status-active">Active</span>
-      <div>
-        <div class="project-name">Perception Understanding Action (PUA) Cycle</div>
-        <p class="project-desc">Building a Neuromorphic system focused on blending CNN-based feature extraction with SCNN latency advantages to understand dynamic scenes.</p>
-      </div>
-      <span class="project-arrow">→</span>
-    </div>
-    <div class="project-item">
-      <span class="project-status status-dev">In Dev</span>
-      <div>
-        <div class="project-name">VSA for AI at the Edge</div>
-        <p class="project-desc">Demonstrating Vector Symbolic Architectures as highly effective integrated technologies for constrained low-power edge environments.</p>
-      </div>
-      <span class="project-arrow">→</span>
-    </div>
-    <div class="project-item">
-      <span class="project-status status-open">Recruiting</span>
-      <div>
-        <div class="project-name">Time Series Forecasting with SNNs</div>
-        <p class="project-desc">Investigating derivative spike encoding techniques coupled with Spiking Neural Networks to effectively forecast robust time-series data signals.</p>
-      </div>
-      <span class="project-arrow">→</span>
-    </div>
-  </div>
-</section>
+            <div class="reveal-mask">
+                <p class="reveal-text font-mono text-gray-400 text-sm max-w-md leading-relaxed mt-2 delay-3">
+                    Research Fellow in Neuromorphic Engineering. Building event-driven systems that sense and react in real time — smarter, faster, leaner AI by giving machines a little more brainpower, minus the energy bill.
+                </p>
+            </div>
 
-<div class="full-divider"></div>
+            <div class="reveal-mask">
+                <div class="reveal-text flex flex-wrap gap-2 mt-1 delay-3">
+                    <span class="font-mono text-xs px-3 py-1 border border-acid text-acid">Neuromorphic Engineering</span>
+                    <span class="font-mono text-xs px-3 py-1 border border-gray-700 text-gray-400">Spiking Neural Networks</span>
+                    <span class="font-mono text-xs px-3 py-1 border border-teal-800 text-teal-400">Event Cameras</span>
+                    <span class="font-mono text-xs px-3 py-1 border border-gray-700 text-gray-400">Robotics</span>
+                    <span class="font-mono text-xs px-3 py-1 border border-gray-700 text-gray-400">Computer Vision</span>
+                    <span class="font-mono text-xs px-3 py-1 border border-gray-700 text-gray-400">Edge AI</span>
+                </div>
+            </div>
 
-<!-- PUBLICATIONS -->
-<section id="publications">
-  <div class="section-label">03 — Selected Publications</div>
-  <h2>Recent output</h2>
-  <div class="pub-list">
-    <div class="pub-item">
-      <div class="pub-year">2025</div>
-      <div>
-        <div class="pub-title">Single photon event-driven 3D imaging</div>
-        <div class="pub-meta">Kirkland, P., et al. · <span>Communications Engineering (Nature)</span></div>
-      </div>
-    </div>
-    <div class="pub-item">
-      <div class="pub-year">2024</div>
-      <div>
-        <div class="pub-title">Spiking Neural Networks for event-based action recognition: A new task to understand their advantage</div>
-        <div class="pub-meta">Kirkland, P., et al. · <span>Neurocomputing</span></div>
-      </div>
-    </div>
-    <div class="pub-item">
-      <div class="pub-year">2023</div>
-      <div>
-        <div class="pub-title">From task-aware to task-agnostic parameter isolation for incremental learning</div>
-        <div class="pub-meta">Kirkland, P., et al. · <span>Neural Processing Letters</span></div>
-      </div>
-    </div>
-    <div class="pub-item">
-      <div class="pub-year">2023</div>
-      <div>
-        <div class="pub-title">An Approach to Time Series Forecasting With Derivative Spike Encoding and Spiking Neural Networks</div>
-        <div class="pub-meta">Kirkland, P., et al. · <span>IEEE</span></div>
-      </div>
-    </div>
-    <div class="pub-item">
-      <div class="pub-year">2020</div>
-      <div>
-        <div class="pub-title">Perception Understanding Action: Adding Understanding to the Perception Action Cycle With Spiking Segmentation</div>
-        <div class="pub-meta">Kirkland, P., et al. · <span>Frontiers in Neurorobotics</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="reveal-mask mt-3">
+                <div class="reveal-text flex flex-wrap gap-4 delay-4">
+                    <a href="mailto:p.kirkland@westernsydney.edu.au"
+                       class="bg-acid text-black px-8 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors duration-300">
+                        Get in Touch
+                    </a>
+                    <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+                       class="border border-gray-600 text-white px-8 py-4 font-bold text-xs tracking-widest uppercase hover:border-acid transition-colors duration-300">
+                        Google Scholar
+                    </a>
+                    <a href="https://au.linkedin.com/in/paul-kirkland-618ab096" target="_blank"
+                       class="border border-gray-600 text-white px-8 py-4 font-bold text-xs tracking-widest uppercase hover:border-acid transition-colors duration-300">
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
 
-<div class="full-divider"></div>
+        <!-- Right: Spline 3D Viewer -->
+        <div class="absolute right-0 top-0 w-full h-full md:w-[60%] z-0 opacity-40 md:opacity-100">
+            <spline-viewer
+                loading-anim-type="spinner-small-light"
+                url="https://prod.spline.design/615b9422-9985-43f6-8593-d7d7bc3b0be1/scene.splinecode">
+            </spline-viewer>
+        </div>
+    </section>
 
-<!-- JOIN -->
-<section id="join">
-  <div class="section-label">04 — Collaborate</div>
-  <div class="join-block">
-    <h2>Work on problems<br>at the edge of AI</h2>
-    <p>
-      Whether you're interested in spiking neural networks, event cameras, low-power learning, or deployable intelligence — drop me a line. 
-      I regularly collaborate internationally and mentor ambitious students looking to build smarter, leaner AI for real-world robotics.
-    </p>
-    <div class="positions-row">
-      <span class="position-pill open">PhD Candidacy — Open</span>
-      <span class="position-pill open">Honours / Masters — Open</span>
-      <span class="position-pill">Industry Collaboration — Enquire</span>
-    </div>
-    <a class="link-btn primary" href="mailto:p.kirkland@westernsydney.edu.au">Contact Paul →</a>
-  </div>
-</section>
+    <!-- ═══════════════════════════════════════════════ RESEARCH -->
+    <section id="research" class="relative z-10 bg-darkBg py-24 px-6 md:px-12 border-t border-gray-900">
+        <div class="mb-16">
+            <div class="font-mono text-xs text-acid tracking-widest mb-3">01 — RESEARCH AREAS</div>
+            <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-3">What I Focus On</h2>
+            <div class="w-12 h-1 bg-acid"></div>
+        </div>
 
-<footer>
-  <div>© 2026 Paul Kirkland · Western Sydney University · ICNS</div>
-  <div>
-    <a href="mailto:p.kirkland@westernsydney.edu.au">p.kirkland@westernsydney.edu.au</a> &nbsp;·&nbsp;
-    <a target="_blank" href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en">Google Scholar</a> &nbsp;·&nbsp;
-    <a target="_blank" href="https://au.linkedin.com/in/paul-kirkland-618ab096">LinkedIn</a>
-  </div>
-</footer>
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-gray-900">
+            <div class="glass-card p-8 hover:border-acid transition-colors duration-500 group cursor-default bg-[#111]">
+                <div class="font-mono text-acid text-xs mb-4">01 // EVENT-DRIVEN</div>
+                <h3 class="text-xl font-bold uppercase mb-4 group-hover:text-acid transition-colors leading-tight">
+                    Event-driven Systems & Perception
+                </h3>
+                <p class="text-gray-400 text-sm font-mono leading-relaxed">
+                    Combining CNN feature extraction with SCNN low-latency processing. Utilizing neuromorphic vision sensors for asynchronous semantic segmentation of dynamic scenes.
+                </p>
+            </div>
 
-<script>
-  // Animate sensor pixel grid
-  const canvas = document.getElementById('sensorCanvas');
-  const cols = 24, rows = 32;
-  for (let i = 0; i < cols * rows; i++) {
-    const px = document.createElement('div');
-    px.className = 'pixel';
-    const dur = (2 + Math.random() * 6).toFixed(2) + 's';
-    const delay = (Math.random() * 8).toFixed(2) + 's';
-    px.style.setProperty('--dur', dur);
-    px.style.setProperty('--delay', delay);
-    // Occasionally use accent2 or accent3
-    const r = Math.random();
-    if (r > 0.97) px.style.setProperty('--accent', '#ff6b35');
-    else if (r > 0.94) px.style.setProperty('--accent', '#7c9eff');
-    canvas.appendChild(px);
-  }
+            <div class="glass-card p-8 hover:border-acid transition-colors duration-500 group cursor-default bg-[#111]">
+                <div class="font-mono text-acid text-xs mb-4">02 // NETWORKS</div>
+                <h3 class="text-xl font-bold uppercase mb-4 group-hover:text-acid transition-colors leading-tight">
+                    Spiking Neural Networks
+                </h3>
+                <p class="text-gray-400 text-sm font-mono leading-relaxed">
+                    Developing SNN models and low-power, robust learning frameworks for machine learning, computer vision, robotics, and signal processing.
+                </p>
+            </div>
 
-  // Nav scroll state
-  const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
-  });
+            <div class="glass-card p-8 hover:border-acid transition-colors duration-500 group cursor-default bg-[#111]">
+                <div class="font-mono text-acid text-xs mb-4">03 // IMAGING</div>
+                <h3 class="text-xl font-bold uppercase mb-4 group-hover:text-acid transition-colors leading-tight">
+                    Single Photon 3D Imaging
+                </h3>
+                <p class="text-gray-400 text-sm font-mono leading-relaxed">
+                    High-speed LiDAR-based imaging using time-of-arrival of individual photons, reconstructed asynchronously by SCNNs for robust 3D tracking.
+                </p>
+            </div>
 
-  // Section reveal on scroll
-  const sections = document.querySelectorAll('section');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-  }, { threshold: 0.1 });
-  sections.forEach(s => observer.observe(s));
-</script>
+            <div class="glass-card p-8 hover:border-acid transition-colors duration-500 group cursor-default bg-[#111]">
+                <div class="font-mono text-acid text-xs mb-4">04 // EDGE AI</div>
+                <h3 class="text-xl font-bold uppercase mb-4 group-hover:text-acid transition-colors leading-tight">
+                    AI at the Network Edge
+                </h3>
+                <p class="text-gray-400 text-sm font-mono leading-relaxed">
+                    Deployable intelligence that is powerful, efficient, and adaptive — spanning defence and aerospace to everyday robotics.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ PROJECTS -->
+    <section id="projects" class="relative z-10 bg-darkBg py-24 px-6 md:px-12 border-t border-gray-900">
+        <div class="mb-16">
+            <div class="font-mono text-xs text-acid tracking-widest mb-3">02 — ACTIVE PROJECTS</div>
+            <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-3">Current Work</h2>
+            <div class="w-12 h-1 bg-white"></div>
+        </div>
+
+        <div class="flex flex-col gap-px">
+            <div class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="flex items-start gap-6 mb-4 md:mb-0">
+                    <span class="font-mono text-xs border border-acid text-acid px-3 py-1 mt-1 whitespace-nowrap">ACTIVE</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors mb-1">Single Photon Event-Driven 3D Imaging</h3>
+                        <p class="font-mono text-xs text-gray-500 leading-relaxed max-w-2xl">Novel LiDAR modality paired with a Spiking CNN to track objects asynchronously through atmospheric obscurants in real time using the arrival of individual photons.</p>
+                    </div>
+                </div>
+                <span class="text-gray-600 group-hover:text-acid group-hover:translate-x-1 transition-all duration-300 text-xl self-center">→</span>
+            </div>
+
+            <div class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="flex items-start gap-6 mb-4 md:mb-0">
+                    <span class="font-mono text-xs border border-acid text-acid px-3 py-1 mt-1 whitespace-nowrap">ACTIVE</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors mb-1">Perception Understanding Action (PUA) Cycle</h3>
+                        <p class="font-mono text-xs text-gray-500 leading-relaxed max-w-2xl">Building a neuromorphic system blending CNN-based feature extraction with SCNN latency advantages to understand dynamic scenes.</p>
+                    </div>
+                </div>
+                <span class="text-gray-600 group-hover:text-acid group-hover:translate-x-1 transition-all duration-300 text-xl self-center">→</span>
+            </div>
+
+            <div class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="flex items-start gap-6 mb-4 md:mb-0">
+                    <span class="font-mono text-xs border border-blue-600 text-blue-400 px-3 py-1 mt-1 whitespace-nowrap">IN DEV</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors mb-1">VSA for AI at the Edge</h3>
+                        <p class="font-mono text-xs text-gray-500 leading-relaxed max-w-2xl">Demonstrating Vector Symbolic Architectures as highly effective integrated technologies for constrained low-power edge environments.</p>
+                    </div>
+                </div>
+                <span class="text-gray-600 group-hover:text-acid group-hover:translate-x-1 transition-all duration-300 text-xl self-center">→</span>
+            </div>
+
+            <div class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="flex items-start gap-6 mb-4 md:mb-0">
+                    <span class="font-mono text-xs border border-orange-500 text-orange-400 px-3 py-1 mt-1 whitespace-nowrap">RECRUITING</span>
+                    <div>
+                        <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors mb-1">Time Series Forecasting with SNNs</h3>
+                        <p class="font-mono text-xs text-gray-500 leading-relaxed max-w-2xl">Investigating derivative spike encoding techniques coupled with Spiking Neural Networks to effectively forecast robust time-series data signals.</p>
+                    </div>
+                </div>
+                <span class="text-gray-600 group-hover:text-acid group-hover:translate-x-1 transition-all duration-300 text-xl self-center">→</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ PUBLICATIONS -->
+    <section id="publications" class="relative z-10 bg-darkBg py-24 px-6 md:px-12 border-t border-gray-900">
+        <div class="mb-16">
+            <div class="font-mono text-xs text-acid tracking-widest mb-3">03 — SELECTED PUBLICATIONS</div>
+            <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-3">Recent Output</h2>
+            <div class="w-12 h-1 bg-acid"></div>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+               class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="mb-4 md:mb-0">
+                    <div class="font-mono text-xs text-gray-500 mb-2">COMMUNICATIONS ENGINEERING (NATURE) · 2025</div>
+                    <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors">Single photon event-driven 3D imaging</h3>
+                    <div class="font-mono text-xs text-gray-600 mt-1">Kirkland, P., et al.</div>
+                </div>
+                <div class="font-mono text-xs border border-gray-600 px-4 py-2 text-white group-hover:bg-acid group-hover:text-black group-hover:border-acid transition-colors inline-block text-center whitespace-nowrap">VIEW →</div>
+            </a>
+
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+               class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="mb-4 md:mb-0">
+                    <div class="font-mono text-xs text-gray-500 mb-2">NEUROCOMPUTING · 2024</div>
+                    <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors">Spiking Neural Networks for event-based action recognition: A new task to understand their advantage</h3>
+                    <div class="font-mono text-xs text-gray-600 mt-1">Kirkland, P., et al.</div>
+                </div>
+                <div class="font-mono text-xs border border-gray-600 px-4 py-2 text-white group-hover:bg-acid group-hover:text-black group-hover:border-acid transition-colors inline-block text-center whitespace-nowrap">VIEW →</div>
+            </a>
+
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+               class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="mb-4 md:mb-0">
+                    <div class="font-mono text-xs text-gray-500 mb-2">NEURAL PROCESSING LETTERS · 2023</div>
+                    <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors">From task-aware to task-agnostic parameter isolation for incremental learning</h3>
+                    <div class="font-mono text-xs text-gray-600 mt-1">Kirkland, P., et al.</div>
+                </div>
+                <div class="font-mono text-xs border border-gray-600 px-4 py-2 text-white group-hover:bg-acid group-hover:text-black group-hover:border-acid transition-colors inline-block text-center whitespace-nowrap">VIEW →</div>
+            </a>
+
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+               class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="mb-4 md:mb-0">
+                    <div class="font-mono text-xs text-gray-500 mb-2">IEEE · 2023</div>
+                    <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors">An Approach to Time Series Forecasting With Derivative Spike Encoding and Spiking Neural Networks</h3>
+                    <div class="font-mono text-xs text-gray-600 mt-1">Kirkland, P., et al.</div>
+                </div>
+                <div class="font-mono text-xs border border-gray-600 px-4 py-2 text-white group-hover:bg-acid group-hover:text-black group-hover:border-acid transition-colors inline-block text-center whitespace-nowrap">VIEW →</div>
+            </a>
+
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+               class="group flex flex-col md:flex-row justify-between md:items-center p-6 border border-gray-800 hover:border-acid hover:bg-[#0a0a0a] transition-all duration-300">
+                <div class="mb-4 md:mb-0">
+                    <div class="font-mono text-xs text-gray-500 mb-2">FRONTIERS IN NEUROROBOTICS · 2020</div>
+                    <h3 class="text-lg font-bold text-white group-hover:text-acid transition-colors">Perception Understanding Action: Adding Understanding to the Perception Action Cycle With Spiking Segmentation</h3>
+                    <div class="font-mono text-xs text-gray-600 mt-1">Kirkland, P., et al.</div>
+                </div>
+                <div class="font-mono text-xs border border-gray-600 px-4 py-2 text-white group-hover:bg-acid group-hover:text-black group-hover:border-acid transition-colors inline-block text-center whitespace-nowrap">VIEW →</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ COLLABORATE -->
+    <section id="join" class="relative z-10 bg-darkBg py-24 px-6 md:px-12 border-t border-gray-900">
+        <div class="mb-16">
+            <div class="font-mono text-xs text-acid tracking-widest mb-3">04 — COLLABORATE</div>
+            <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-3">Work on Problems<br/>at the Edge of AI</h2>
+            <div class="w-12 h-1 bg-white"></div>
+        </div>
+
+        <div class="glass-card p-10 md:p-16 border border-gray-800 max-w-4xl">
+            <p class="font-mono text-gray-400 text-sm leading-relaxed mb-10 max-w-2xl">
+                Whether you're interested in spiking neural networks, event cameras, low-power learning, or deployable intelligence — drop me a line.
+                I regularly collaborate internationally and mentor ambitious students looking to build smarter, leaner AI for real-world robotics.
+            </p>
+
+            <div class="flex flex-wrap gap-3 mb-10">
+                <span class="font-mono text-xs px-4 py-2 border border-orange-500 text-orange-400">PhD Candidacy — Open</span>
+                <span class="font-mono text-xs px-4 py-2 border border-orange-500 text-orange-400">Honours / Masters — Open</span>
+                <span class="font-mono text-xs px-4 py-2 border border-gray-700 text-gray-400">Industry Collaboration — Enquire</span>
+            </div>
+
+            <a href="mailto:p.kirkland@westernsydney.edu.au"
+               class="inline-block bg-acid text-black px-10 py-4 font-bold text-xs tracking-widest uppercase hover:bg-white transition-colors duration-300">
+                Contact Paul →
+            </a>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════ FOOTER -->
+    <footer class="bg-cardBg py-10 px-6 md:px-12 border-t border-gray-900 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div class="font-mono text-xs text-gray-500">
+            © 2026 PAUL KIRKLAND · WESTERN SYDNEY UNIVERSITY · ICNS
+        </div>
+        <div class="flex gap-6 font-mono text-xs text-gray-400">
+            <a href="mailto:p.kirkland@westernsydney.edu.au" class="hover:text-acid transition-colors">EMAIL</a>
+            <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank" class="hover:text-acid transition-colors">SCHOLAR</a>
+            <a href="https://au.linkedin.com/in/paul-kirkland-618ab096" target="_blank" class="hover:text-acid transition-colors">LINKEDIN</a>
+        </div>
+    </footer>
+
+    <script>
+        // Nav blur on scroll
+        const nav = document.getElementById('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 40) {
+                nav.style.background = 'rgba(5,5,5,0.92)';
+                nav.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+                nav.style.backdropFilter = 'blur(16px)';
+            } else {
+                nav.style.background = 'transparent';
+                nav.style.borderBottom = 'none';
+            }
+        });
+
+        // Hero text reveal
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+
+            setTimeout(() => {
+                document.querySelectorAll('.reveal-text').forEach(el => observer.observe(el));
+            }, 100);
+        });
+    </script>
 </body>
 </html>
