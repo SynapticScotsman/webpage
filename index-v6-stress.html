@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paul Kirkland — Embodied Intelligence</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] } } }
+        }
+    </script>
+
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #020617;
+            color: white;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            cursor: crosshair;
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #22d3ee;
+        }
+
+        #three-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #progress-bar {
+            box-shadow: 0 0 10px #06b6d4;
+        }
+
+        /* Glitch on hero h1 hover */
+        .hover-glitch:hover {
+            animation: glitch .3s steps(2, end) infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                text-shadow: 2px 0 #22d3ee, -2px 0 #f87171;
+            }
+
+            25% {
+                text-shadow: -2px 0 #22d3ee, 2px 0 #f87171;
+                clip-path: inset(20% 0 30% 0);
+            }
+
+            50% {
+                text-shadow: 3px 0 #a78bfa, -3px 0 #22d3ee;
+                clip-path: inset(50% 0 10% 0);
+            }
+
+            75% {
+                text-shadow: -3px 0 #f87171, 3px 0 #a78bfa;
+                clip-path: inset(10% 0 70% 0);
+            }
+
+            100% {
+                text-shadow: 2px 0 #22d3ee, -2px 0 #f87171;
+                clip-path: inset(0);
+            }
+        }
+
+        /* HUD — pre-rendered, 5 slots, shown/hidden via opacity */
+        #hud-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5;
+            overflow: hidden;
+        }
+
+        .hud-slot {
+            position: absolute;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+            transition: opacity .075s;
+            will-change: left, top, opacity;
+        }
+
+        .hud-frame {
+            width: 80px;
+            height: 80px;
+            border: 1px solid rgba(34, 211, 238, .2);
+            position: relative;
+        }
+
+        .hud-corner {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: #22d3ee;
+            border-style: solid;
+        }
+
+        .hud-corner.tl {
+            top: -2px;
+            left: -2px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .hud-corner.tr {
+            top: -2px;
+            right: -2px;
+            border-width: 2px 2px 0 0;
+        }
+
+        .hud-corner.bl {
+            bottom: -2px;
+            left: -2px;
+            border-width: 0 0 2px 2px;
+        }
+
+        .hud-corner.br {
+            bottom: -2px;
+            right: -2px;
+            border-width: 0 2px 2px 0;
+        }
+
+        .hud-info {
+            position: absolute;
+            top: calc(100%+8px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: #22d3ee;
+            background: rgba(2, 6, 23, .8);
+            padding: 4px 8px;
+            white-space: nowrap;
+            border: 1px solid rgba(34, 211, 238, .2);
+            line-height: 1.6;
+        }
+
+        .hud-info .bind {
+            color: #34d399;
+        }
+
+        /* Cognitive Map */
+        @keyframes halo-spin {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        #cog-map {
+            position: relative;
+            overflow: hidden;
+            background: #020617;
+            background-image:
+                linear-gradient(to right, rgba(128, 128, 128, .07) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(128, 128, 128, .07) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .lm-wrap {
+            position: absolute;
+            transition: left 1s ease, top 1s ease;
+        }
+
+        .lm-halo {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px dashed;
+            pointer-events: none;
+        }
+
+        .lm-dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+        }
+
+        .lm-label {
+            position: absolute;
+            top: 16px;
+            left: 12px;
+            background: rgba(15, 23, 42, .9);
+            border: 1px solid rgba(255, 255, 255, .1);
+            padding: 6px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            z-index: 30;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        /* Cards */
+        .dash-card {
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: .75rem;
+        }
+
+        .pub-card {
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: 1rem;
+            transition: all .3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .pub-card:hover {
+            border-color: rgba(34, 211, 238, .3);
+            background: rgba(34, 211, 238, .04);
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, .02);
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: .75rem;
+            transition: all .3s ease;
+        }
+
+        .step-card:hover {
+            background: rgba(255, 255, 255, .05);
+            border-color: rgba(255, 255, 255, .2);
+        }
+
+        .partner-card {
+            background: #020617;
+            border: 1px solid rgba(255, 255, 255, .05);
+            border-radius: .75rem;
+            transition: border-color .3s ease;
+            text-align: center;
+        }
+
+        .partner-card:hover {
+            border-color: rgba(34, 211, 238, .3);
+        }
+
+        .partner-card:hover .partner-icon {
+            color: #22d3ee;
+        }
+
+        .partner-icon {
+            color: #334155;
+            transition: color .3s ease;
+        }
+
+        .bar-col {
+            transition: height .5s ease;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .radar-line {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 48%;
+            height: 1px;
+            transform-origin: left center;
+            animation: spin 2s linear infinite;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        #vsa-log {
+            overflow-y: auto;
+            max-height: 320px;
+        }
+
+        #vsa-log::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        #vsa-log::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 2px;
+        }
+
+        .video-box {
+            position: relative;
+            aspect-ratio: 16/9;
+            background: #020617;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, .1);
+            cursor: pointer;
+        }
+
+        .video-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: .4;
+            filter: grayscale(1) brightness(.6);
+            transition: opacity .7s ease;
+        }
+
+        .video-box:hover .video-bg {
+            opacity: .6;
+        }
+
+        .video-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #020617 0%, transparent 60%);
+        }
+
+        .play-btn {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            transition: transform .4s ease;
+        }
+
+        .video-box:hover .play-btn {
+            transform: scale(1.08);
+        }
+
+        .play-circle {
+            width: 6rem;
+            height: 6rem;
+            border-radius: 50%;
+            background: rgba(34, 211, 238, .15);
+            border: 1px solid rgba(34, 211, 238, .4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(6, 182, 212, .25);
+            transition: background .3s, border-color .3s;
+        }
+
+        .video-box:hover .play-circle {
+            background: #22d3ee;
+            border-color: #22d3ee;
+        }
+
+        .video-box:hover .play-circle svg {
+            color: #000;
+        }
+    </style>
+</head>
+
+<body class="selection:bg-cyan-500/30">
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-slate-900">
+        <div id="progress-bar" class="h-full bg-cyan-500 transition-all duration-75" style="width:0%"></div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="fixed top-0 w-full z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/5 mt-1">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+                <div
+                    class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
+                    <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-black tracking-tight text-lg leading-none uppercase">Paul Kirkland</span>
+                    <span class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">@SynapticScotsman</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-10 text-xs font-bold uppercase tracking-widest text-slate-400">
+                <a href="#about" class="hover:text-cyan-400 transition-colors">Overview</a>
+                <a href="#pipeline" class="hover:text-cyan-400 transition-colors">Framework</a>
+                <a href="#dashboard" class="hover:text-cyan-400 transition-colors">Telemetry</a>
+                <a href="#publications" class="hover:text-cyan-400 transition-colors">Publications</a>
+                <span id="live-clock" class="font-mono text-[10px] text-slate-500 tabular-nums">--:--:--</span>
+                <a href="#contact"
+                    class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Let's
+                    Talk</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950">
+        <div class="absolute inset-0 z-0" style="opacity:.8">
+            <div id="three-canvas"></div>
+            <!-- Pre-rendered HUD: 5 fixed slots -->
+            <div id="hud-overlay">
+                <div class="hud-slot" id="hud-0">
+                    <div class="hud-frame">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+                    </div>
+                    <div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span
+                            class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span
+                            class="target-bind text-emerald-400">STABLE</span></div>
+                </div>
+                <div class="hud-slot" id="hud-1">
+                    <div class="hud-frame">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+                    </div>
+                    <div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span
+                            class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span
+                            class="target-bind text-emerald-400">STABLE</span></div>
+                </div>
+                <div class="hud-slot" id="hud-2">
+                    <div class="hud-frame">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+                    </div>
+                    <div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span
+                            class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span
+                            class="target-bind text-emerald-400">STABLE</span></div>
+                </div>
+                <div class="hud-slot" id="hud-3">
+                    <div class="hud-frame">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+                    </div>
+                    <div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span
+                            class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span
+                            class="target-bind text-emerald-400">STABLE</span></div>
+                </div>
+                <div class="hud-slot" id="hud-4">
+                    <div class="hud-frame">
+                        <div class="hud-corner tl"></div>
+                        <div class="hud-corner tr"></div>
+                        <div class="hud-corner bl"></div>
+                        <div class="hud-corner br"></div>
+                    </div>
+                    <div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span
+                            class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span
+                            class="target-bind text-emerald-400">STABLE</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center mt-12 pointer-events-none">
+            <h1
+                class="hover-glitch text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tighter mb-4 text-white leading-none uppercase select-none drop-shadow-2xl">
+                Embodied<br />Intelligence
+            </h1>
+            <div
+                class="text-xl md:text-3xl text-cyan-400 font-light tracking-wide mb-12 italic drop-shadow-md bg-slate-950/20 px-6 py-2 rounded-2xl backdrop-blur-sm">
+                Continuous neuro-symbolic architectures.
+            </div>
+        </div>
+
+        <div
+            class="absolute bottom-6 flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 z-20">
+            <span class="animate-pulse cursor-pointer pointer-events-auto"
+                onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Scroll</span>
+            <div class="w-px h-12 bg-gradient-to-b from-cyan-500 to-transparent"></div>
+            <span class="opacity-50 tracking-[0.4em] pointer-events-none text-center">[ Move mouse rapidly for
+                ego-motion noise ]</span>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-32 px-6 max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl md:text-5xl font-black mb-10 tracking-tight">Pioneering Embodied Resilience in Extreme
+            Environments</h2>
+        <p class="text-lg md:text-2xl text-slate-400 font-light leading-relaxed mb-12">
+            My research portfolio focuses on translating chaotic event streams into resilient robotic spatial awareness.
+            By bridging biologically-inspired neuromorphic perception with discrete symbolic reasoning, I am building
+            the foundational architectures for autonomous systems that <strong class="text-white">sense less to
+                understand more</strong>.
+        </p>
+        <a href="#pipeline"
+            class="inline-flex items-center gap-2 text-cyan-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors pb-1 border-b border-cyan-400/30 hover:border-white">
+            Explore Research Themes
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    </section>
+
+    <!-- FRAMEWORK -->
+    <section id="pipeline" class="py-32 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black mb-4">Core Research Pillars</h2>
+            <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Perception • Reasoning • Action</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="step-card p-10 group">
+                <div
+                    class="mb-6 p-4 rounded-xl bg-slate-900 inline-block border border-white/5 transition-transform duration-300 group-hover:scale-110 text-cyan-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                </div>
+                <h4 class="text-2xl font-black mb-4 tracking-tight uppercase">Continuous Perception</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Developing front-end perception algorithms where
+                    asynchronous event streams are filtered through log-polar receptive fields to isolate stable
+                    geometric structures under rapid ego-motion.</p>
+            </div>
+            <div class="step-card p-10 group">
+                <div
+                    class="mb-6 p-4 rounded-xl bg-slate-900 inline-block border border-white/5 transition-transform duration-300 group-hover:scale-110 text-purple-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" />
+                    </svg>
+                </div>
+                <h4 class="text-2xl font-black mb-4 tracking-tight uppercase">Symbolic Reasoning</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Translating neural spikes into high-dimensional
+                    Spatial Semantic Pointers (SSPs), creating models that map complex <em
+                        class="text-white not-italic">what-to-where</em> relationships via phase encoding.</p>
+            </div>
+            <div class="step-card p-10 group">
+                <div
+                    class="mb-6 p-4 rounded-xl bg-slate-900 inline-block border border-white/5 transition-transform duration-300 group-hover:scale-110 text-emerald-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                </div>
+                <h4 class="text-2xl font-black mb-4 tracking-tight uppercase">Active Decision Loop</h4>
+                <p class="text-slate-400 text-sm leading-relaxed">Designing uncertainty-aware control systems that
+                    trigger active investigation — such as altering speed or activating sensor fallbacks — when spatial
+                    ambiguity rises.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard" class="py-32 bg-slate-950 relative overflow-hidden border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+                <div>
+                    <h2 class="text-xs font-bold text-emerald-500 uppercase tracking-[0.3em] mb-4">Live Telemetry
+                        Emulation</h2>
+                    <h3 class="text-4xl md:text-5xl font-black tracking-tighter uppercase italic">Decision Engine</h3>
+                </div>
+                <div class="flex items-center gap-3 text-[10px] font-mono shrink-0">
+                    <span class="text-slate-400 uppercase tracking-widest whitespace-nowrap">Global System Stress</span>
+                    <div class="w-32 h-2 bg-slate-950 rounded-full overflow-hidden border border-white/10">
+                        <div id="stress-bar" class="h-full rounded-full transition-all duration-500"
+                            style="width:0%;background:#06b6d4"></div>
+                    </div>
+                    <span id="stress-pct" class="text-cyan-400 font-bold tabular-nums w-8 text-right">0%</span>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+                <!-- LEFT: Uncertainty + AER Terminal -->
+                <div class="lg:col-span-1 flex flex-col gap-8">
+                    <div class="dash-card p-6">
+                        <div class="flex items-start justify-between mb-6">
+                            <span
+                                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 leading-tight">Epistemic<br />Uncertainty</span>
+                            <div id="unc-dot" class="w-3 h-3 rounded-full bg-emerald-500 shrink-0 mt-0.5"
+                                style="box-shadow:0 0 10px #10b981"></div>
+                        </div>
+                        <div id="bar-chart" class="flex items-end gap-1 h-20 mb-4"></div>
+                        <div
+                            class="flex justify-between items-center text-[9px] font-mono text-slate-500 border-t border-white/5 pt-3">
+                            <span id="unc-value">VAL: 42.00</span>
+                            <span id="unc-status" class="text-emerald-400 font-bold">NOMINAL</span>
+                        </div>
+                    </div>
+                    <div class="dash-card p-6 flex flex-col flex-1">
+                        <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/10">
+                            <h4
+                                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                                <svg class="w-3 h-3 text-cyan-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                </svg>
+                                Raw AER Stream
+                            </h4>
+                            <span class="text-emerald-500 text-[10px] font-mono">1.2M EV/s</span>
+                        </div>
+                        <div class="flex-1 bg-slate-950 p-3 rounded-lg border border-white/5 shadow-inner overflow-hidden flex flex-col justify-end"
+                            style="min-height:140px">
+                            <div id="event-terminal" class="font-mono text-[10px] space-y-1.5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MIDDLE 2: Cognitive Map -->
+                <div class="lg:col-span-2">
+                    <div class="dash-card p-6 h-full flex flex-col" style="min-height:460px">
+                        <div class="flex justify-between items-center mb-4 pb-3 border-b border-white/10">
+                            <h4
+                                class="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
+                                <svg class="w-3 h-3 text-purple-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                                </svg>
+                                Semantic Cognitive Map
+                            </h4>
+                            <span
+                                class="text-emerald-500 text-[10px] font-mono animate-pulse border border-emerald-500/30 px-2 py-0.5 rounded bg-emerald-500/10">LIVE
+                                TRACKING</span>
+                        </div>
+                        <div id="cog-map" class="flex-1 rounded-lg border border-white/10"
+                            style="min-height:360px;position:relative;overflow:hidden;">
+                            <div id="radar-line" class="radar-line"
+                                style="background:rgba(52,211,153,0.35);box-shadow:0 0 6px rgba(52,211,153,0.4);"></div>
+                            <div style="position:absolute;top:50%;left:50%;z-index:20;transform:translate(-50%,-50%)">
+                                <div
+                                    style="width:16px;height:16px;background:white;transform:rotate(45deg);box-shadow:0 0 15px white;">
+                                </div>
+                                <div
+                                    style="position:absolute;top:50%;left:50%;width:220px;height:220px;transform:translate(-50%,-100%);background:linear-gradient(to top,rgba(34,211,238,.08),transparent);clip-path:polygon(50% 100%,12% 0,88% 0);pointer-events:none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: VSA Log -->
+                <div class="lg:col-span-1">
+                    <div class="dash-card p-6 h-full flex flex-col relative" style="min-height:460px">
+                        <h4
+                            class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 flex items-center gap-2">
+                            <svg class="w-3 h-3 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 6h16M4 10h16M4 14h8" />
+                            </svg>
+                            VSA Log
+                        </h4>
+                        <div id="vsa-log"
+                            class="font-mono text-[9px] space-y-3 text-slate-400 flex-1 overflow-y-auto pr-1"></div>
+                        <div class="absolute bottom-0 left-0 w-full h-12 pointer-events-none"
+                            style="background:linear-gradient(to top,rgba(15,23,42,.6),transparent)"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PARTNERS -->
+    <section class="py-24 border-y border-white/5" style="background:rgba(255,255,255,.03)">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-black mb-4">Affiliations &amp; Partners</h2>
+                <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Supported by leading institutions</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="partner-card p-10 group">
+                    <div class="partner-icon mb-6 flex justify-center"><svg class="w-8 h-8" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg></div>
+                    <div class="text-lg font-bold mb-1">Western Sydney University</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">Lead Institution</div>
+                </div>
+                <div class="partner-card p-10 group">
+                    <div class="partner-icon mb-6 flex justify-center"><svg class="w-8 h-8" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                        </svg></div>
+                    <div class="text-lg font-bold mb-1">ICNS</div>
+                    <div class="text-xs text-slate-500 uppercase tracking-widest">Neuromorphic Systems</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PUBLICATIONS -->
+    <section id="publications" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/5">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-black mb-4">Research Archives</h2>
+            <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Selected Key Outputs</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <a href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener noreferrer"
+                class="pub-card group p-8">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">
+                            Scientific Reports · 2022</div><svg
+                            class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </div>
+                    <h4
+                        class="text-lg font-bold mb-4 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">
+                        Ultrafast neuromorphic photonic image processing with a VCSEL neuron</h4>
+                </div>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed">Validates
+                    VCSELs as spiking neurons for target tracking.</p>
+            </a>
+            <a href="https://doi.org/10.1016/j.neucom.2024.128657" target="_blank" rel="noopener noreferrer"
+                class="pub-card group p-8">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">
+                            Neurocomputing · 2025</div><svg
+                            class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </div>
+                    <h4
+                        class="text-lg font-bold mb-4 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">
+                        Spiking Neural Networks for event-based action recognition</h4>
+                </div>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed">Advances
+                    event-based action recognition on complex temporal data.</p>
+            </a>
+            <a href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener noreferrer"
+                class="pub-card group p-8">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">
+                            IEEE Transactions on Computers · 2022</div><svg
+                            class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </div>
+                    <h4
+                        class="text-lg font-bold mb-4 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">
+                        Unsupervised Spiking Instance Segmentation on Event Data</h4>
+                </div>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed">Engineered the
+                    first semantic and instance segmentation SNNs.</p>
+            </a>
+            <a href="https://doi.org/10.1038/s44172-025-00555-7" target="_blank" rel="noopener noreferrer"
+                class="pub-card group p-8">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">
+                            Communications Engineering · 2025</div><svg
+                            class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                    </div>
+                    <h4
+                        class="text-lg font-bold mb-4 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">
+                        Single photon event-driven 3D imaging</h4>
+                </div>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed">First
+                    asynchronous 3D imaging pipeline using SPADs.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- VIDEO -->
+    <section class="py-24 bg-slate-900 border-y border-white/5 relative overflow-hidden">
+        <div class="absolute inset-0"
+            style="background:radial-gradient(circle at center,rgba(34,211,238,.08) 0%,transparent 70%);"></div>
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] mb-2">Simulated Deployment</h2>
+                <h3 class="text-3xl font-black">Watch the Framework in Action</h3>
+            </div>
+            <div class="video-box shadow-2xl">
+                <div class="video-bg"
+                    style="background-image:url('https://images.unsplash.com/photo-1535378273068-9bb67d5beacd?q=80&w=2500&auto=format&fit=crop')">
+                </div>
+                <div class="video-overlay"></div>
+                <div class="play-btn">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/50">Play</span>
+                    <div class="play-circle"><svg class="w-12 h-12 text-cyan-400 ml-1" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                        </svg></div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-white/50">Video</span>
+                </div>
+                <div class="absolute top-6 left-6 flex items-center gap-2 z-10">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <span class="text-[10px] font-mono text-white/60 uppercase tracking-widest">Live Feed · REC</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="contact" class="py-32 text-center px-6" style="background:#22d3ee;color:#000">
+        <h2 class="text-5xl md:text-7xl font-black mb-8 tracking-tighter">Interested?</h2>
+        <p class="text-lg md:text-2xl font-medium mb-12 max-w-2xl mx-auto" style="opacity:.8">Looking to collaborate on
+            neuro-symbolic AI or apply these frameworks to real-world edge robotics?</p>
+        <a href="mailto:p.kirkland@westernsydney.edu.au"
+            class="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-bold uppercase tracking-widest text-sm rounded-full hover:scale-105 hover:shadow-2xl transition-all">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Let's Talk!
+        </a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-24 bg-slate-950 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col lg:flex-row justify-between gap-16 mb-20">
+                <div class="max-w-sm">
+                    <div class="flex items-center gap-2 mb-8">
+                        <svg class="w-8 h-8 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        <span class="font-black tracking-tighter text-3xl uppercase italic">Paul<span
+                                class="text-cyan-400">Kirkland</span></span>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8">Pioneering the intersection of neuromorphic
+                        engineering and symbolic AI. Based at the International Centre for Neuromorphic Systems (ICNS).
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://au.linkedin.com/in/paul-kirkland-618ab096" target="_blank"
+                            class="w-10 h-10 rounded border border-white/10 flex items-center justify-center text-slate-400 hover:bg-white hover:text-black hover:border-white transition-all"><svg
+                                class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                            </svg></a>
+                        <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ&hl=en" target="_blank"
+                            class="w-10 h-10 rounded border border-white/10 flex items-center justify-center text-slate-400 hover:bg-white hover:text-black hover:border-white transition-all"><svg
+                                class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z" />
+                            </svg></a>
+                        <a href="https://github.com/SynapticScotsman" target="_blank"
+                            class="w-10 h-10 rounded border border-white/10 flex items-center justify-center text-slate-400 hover:bg-white hover:text-black hover:border-white transition-all"><svg
+                                class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                            </svg></a>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-12 lg:gap-24">
+                    <div>
+                        <h5 class="text-[10px] font-black uppercase tracking-[0.3em] text-white mb-6">Research Hub</h5>
+                        <ul class="space-y-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                            <li><a href="#pipeline" class="hover:text-cyan-400 transition-colors">Framework</a></li>
+                            <li><a href="#publications" class="hover:text-cyan-400 transition-colors">Publications</a>
+                            </li>
+                            <li><a href="#dashboard" class="hover:text-cyan-400 transition-colors">Live Telemetry</a>
+                            </li>
+                            <li><a href="#contact" class="hover:text-cyan-400 transition-colors">Collaborate</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h5 class="text-[10px] font-black uppercase tracking-[0.3em] text-white mb-6">Location</h5>
+                        <div class="text-xs font-bold text-slate-400 leading-loose uppercase tracking-widest">Western
+                            Sydney University<br />MARCS Institute<br />Sydney, Australia</div>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6 rounded-xl mb-12"
+                style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05)">
+                <div class="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+                    <div
+                        class="shrink-0 w-16 h-16 rounded-full bg-slate-900 flex items-center justify-center border border-white/10">
+                        <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-slate-400 leading-relaxed max-w-3xl">This research focuses on the advancement
+                        of continuous neuro-symbolic architectures, enabling resilient autonomous robotics to operate
+                        efficiently in extreme, SWaP-constrained environments.</p>
+                </div>
+            </div>
+            <div
+                class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-mono text-slate-600 uppercase tracking-[0.3em]">
+                <span>© 2026 Paul Kirkland. All rights reserved.</span>
+                <span>Developed for autonomous resilience.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+            // ── LIVE CLOCK ────────────────────────────────────────────────────────
+            (function () {
+                const el = document.getElementById('live-clock');
+                function tick() { el.textContent = new Date().toISOString().slice(11, 23); }
+                tick(); setInterval(tick, 100);
+            })();
+
+        // ── MODULE-LEVEL GLOBALS ──────────────────────────────────────────────
+        let scrollProgress = 0;
+        let gVel = 0;  // exposed from Three.js loop
+        let stress = 0;
+        setInterval(() => {
+            stress = Math.min(100, Math.round(gVel * 1.5));
+            // Update stress bar UI
+            const sb = document.getElementById('stress-bar');
+            const sp = document.getElementById('stress-pct');
+            if (sb) { sb.style.width = stress + '%'; sb.style.background = stress > 60 ? '#ef4444' : '#06b6d4'; }
+            if (sp) { sp.textContent = stress + '%'; sp.className = 'font-bold tabular-nums w-8 text-right ' + (stress > 60 ? 'text-red-400' : 'text-cyan-400'); }
+        }, 500);
+
+        // ── SCROLL PROGRESS (rAF throttled) ──────────────────────────────────
+        (function () {
+            const bar = document.getElementById('progress-bar');
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        const t = document.documentElement.scrollTop;
+                        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        scrollProgress = h > 0 ? (t / h) * 100 : 0;
+                        bar.style.width = scrollProgress + '%';
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
+
+        // ── UNCERTAINTY STATE ─────────────────────────────────────────────────
+        const unc = { aleatoric: 15, epistemic: 42, compositional: 8 };
+        setInterval(() => {
+            unc.aleatoric = Math.max(5, Math.min(95, 15 + (Math.random() - .5) * 20));
+            unc.epistemic = Math.max(5, Math.min(95, 42 + (Math.random() - .5) * 40));
+            unc.compositional = Math.max(5, Math.min(95, 8 + (Math.random() - .5) * 10));
+        }, 3000);
+
+        // ── THREE.JS — PHASOR TRANSITION VISUALIZER (HIGH-PERF) ──────────────
+        (function initThree() {
+            const container = document.getElementById('three-canvas');
+            const W = container.clientWidth || window.innerWidth;
+            const H = container.clientHeight || window.innerHeight;
+
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x020617, 0.020);
+
+            const camera = new THREE.PerspectiveCamera(70, W / H, 0.1, 150);
+            camera.position.set(0, 3, 0);
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(W, H);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            container.appendChild(renderer.domElement);
+
+            // VSA phasor rings
+            const vsaRings = new THREE.Group();
+            for (let i = 1; i <= 5; i++) {
+                const g = new THREE.RingGeometry(i * 2 - .05, i * 2 + .05, 64);
+                const m = new THREE.MeshBasicMaterial({ color: 0xa855f7, side: THREE.DoubleSide, transparent: true, opacity: 0 });
+                vsaRings.add(new THREE.Mesh(g, m));
+            }
+            vsaRings.position.set(0, 5, -20);
+            scene.add(vsaRings);
+
+            // Build parallel geometry arrays
+            const edgePoints = [], phasorPoints = [], edgeColors = [];
+            const targetCenters = [];
+            const WORLD_DEPTH = 100;
+
+            function addShapeEdges(geo, ox, oy, oz, rotY, phase, density) {
+                geo.rotateY(rotY); geo.translate(ox, oy, oz);
+                const edges = new THREE.EdgesGeometry(geo);
+                const arr = edges.attributes.position.array;
+                for (let j = 0; j < arr.length; j += 6) {
+                    const v1 = new THREE.Vector3(arr[j], arr[j + 1], arr[j + 2]);
+                    const v2 = new THREE.Vector3(arr[j + 3], arr[j + 4], arr[j + 5]);
+                    const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density));
+                    // Perpendicular to edge in XZ-plane — puts ON/OFF on opposite sides
+                    const edx = v2.x - v1.x, edz = v2.z - v1.z;
+                    const elen = Math.sqrt(edx * edx + edz * edz) || 1;
+                    const px = -edz / elen, pz = edx / elen; // 90° rotation in XZ
+                    const SEP = 0.12; // half-separation between ON and OFF bands
+                    for (let k = 0; k < n; k++) {
+                        const t = Math.random();
+                        const isOn = (k & 1) === 0; // alternate ON / OFF
+                        const side = isOn ? SEP : -SEP;
+                        edgePoints.push(
+                            v1.x + (v2.x - v1.x) * t + (Math.random() - .5) * .06 + px * side,
+                            v1.y + (v2.y - v1.y) * t + (Math.random() - .5) * .06,
+                            v1.z + (v2.z - v1.z) * t + (Math.random() - .5) * .06 + pz * side
+                        );
+                        if (isOn) edgeColors.push(1.0, .1, .1);   // red  = ON  (+1)
+                        else      edgeColors.push(.05, .2, 1.0);   // blue = OFF (-1)
+                        const r = Math.random() * 8 + 2;
+                        phasorPoints.push(Math.cos(phase) * r, Math.sin(phase) * r + 5, -20);
+                    }
+                }
+                geo.dispose(); edges.dispose();
+            }
+
+            // Urban street scene
+            for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
+                if (Math.random() > .2) {
+                    const ph = Math.random() * Math.PI * 2;
+                    addShapeEdges(new THREE.BoxGeometry(4, 3, 4), -8, 1.5, z, 0, ph, 12);
+                    addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4, z, Math.PI / 4, ph, 12);
+                    targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE' });
+                }
+                if (Math.random() > .2) {
+                    const ph = Math.random() * Math.PI * 2;
+                    addShapeEdges(new THREE.BoxGeometry(4, 3, 4), 8, 1.5, z + 5, 0, ph, 12);
+                    addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4, z + 5, Math.PI / 4, ph, 12);
+                    targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE' });
+                }
+                if (Math.random() > .4) {
+                    const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5, ph = Math.random() * Math.PI * 2;
+                    addShapeEdges(new THREE.BoxGeometry(2, .8, 4), cx, .4, cz, 0, ph, 15);
+                    addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, ph, 15);
+                    targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE' });
+                }
+                if (Math.random() > .5) {
+                    const sx = (Math.random() > .5 ? -5.5 : 5.5), sz = z + 7, ph = Math.random() * Math.PI * 2;
+                    addShapeEdges(new THREE.CylinderGeometry(.05, .05, 4, 6), sx, 2, sz, 0, ph, 20);
+                    addShapeEdges(new THREE.BoxGeometry(1.5, 1, .1), sx, 4.5, sz, 0, ph, 20);
+                    targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE' });
+                }
+            }
+
+            // Noise fill
+            const TOTAL = Math.max(edgePoints.length / 3, 20000);
+            for (let i = edgePoints.length / 3; i < TOTAL; i++) {
+                edgePoints.push((Math.random() - .5) * 60, Math.random() * 20, -Math.random() * WORLD_DEPTH);
+                if (Math.random() > .5) edgeColors.push(.05, .2, 1.0);
+                else edgeColors.push(1.0, .1, .1);
+                phasorPoints.push((Math.random() - .5) * .5, (Math.random() - .5) * .5 + 5, -20);
+            }
+
+            const FC = edgePoints.length / 3;
+            const posArray = new Float32Array(FC * 3);
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeColors, 3));
+            const mat = new THREE.PointsMaterial({ size: .08, vertexColors: true, transparent: true, opacity: .8, blending: THREE.AdditiveBlending, depthWrite: false });
+            scene.add(new THREE.Points(geo, mat));
+
+            // Mouse + Touch input
+            let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0;
+            let lastTouchX = null, lastTouchY = null;
+            window.addEventListener('mousemove', e => {
+                tgtVel = Math.min(Math.sqrt(e.movementX * e.movementX + e.movementY * e.movementY), 100);
+                const r = container.getBoundingClientRect();
+                tgtRY = ((e.clientX - r.left) / r.width - .5) * -1.2;
+                tgtRX = ((e.clientY - r.top) / r.height - .5) * -.6;
+            });
+            window.addEventListener('touchstart', e => { lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY; }, { passive: true });
+            window.addEventListener('touchmove', e => {
+                if (lastTouchX === null) return;
+                const dx = e.touches[0].clientX - lastTouchX, dy = e.touches[0].clientY - lastTouchY;
+                tgtVel = Math.min(Math.sqrt(dx * dx + dy * dy) * 1.5, 100);
+                const r = container.getBoundingClientRect();
+                tgtRY = ((e.touches[0].clientX - r.left) / r.width - .5) * -1.2;
+                tgtRX = ((e.touches[0].clientY - r.top) / r.height - .5) * -.6;
+                lastTouchX = e.touches[0].clientX; lastTouchY = e.touches[0].clientY;
+            }, { passive: true });
+            window.addEventListener('touchend', () => { lastTouchX = null; lastTouchY = null; }, { passive: true });
+
+            // Pre-rendered HUD slots (no DOM create/destroy)
+            const hudSlots = Array.from({ length: 5 }, (_, i) => document.getElementById('hud-' + i));
+            const projVec = new THREE.Vector3();
+            let lastHUD = 0;
+
+            function updateHUD(wz, blend) {
+                const now = performance.now() / 1000;
+                if (now - lastHUD < 0.05) return;
+                lastHUD = now;
+                const rect = renderer.domElement.getBoundingClientRect();
+                let visible = 0;
+                if (blend < 0.5) {
+                    for (let i = 0; i < targetCenters.length && visible < 5; i++) {
+                        projVec.copy(targetCenters[i].pos);
+                        projVec.z += wz;
+                        if (projVec.z > 5) projVec.z -= WORLD_DEPTH;
+                        if (projVec.z > -5 || projVec.z < -40) continue;
+                        const rawDist = Math.abs(projVec.z - camera.position.z);
+                        projVec.project(camera);
+                        if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
+                        const sx = (projVec.x * .5 + .5) * rect.width;
+                        const sy = (-projVec.y * .5 + .5) * rect.height;
+                        const slot = hudSlots[visible];
+                        slot.style.left = sx + 'px';
+                        slot.style.top = sy + 'px';
+                        slot.style.opacity = '1';
+                        slot.querySelector('.hud-type').textContent = targetCenters[i].type;
+                        slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
+                        const bs = slot.querySelector('.target-bind');
+                        if (bs) { if (vel > 30) { bs.textContent = 'UNSTABLE'; bs.className = 'target-bind text-red-400'; } else { bs.textContent = 'STABLE'; bs.className = 'target-bind text-emerald-400'; } }
+                        visible++;
+                    }
+                }
+                for (let i = visible; i < 5; i++) hudSlots[i].style.opacity = '0';
+            }
+
+            const clock = new THREE.Clock();
+            let wz = 0, blend = 0;
+            (function animate() {
+                requestAnimationFrame(animate);
+                const delta = clock.getDelta();
+                vel += (tgtVel - vel) * 10 * delta; tgtVel = 0; gVel = vel;
+                wz += 15 * delta; if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
+                const tb = Math.max(0, Math.min(1, (scrollProgress - 5) / 20));
+                blend += (tb - blend) * 5 * delta;
+                vsaRings.children.forEach(r => { r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, blend * .6, 5 * delta); });
+                camera.rotation.y += (tgtRY - camera.rotation.y) * 5 * delta;
+                camera.rotation.x += (tgtRX - camera.rotation.x) * 5 * delta;
+                const sh = vel * .001 * (1 - blend);
+                camera.position.x = (Math.random() - .5) * sh;
+                camera.position.y = 3 + (Math.random() - .5) * sh;
+                const scatter = blend < .8 && vel > 1, sa = vel * .01 * (1 - blend);
+                for (let i = 0; i < FC; i++) {
+                    const i3 = i * 3;
+                    let sx = edgePoints[i3], sy = edgePoints[i3 + 1], sz = edgePoints[i3 + 2] + wz;
+                    if (sz > 5) sz -= WORLD_DEPTH;
+                    let cx = sx + (phasorPoints[i3] - sx) * blend;
+                    let cy = sy + (phasorPoints[i3 + 1] - sy) * blend;
+                    let cz = sz + (phasorPoints[i3 + 2] - sz) * blend;
+                    if (scatter) { cx += (Math.random() - .5) * sa; cy += (Math.random() - .5) * sa; cz += (Math.random() - .5) * sa; }
+                    posArray[i3] = cx; posArray[i3 + 1] = cy; posArray[i3 + 2] = cz;
+                }
+                geo.attributes.position.needsUpdate = true;
+                updateHUD(wz, blend);
+                renderer.render(scene, camera);
+            })();
+
+            window.addEventListener('resize', () => {
+                const w = container.clientWidth || window.innerWidth, h = container.clientHeight || window.innerHeight;
+                renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+            });
+        })();
+
+        // ── SEMANTIC COGNITIVE MAP ────────────────────────────────────────────
+        (function () {
+            const mapEl = document.getElementById('cog-map');
+            const landmarks = [
+                { id: 1, type: 'VEHICLE', x: 25, y: 35, baseUnc: 20 },
+                { id: 2, type: 'STRUCTURE', x: 75, y: 25, baseUnc: 50 },
+                { id: 3, type: 'SIGNAGE', x: 80, y: 70, baseUnc: 10 },
+                { id: 4, type: 'UNKNOWN', x: 30, y: 80, baseUnc: 80 },
+            ];
+            landmarks.forEach(lm => {
+                const w = document.createElement('div'); w.id = 'lm-' + lm.id; w.className = 'lm-wrap'; w.style.cssText = `left:${lm.x}%;top:${lm.y}%;`;
+                const h = document.createElement('div'); h.id = 'halo-' + lm.id; h.className = 'lm-halo';
+                const d = document.createElement('div'); d.id = 'dot-' + lm.id; d.className = 'lm-dot';
+                const l = document.createElement('div'); l.id = 'lbl-' + lm.id; l.className = 'lm-label';
+                w.appendChild(h); w.appendChild(d); w.appendChild(l); mapEl.appendChild(w);
+            });
+            function render() {
+                const radar = document.getElementById('radar-line');
+                if (radar) { const rc = stress > 60 ? 'rgba(239,68,68,0.5)' : 'rgba(52,211,153,0.35)'; radar.style.background = rc; radar.style.boxShadow = `0 0 6px ${rc}`; }
+                landmarks.forEach(lm => {
+                    const u = Math.min(99, lm.baseUnc + unc.epistemic * .4 + stress * .3), hi = u > 65, rs = hi ? 70 + u * .6 : 35;
+                    document.getElementById('halo-' + lm.id).style.cssText = `position:absolute;border-radius:50%;border:1px dashed;pointer-events:none;width:${rs}px;height:${rs}px;top:50%;left:50%;border-color:${hi ? 'rgba(239,68,68,.5)' : 'rgba(52,211,153,.5)'};background:${hi ? 'rgba(239,68,68,.1)' : 'rgba(52,211,153,.1)'};animation:halo-spin ${hi ? 2 : 6}s linear infinite;`;
+                    document.getElementById('dot-' + lm.id).style.cssText = `position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;border-radius:50%;width:10px;height:10px;background:${hi ? '#f87171' : '#34d399'};box-shadow:0 0 10px ${hi ? '#ef4444' : '#10b981'};`;
+                    document.getElementById('lbl-' + lm.id).innerHTML = `<div style="color:white;font-weight:700;font-size:10px;margin-bottom:2px">${lm.type}</div><div style="color:#94a3b8;font-size:9px">UNC_LVL: ${u.toFixed(1)}%</div><div style="color:${hi ? '#f87171' : '#34d399'};font-weight:700;font-size:9px;margin-top:3px">VSA: ${hi ? 'AMBIGUOUS' : 'BOUND'}</div>`;
+                });
+            }
+            setInterval(() => {
+                landmarks.forEach(lm => {
+                    lm.x = Math.max(10, Math.min(90, lm.x + (Math.random() - .5) * 2));
+                    lm.y = Math.max(10, Math.min(90, lm.y + (Math.random() - .5) * 2));
+                    const w = document.getElementById('lm-' + lm.id);
+                    if (w) { w.style.left = lm.x + '%'; w.style.top = lm.y + '%'; }
+                });
+            }, 2000);
+            render(); setInterval(render, 3000);
+        })();
+
+        // ── AER EVENT STREAM ──────────────────────────────────────────────────
+        (function () {
+            const term = document.getElementById('event-terminal');
+            // Find AER card parent for stressed border
+            const aerCard = term.closest('.dash-card');
+            const MAX = 6;
+            let aerTimer = null;
+            function add() {
+                const isErr = stress > 60 && Math.random() > .4;
+                let line;
+                if (isErr) {
+                    line = document.createElement('div');
+                    line.style.opacity = '1';
+                    line.innerHTML = `<span style="color:#f87171;font-weight:700">ERR:[x:----, y:----] | POL: WARN | TS: ${Date.now()} | EGO_MOTION_CRITICAL</span>`;
+                } else {
+                    const x = Math.floor(Math.random() * 1280).toString().padStart(4, '0');
+                    const y = Math.floor(Math.random() * 720).toString().padStart(3, '0');
+                    const pol = Math.random() > .5 ? '+1' : '-1';
+                    line = document.createElement('div');
+                    line.style.opacity = '1';
+                    line.innerHTML = `<span style="color:${pol === '+1' ? '#f87171' : '#22d3ee'}">EVT:[x:${x}, y:${y}] | POL: ${pol}</span>`;
+                }
+                term.insertBefore(line, term.firstChild);
+                while (term.children.length > MAX) term.removeChild(term.lastChild);
+                Array.from(term.children).forEach((el, i) => { el.style.opacity = i === 0 ? '1' : '0.25'; });
+                // Update card border for stress
+                if (aerCard) {
+                    if (stress > 60) { aerCard.style.background = 'rgba(127,29,29,0.2)'; aerCard.style.borderColor = 'rgba(239,68,68,0.3)'; }
+                    else { aerCard.style.background = ''; aerCard.style.borderColor = ''; }
+                }
+                // Schedule next with dynamic rate
+                const rate = Math.max(30, 150 - stress);
+                aerTimer = setTimeout(add, rate);
+            }
+            for (let i = 0; i < MAX; i++)add();
+        })();
+
+        // ── UNCERTAINTY BARS ──────────────────────────────────────────────────
+        (function () {
+            const bc = document.getElementById('bar-chart'), uv = document.getElementById('unc-value'), us = document.getElementById('unc-status'), ud = document.getElementById('unc-dot');
+            const bars = [];
+            for (let i = 0; i < 12; i++) {
+                const b = document.createElement('div');
+                b.className = 'bar-col flex-1 rounded-t';
+                b.style.cssText = 'background:rgba(52,211,153,.3);height:' + Math.random() * 100 + '%';
+                bc.appendChild(b); bars.push(b);
+            }
+            function update() {
+                const ep = unc.epistemic, hot = ep > 60 || stress > 60;
+                bars.forEach(b => { b.style.height = Math.random() * 100 + '%'; b.style.background = hot ? 'rgba(248,113,113,.4)' : 'rgba(52,211,153,.3)'; });
+                const valDisp = Math.min(99, ep + stress * .5);
+                uv.textContent = 'VAL: ' + valDisp.toFixed(2);
+                us.textContent = hot ? 'TRIG: SPAD' : 'NOMINAL';
+                us.className = 'font-bold ' + (hot ? 'text-red-400' : 'text-emerald-400');
+                ud.style.cssText = hot ? 'width:.75rem;height:.75rem;border-radius:50%;background:#ef4444;box-shadow:0 0 10px #ef4444' : 'width:.75rem;height:.75rem;border-radius:50%;background:#10b981;box-shadow:0 0 10px #10b981';
+            }
+            update(); setInterval(update, 2500);
+        })();
+
+        // ── VSA LOG ───────────────────────────────────────────────────────────
+        (function () {
+            const log = document.getElementById('vsa-log');
+            const T = [
+                (ts) => ({ cls: 'border-cyan-500/30', txt: `<span class="text-slate-500">[${ts}]</span><br><span class="text-cyan-400">PHASOR_BIND: [TARGET_0${Math.ceil(Math.random() * 9)}] @ [Phase: ${(Math.random() * 2).toFixed(2)}π]</span>` }),
+                (ts) => ({ cls: 'border-slate-700', txt: `<span class="text-slate-500">[${ts}]</span><br><span class="${stress > 60 ? 'text-red-300' : 'text-slate-300'}">RESONATOR_PASS: ${stress > 60 ? '0.21' : (0.8 + Math.random() * .19).toFixed(2)} CONFIDENCE</span>` }),
+                (ts, v) => ({ cls: v > 40 || stress > 40 ? 'border-red-500/50' : 'border-emerald-500/50', txt: `<span class="text-slate-500">[${ts}]</span><br><span class="${v > 40 || stress > 40 ? 'text-red-400' : 'text-emerald-400'}">ALEATORIC_CHECK: ${(v + stress * .3).toFixed(2)} (Limit: 40.00)</span>` }),
+                (ts) => ({ cls: 'border-purple-500/30', txt: `<span class="text-slate-500">[${ts}]</span><br><span class="text-purple-400">SSP_UPDATE: DIM_10K_COMMITTED</span>` }),
+                (ts) => ({ cls: stress > 60 ? 'border-red-500/30' : 'border-emerald-500/30', txt: `<span class="text-slate-500">[${ts}]</span><br><span class="${stress > 60 ? 'text-red-400' : 'text-emerald-400'}">VSA_GRAPH: ${stress > 60 ? 'RESOLVING_AMBIGUITY...' : 'MAP_STABLE'}</span>` }),
+            ];
+            function add() {
+                const fn = T[Math.floor(Math.random() * T.length)];
+                const { cls, txt } = fn(Date.now(), unc.aleatoric);
+                const row = document.createElement('div');
+                row.className = `flex flex-col gap-0.5 border-l-2 ${cls} pl-2`;
+                row.innerHTML = txt;
+                log.insertBefore(row, log.firstChild);
+                while (log.children.length > 30) log.removeChild(log.lastChild);
+            }
+            for (let i = 0; i < 6; i++)add(); setInterval(add, 2000);
+        })();
+    </script>
+</body>
+
+</html>
