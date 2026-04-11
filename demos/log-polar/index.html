@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Log-Polar Retina Demo — Paul Kirkland</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="shell">
+
+    <!-- Back to main site -->
+    <div style="padding-top:8px">
+      <a href="../../index.html" class="back-link">← Back to Paul Kirkland</a>
+    </div>
+
+    <section class="hero">
+      <div class="eyebrow">Egomotion in log-polar space</div>
+      <h1>Log-Polar Retina — Spin &amp; Forward Motion Demo</h1>
+      <p>
+        A corridor scene viewed through a moving camera, with a configurable log-polar kernel map
+        on the right. Forward motion produces mainly vertical drift in log-polar space; camera spin
+        produces mainly horizontal drift. The right panel can show a continuous transform or a
+        discrete retinal kernel mosaic — receptor, bipolar (ON/OFF), or ganglion-like spiking stages.
+      </p>
+    </section>
+
+    <section class="tipbar">
+      <div class="tip">
+        <strong>1. Continuous</strong>
+        <span>Easiest geometric reading. Transformed feature points, motion trails, and flow vectors are plotted directly.</span>
+      </div>
+      <div class="tip">
+        <strong>2. Kernel mosaic</strong>
+        <span>Features are pooled into discrete log-polar bins with uniform or Gaussian kernels — closer to a real retinal sampling arrangement.</span>
+      </div>
+      <div class="tip">
+        <strong>3. Cell-stage views</strong>
+        <span>Receptor, bipolar, and ganglion-style panels approximate retinal pipeline stages. Browser versions — not exact parity with Python internals.</span>
+      </div>
+    </section>
+
+    <section class="layout">
+      <section class="panel">
+        <h2>Retinal scene</h2>
+        <p>Static corridor seen by a moving camera. Click anywhere to relocate the fixation point and shift the centre of the log-polar transform.</p>
+        <div class="canvas-wrap">
+          <canvas id="sceneCanvas" width="420" height="420"></canvas>
+          <div class="badge">Doorway frames and wall markers make depth and spin easier to read</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Cartesian optic flow</h2>
+        <p>Flow arrows are attached only to stable tracked corridor features so the field stays interpretable even at high speeds.</p>
+        <div class="canvas-wrap">
+          <canvas id="flowCanvas" width="420" height="420"></canvas>
+          <div class="badge">Optic flow in image coordinates</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Log-polar retina map</h2>
+        <p>x&nbsp;=&nbsp;angle&nbsp;θ, y&nbsp;=&nbsp;log radius ln(r). Switch between continuous and discrete kernel modes below.</p>
+        <div class="canvas-wrap">
+          <canvas id="logCanvas" width="420" height="420"></canvas>
+          <div class="badge">Continuous transform or discrete retinal kernels</div>
+        </div>
+      </section>
+
+      <aside class="controls">
+        <div class="control-group">
+          <div class="group-title">Motion</div>
+          <label>
+            Egomotion mode
+            <select id="motionMode">
+              <option value="forward">Forward only</option>
+              <option value="spin">Spin only</option>
+              <option value="combined">Forward + spin</option>
+            </select>
+          </label>
+          <div class="split">
+            <button id="toggleBtn">Pause</button>
+            <button id="resetBtn">Reset camera</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="group-title">Speeds</div>
+          <div class="row">
+            <label for="forwardSpeed">Forward speed</label>
+            <div class="value" id="forwardSpeedValue"></div>
+          </div>
+          <input id="forwardSpeed" type="range" min="0" max="18" step="0.1" value="6.2" />
+
+          <div class="row">
+            <label for="spinSpeed">Spin speed</label>
+            <div class="value" id="spinSpeedValue"></div>
+          </div>
+          <input id="spinSpeed" type="range" min="-1.8" max="1.8" step="0.01" value="0.55" />
+        </div>
+
+        <div class="control-group">
+          <div class="group-title">Fixation</div>
+          <div class="row">
+            <label for="fixX">Fixation X</label>
+            <div class="value" id="fixXValue"></div>
+          </div>
+          <input id="fixX" type="range" min="24" max="396" step="1" value="210" />
+          <div class="row">
+            <label for="fixY">Fixation Y</label>
+            <div class="value" id="fixYValue"></div>
+          </div>
+          <input id="fixY" type="range" min="24" max="396" step="1" value="210" />
+          <button id="centreBtn">Re-centre fixation</button>
+        </div>
+
+        <div class="control-group">
+          <div class="group-title">Corridor</div>
+          <div class="row">
+            <label for="depthRange">Visible depth</label>
+            <div class="value" id="depthRangeValue"></div>
+          </div>
+          <input id="depthRange" type="range" min="14" max="42" step="1" value="26" />
+          <div class="row">
+            <label for="spacingRange">Frame spacing</label>
+            <div class="value" id="spacingValue"></div>
+          </div>
+          <input id="spacingRange" type="range" min="2.2" max="5.4" step="0.1" value="3.4" />
+        </div>
+
+        <div class="control-group">
+          <div class="group-title">Retina map</div>
+          <label>
+            Map style
+            <select id="mapStyle">
+              <option value="continuous">Continuous transform</option>
+              <option value="mosaic">Kernel mosaic</option>
+              <option value="receptor">Receptor-like</option>
+              <option value="bipolar">Bipolar ON/OFF</option>
+              <option value="ganglion">Ganglion-like spikes</option>
+            </select>
+          </label>
+          <label>
+            Kernel type
+            <select id="kernelType">
+              <option value="uniform">Uniform</option>
+              <option value="gaussian">Gaussian</option>
+            </select>
+          </label>
+          <div class="row">
+            <label for="radialBins">Radial bins</label>
+            <div class="value" id="radialBinsValue"></div>
+          </div>
+          <input id="radialBins" type="range" min="8" max="32" step="1" value="18" />
+          <div class="row">
+            <label for="angularBins">Angular bins</label>
+            <div class="value" id="angularBinsValue"></div>
+          </div>
+          <input id="angularBins" type="range" min="12" max="72" step="2" value="36" />
+        </div>
+
+        <div class="control-group">
+          <div class="group-title">Overlays</div>
+          <div class="checklist">
+            <label class="check"><input id="showTrails"    type="checkbox" checked /> Show transformed trails</label>
+            <label class="check"><input id="showVectors"   type="checkbox" checked /> Show flow vectors</label>
+            <label class="check"><input id="showGrid"      type="checkbox" checked /> Show map guides</label>
+            <label class="check"><input id="showStructure" type="checkbox" checked /> Show corridor structure</label>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="metrics">
+      <article class="metric">
+        <div class="label">Interpretation</div>
+        <div class="big" id="modeHeadline">Forward motion becomes a vertical drift</div>
+        <div class="small" id="modeBody"></div>
+      </article>
+      <article class="metric">
+        <div class="label">Mean log-polar flow</div>
+        <div class="big" id="flowReadout">Δθ 0.000 · Δln(r) 0.000</div>
+        <div class="small">Horizontal transformed motion tracks spin. Vertical tracks forward translation. Kernel modes use the same geometry but pool into retinal bins.</div>
+      </article>
+      <article class="metric">
+        <div class="label">Current map</div>
+        <div class="big" id="mapHeadline">Continuous transform</div>
+        <div class="small" id="mapBody"></div>
+      </article>
+      <article class="metric">
+        <div class="label">What to look for</div>
+        <div class="big">Geometry vs retinal sampling</div>
+        <div class="small">Continuous mode is best for intuition. Mosaic and cell-stage modes are closer to the structure of a retina-inspired kernel codebase.</div>
+      </article>
+    </section>
+
+    <div class="footer-note">
+      The Pyrception repository advertises a log-polar kernel arrangement, uniform or Gaussian kernels, arbitrary kernel size/shape/orientation,
+      major retinal cell types, temporal dynamics, events as input, and saccadic movements. This browser version mirrors that structure visually
+      but is a hand-built JavaScript approximation rather than a direct execution of the Python package.
+    </div>
+
+  </div>
+
+  <script src="retina.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
