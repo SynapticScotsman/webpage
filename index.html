@@ -218,50 +218,52 @@
 <section id="projects" class="py-24 px-6 max-w-7xl mx-auto" aria-labelledby="projects-heading">
     <div class="text-center mb-16">
         <h2 id="projects-heading" class="text-4xl font-black mb-4">Featured Projects</h2>
-        <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Current Research &amp; Live Demos</p>
+        <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">DECRA Future Research &amp; Existing Work</p>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
+        <!-- DECRA future projects -->
         <article class="project-card" aria-labelledby="proj1-title">
-            <span class="project-tag">Event Vision · SLAM</span>
-            <h3 id="proj1-title" class="text-lg font-bold tracking-tight">SLAM with Event Cameras</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Real-time simultaneous localisation and mapping using asynchronous event streams. Targets sub-millisecond pose estimation on embedded platforms.</p>
-            <a href="#exhibits" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Explore Research →</a>
+            <span class="project-tag">DECRA · Event Vision · Log-Polar</span>
+            <h3 id="proj1-title" class="text-lg font-bold tracking-tight">Log-Polar Equivariant Features</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Extracting rotation- and scale-equivariant features from asynchronous event streams via log-polar filtering, enabling robust ego-motion estimation under heavy camera spin and forward translation.</p>
+            <a href="demos/log-polar/index.html" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Live Demo →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj2-title">
-            <span class="project-tag">VSA · Robotics</span>
-            <h3 id="proj2-title" class="text-lg font-bold tracking-tight">Hypervector Scene Memory</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Encoding occupancy grids and agent identities into superposed hypervectors for compact, queryable map representations on neuromorphic hardware.</p>
-            <a href="#vsa-explorer" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Try the Demo →</a>
+            <span class="project-tag">DECRA · VSA · Cognitive Mapping</span>
+            <h3 id="proj2-title" class="text-lg font-bold tracking-tight">VSA Cognitive Mapping</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Binding log-polar event features into superposed hypervectors (FHRR) to build compact, queryable spatial maps on edge hardware — bridging continuous neuromorphic perception with discrete symbolic reasoning.</p>
+            <a href="#vsa-explorer" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Try the VSA Explorer →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj3-title">
-            <span class="project-tag">SNN · Loihi-2</span>
-            <h3 id="proj3-title" class="text-lg font-bold tracking-tight">Loihi-2 Gesture Decoder</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Spiking network on Intel Loihi-2 for in-sensor gesture classification from DVS data, achieving &lt;1 mW active power draw.</p>
-            <a href="#exhibits" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">See SWaP Benchmark →</a>
+            <span class="project-tag">DECRA · Uncertainty · Active Sensing</span>
+            <h3 id="proj3-title" class="text-lg font-bold tracking-tight">Uncertainty-Driven Active Perception</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">A continuous epistemic uncertainty monitor over VSA resonance directs the robot's attention — triggering SPAD or LiDAR fallback only when the scene exceeds ambiguity thresholds, realising sense-less-understand-more efficiency.</p>
+            <a href="#exhibits" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">See Active Fallback →</a>
         </article>
 
+        <!-- Existing highlighted projects -->
         <article class="project-card" aria-labelledby="proj4-title">
-            <span class="project-tag">Autonomy · UAV</span>
-            <h3 id="proj4-title" class="text-lg font-bold tracking-tight">Neuromorphic Drone Nav</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">End-to-end neuromorphic perception pipeline for UAV obstacle avoidance using event cameras and on-board spike processing — no GPU required.</p>
-            <a href="#exhibits" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">See Pipeline →</a>
+            <span class="project-tag">Neuromorphic · Structural Plasticity</span>
+            <h3 id="proj4-title" class="text-lg font-bold tracking-tight">Structicity</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">Structural plasticity mechanisms for spiking neural networks — dynamic rewiring of synaptic connectivity in response to sensory statistics, enabling continual adaptation without catastrophic forgetting.</p>
+            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj5-title">
-            <span class="project-tag">Log-Polar · Retina · Live Demo</span>
-            <h3 id="proj5-title" class="text-lg font-bold tracking-tight">Log-Polar Retina Demo</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Interactive browser demo: a moving camera flies through a corridor while a configurable log-polar kernel map separates spin from forward translation. Receptor, bipolar ON/OFF, and ganglion-like spiking stages.</p>
-            <a href="demos/log-polar/index.html" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Open Demo →</a>
+            <span class="project-tag">SNN · Event Vision · Segmentation</span>
+            <h3 id="proj5-title" class="text-lg font-bold tracking-tight">Event Camera SNN Segmentation</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">First unsupervised semantic and instance segmentation spiking neural networks operating directly on DVS event data — no frame conversion, no labelled training set.</p>
+            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj6-title">
-            <span class="project-tag">Photonics · VCSEL</span>
-            <h3 id="proj6-title" class="text-lg font-bold tracking-tight">Neuromorphic Photonic Sensing</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">VCSELs operating as spiking neurons for ultrafast photonic image processing and target tracking — validated in Scientific Reports 2022.</p>
-            <a href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener noreferrer" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Read Paper →</a>
+            <span class="project-tag">SPAD · 3D Imaging · Asynchronous</span>
+            <h3 id="proj6-title" class="text-lg font-bold tracking-tight">Event-Based SPAD Imaging</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">First asynchronous 3D imaging pipeline coupling event cameras with SPAD arrays — exploiting photon-counting sensitivity and microsecond timing for depth reconstruction in low-light autonomous navigation.</p>
+            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
         </article>
 
     </div>
