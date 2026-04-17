@@ -1035,20 +1035,18 @@ setPipeline(0);
 
     function resize() {
         const r = canvas.getBoundingClientRect();
-        const w = r.width  || canvas.offsetWidth  || 400;
-        const h = r.height || canvas.offsetHeight || 320;
+        const w = Math.round(r.width  || canvas.offsetWidth  || 400);
+        const h = Math.round(r.height || canvas.offsetHeight || 320);
         if (canvas.width !== w || canvas.height !== h) {
             canvas.width  = w;
             canvas.height = h;
         }
     }
     window.addEventListener('resize', resize);
-    // Defer first resize until layout is computed
-    requestAnimationFrame(() => { resize(); });
+    requestAnimationFrame(resize);
 
     function draw() {
         requestAnimationFrame(draw);
-        resize();
         const w = canvas.width, h = canvas.height;
         ctx.fillStyle = '#020617';
         ctx.fillRect(0, 0, w, h);
