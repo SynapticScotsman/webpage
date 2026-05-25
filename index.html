@@ -108,13 +108,12 @@
         .play-circle:hover { background:rgba(34,211,238,.25); }
 
         /* VSA Explorer canvas */
-        #vsa-canvas { width:100%; height:320px; background:#020617; border-radius:.75rem; border:1px solid rgba(255,255,255,.08); cursor:crosshair; display:block; }
-        .vsa-btn { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:.5rem; color:#94a3b8; padding:.35rem .7rem; font-size:.72rem; cursor:pointer; font-family:'JetBrains Mono',monospace; transition:all .15s; }
-        .vsa-btn.active { background:rgba(34,211,238,.15); border-color:rgba(34,211,238,.5); color:#22d3ee; }
-        .vsa-btn.danger { border-color:rgba(239,68,68,.3); color:#f87171; }
-        .vsa-btn.danger:hover { background:rgba(239,68,68,.1); }
-        .vsa-trace-bar { height:6px; background:rgba(255,255,255,.06); border-radius:9999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
-        .vsa-trace-fill { height:100%; background:#22d3ee; width:0%; transition:width .3s; }
+        /* VSA Explorer canvas */
+        .vsa-map-canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+        .vsa-phase-wheel svg { overflow: visible; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.28)); }
+        .vsa-score-row { display: grid; grid-template-columns: 72px 1fr 46px; gap: 0.75rem; align-items: center; font-size: 12px; }
+        .vsa-score-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+        .vsa-score-fill { height: 100%; border-radius: 999px; transition: width .25s ease; }
 
         /* Mobile menu */
         #mobile-menu { display:none; }
@@ -400,51 +399,77 @@
     </div>
 
     <!-- Exhibit 4: VSA Explorer (new in v8) -->
+    <!-- Exhibit 4: VSA Explorer (new in v8) -->
     <div class="exhibit-card p-8" id="vsa-explorer" aria-labelledby="vsa-heading">
-        <div class="mb-8">
-            <h4 id="vsa-heading" class="text-xl font-black uppercase tracking-tight mb-1">VSA Explorer — Agent Encoding</h4>
-            <p class="text-sm text-slate-400 max-w-2xl">Click the map to <strong class="text-white">place agents</strong> — each is bound into a superposition hypervector (Domain ⊗ Val ⊕ Mobility ⊗ Val). Switch to <strong class="text-white">Query Loc</strong> or <strong class="text-white">Query Item</strong> to decode the memory. The phase wheel tracks mean superposition angle.</p>
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h3 id="vsa-title" class="text-2xl font-black text-white">Neuro-symbolic VSA sandbox</h3>
+            <p class="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
+              Agents are constructed dynamically: <code class="rounded bg-white/5 px-1.5 py-0.5 text-cyan-300">Agent = (Domain ⊗ Val) ⊕ (Mobility ⊗ Val)</code>.
+              When retrieving from the noisy superposition trace, the signal is passed through an associative clean-up memory to recover exact semantic features.
+            </p>
+          </div>
+          <button id="vsa-reset" class="shrink-0 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-cyan-400 hover:bg-cyan-500/20 transition-colors">
+            Hard Reset
+          </button>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2">
-                <canvas id="vsa-canvas" aria-label="VSA agent placement map — click to encode agents"></canvas>
+
+        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-6 flex flex-col md:flex-row items-center gap-6">
+            <div class="flex-1 w-full">
+              <h4 class="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-purple-400">Phase encoding</h4>
+              <p class="mb-4 text-xs leading-relaxed text-slate-400">
+                Spatial coordinates are lifted into high-dimensional phase vectors.
+              </p>
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-mono text-slate-500">x=</span>
+                <input id="vsa-inspector-range" type="range" min="-10" max="10" step="0.1" value="2.5" class="flex-1 accent-purple-500" style="height:4px;background:rgba(255,255,255,0.1);border-radius:999px;appearance:none;" />
+                <span id="vsa-inspector-value" class="text-xs font-mono text-purple-400">2.5</span>
+              </div>
             </div>
-            <div class="flex flex-col gap-4">
-                <!-- Mode -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Mode</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-mode-place"      onclick="vsaSetMode('place')">Place</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-loc"  onclick="vsaSetMode('query_loc')">Query Loc</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-item" onclick="vsaSetMode('query_item')">Query Item</button>
-                    </div>
-                </div>
-                <!-- Agent type -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Agent Type</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-agent-DRONE"  onclick="vsaSetAgent('DRONE')"  style="border-color:rgba(34,211,238,.4)">DRONE</button>
-                        <button class="vsa-btn"        id="vsa-agent-ROVER"  onclick="vsaSetAgent('ROVER')"  style="border-color:rgba(0,255,136,.3)">ROVER</button>
-                        <button class="vsa-btn"        id="vsa-agent-SENSOR" onclick="vsaSetAgent('SENSOR')" style="border-color:rgba(168,85,247,.3)">SENSOR</button>
-                        <button class="vsa-btn"        id="vsa-agent-RELAY"  onclick="vsaSetAgent('RELAY')"  style="border-color:rgba(248,113,113,.3)">RELAY</button>
-                    </div>
-                </div>
-                <!-- Phase wheel -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Superposition Phase</div>
-                    <svg id="phase-wheel-svg" viewBox="0 0 120 120" class="w-28" aria-label="Phase wheel">
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(34,211,238,.12)" stroke-width="2"/>
-                        <circle cx="60" cy="60" r="35" fill="none" stroke="rgba(34,211,238,.06)" stroke-width="1"/>
-                        <line id="phase-needle" x1="60" y1="60" x2="110" y2="60" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="60" cy="60" r="4" fill="#22d3ee"/>
-                        <text x="60" y="118" text-anchor="middle" fill="rgba(34,211,238,.4)" font-size="9" font-family="monospace">0°</text>
-                    </svg>
-                    <div class="vsa-trace-bar mt-2"><div class="vsa-trace-fill" id="vsa-trace-fill"></div></div>
-                    <div class="text-[11px] font-mono text-slate-500 mt-1" id="vsa-status" aria-live="polite">0 agents encoded</div>
-                </div>
-                <!-- Reset -->
-                <button class="vsa-btn danger" onclick="vsaHardReset()">⟳ Hard Reset</button>
+            <div id="phase-wheel" class="vsa-phase-wheel w-32 shrink-0"></div>
+          </div>
+
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-6 flex flex-col justify-center">
+            <div class="mb-4 flex items-center justify-between">
+              <h4 class="text-sm font-bold uppercase tracking-[0.18em] text-cyan-400">Superposition trace</h4>
+              <span id="vsa-dim" class="rounded bg-slate-800 px-2 py-1 text-xs font-mono text-slate-400">D=1024</span>
             </div>
+            <div class="mb-3 h-2.5 w-full overflow-hidden rounded-full bg-slate-900">
+              <div id="vsa-trace-bar" class="h-full bg-cyan-400 transition-all duration-300" style="width:0%"></div>
+            </div>
+            <p class="text-xs text-slate-400">
+              <strong id="vsa-item-count" class="text-white">0</strong> robotic agents mathematically bundled into a single high-dimensional memory trace.
+            </p>
+            <p id="vsa-status" class="mt-3 text-xs text-slate-500"></p>
+          </div>
+        </div>
+
+        <div class="grid min-h-[560px] grid-cols-1 gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2 flex flex-col space-y-4">
+            <div class="rounded-xl border border-white/8 bg-slate-950 p-2 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex rounded-lg bg-slate-900 p-1">
+                <button data-vsa-mode="place" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-cyan-400 bg-white/10">Encode</button>
+                <button data-vsa-mode="query_loc" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200">Decode Map</button>
+                <button data-vsa-mode="query_item" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200">Scan Concept</button>
+              </div>
+              <div id="vsa-type-buttons" class="flex flex-wrap gap-2 px-2"></div>
+            </div>
+
+            <div class="relative flex-1 overflow-hidden rounded-2xl border border-white/8 bg-slate-950 min-h-[460px]">
+              <canvas id="vsa-map-canvas" class="vsa-map-canvas"></canvas>
+              <div id="vsa-map-hint" class="pointer-events-none absolute left-4 top-4 rounded-full border border-white/10 bg-slate-950/80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 backdrop-blur-sm">
+                Click the grid to encode agents into the memory trace
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-5 flex flex-col">
+            <h4 class="mb-4 flex items-center gap-2 border-b border-white/10 pb-3 text-sm font-bold uppercase tracking-[0.18em] text-white">
+              Pipeline Inspector
+            </h4>
+            <div id="vsa-inspector" class="flex-1"></div>
+          </div>
         </div>
     </div>
 </section>
@@ -1021,118 +1046,327 @@ setPipeline(0);
 })();
 
 // ── VSA EXPLORER ──────────────────────────────────────────────────────
-(function VSAExplorer() {
-    const canvas = document.getElementById('vsa-canvas');
-    const ctx    = canvas.getContext('2d');
-    let agents = [], mode = 'place', agentType = 'DRONE', queryResult = null;
+class ComplexVector {
+  constructor(re, im) { this.re = re; this.im = im; this.dim = re.length; }
+  bind(other) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      r[k] = this.re[k] * other.re[k] - this.im[k] * other.im[k];
+      i[k] = this.re[k] * other.im[k] + this.im[k] * other.re[k];
+    }
+    return new ComplexVector(r, i);
+  }
+  add(other) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) { r[k] = this.re[k] + other.re[k]; i[k] = this.im[k] + other.im[k]; }
+    return new ComplexVector(r, i);
+  }
+  normalize() {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      const mag = Math.sqrt(this.re[k]*this.re[k] + this.im[k]*this.im[k]);
+      if (mag > 0) { r[k] = this.re[k]/mag; i[k] = this.im[k]/mag; } else { r[k] = 1; i[k] = 0; }
+    }
+    return new ComplexVector(r, i);
+  }
+  inverse() {
+    const i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) i[k] = -this.im[k];
+    return new ComplexVector(this.re, i);
+  }
+  similarity(other) {
+    let dot = 0, magThis = 0, magOther = 0;
+    for (let k = 0; k < this.dim; k++) {
+      dot += this.re[k]*other.re[k] + this.im[k]*other.im[k];
+      magThis += this.re[k]*this.re[k] + this.im[k]*this.im[k];
+      magOther += other.re[k]*other.re[k] + other.im[k]*other.im[k];
+    }
+    if (magThis === 0 || magOther === 0) return 0;
+    return dot / (Math.sqrt(magThis) * Math.sqrt(magOther));
+  }
+}
+class BaseVector {
+  constructor(frequencies) { this.freqs = frequencies; this.dim = frequencies.length; }
+  static random(dim) {
+    const f = new Float32Array(dim);
+    for (let k = 0; k < dim; k++) f[k] = (Math.random() * 2 - 1) * Math.PI;
+    return new BaseVector(f);
+  }
+  static spatial(dim, maxFreq) {
+    const f = new Float32Array(dim);
+    for (let k = 0; k < dim; k++) f[k] = (Math.random() * 2 - 1) * maxFreq;
+    return new BaseVector(f);
+  }
+  power(x) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      const angle = this.freqs[k] * x;
+      r[k] = Math.cos(angle); i[k] = Math.sin(angle);
+    }
+    return new ComplexVector(r, i);
+  }
+  toComplex() { return this.power(1); }
+}
 
-    const AGENT_CFG = {
-        DRONE:  { col: '#22d3ee', label: 'D' },
-        ROVER:  { col: '#00ff88', label: 'R' },
-        SENSOR: { col: '#a855f7', label: 'S' },
-        RELAY:  { col: '#f87171', label: 'L' }
+(function initVSAExplorer() {
+  const root = document.querySelector('#vsa-explorer');
+  if(!root) return;
+  const canvas = document.querySelector('#vsa-map-canvas');
+  const inspector = document.querySelector('#vsa-inspector');
+  const phaseWheelRoot = document.querySelector('#phase-wheel');
+  const range = document.querySelector('#vsa-inspector-range');
+  const rangeValue = document.querySelector('#vsa-inspector-value');
+  const resetBtn = document.querySelector('#vsa-reset');
+  const status = document.querySelector('#vsa-status');
+  const traceBar = document.querySelector('#vsa-trace-bar');
+  const itemCount = document.querySelector('#vsa-item-count');
+  const dimLabel = document.querySelector('#vsa-dim');
+  const mapHint = document.querySelector('#vsa-map-hint');
+  const typeButtonRoot = document.querySelector('#vsa-type-buttons');
+  const modeButtons = document.querySelectorAll('[data-vsa-mode]');
+  
+  if(!canvas||!inspector) return;
+  const ctx = canvas.getContext('2d');
+  const GRID_SIZE = 10, DIM = 1024, HEAT_RES = 48, SPATIAL_FREQ_LIMIT = Math.PI / 4;
+  const objTypes = [
+    { name: 'Drone', color: '#ef4444' }, { name: 'Rover', color: '#34d399' }, { name: 'Beacon', color: '#22d3ee' }
+  ];
+  
+  const explorer = {
+    vocab: null, featureMemory: null, itemMemory: null, items: [],
+    mode: 'place', selectedObjType: 'Drone', queryPoint: null, pipelineState: null, inspectorVal: 2.5
+  };
+  const zeroVector = () => new ComplexVector(new Float32Array(DIM), new Float32Array(DIM));
+
+  function seedItems() {
+    return [
+      { id: 1, type: 'Drone', x: -4.2, y: 3.5, color: '#ef4444' },
+      { id: 2, type: 'Rover', x: 3.2, y: -2.4, color: '#34d399' },
+      { id: 3, type: 'Beacon', x: -1.0, y: -4.5, color: '#22d3ee' },
+      { id: 4, type: 'Drone', x: 4.6, y: 2.2, color: '#ef4444' }
+    ];
+  }
+
+  function initVocab() {
+    const v = {
+      X: BaseVector.spatial(DIM, SPATIAL_FREQ_LIMIT),
+      Y: BaseVector.spatial(DIM, SPATIAL_FREQ_LIMIT),
+      Role_Domain: BaseVector.random(DIM).toComplex(),
+      Role_Mobility: BaseVector.random(DIM).toComplex(),
+      Val_Air: BaseVector.random(DIM).toComplex(),
+      Val_Ground: BaseVector.random(DIM).toComplex(),
+      Val_Static: BaseVector.random(DIM).toComplex(),
+      Val_Dynamic: BaseVector.random(DIM).toComplex()
     };
+    explorer.vocab = v;
+    explorer.featureMemory = {
+      domains: { Air: v.Val_Air, Ground: v.Val_Ground },
+      mobility: { Static: v.Val_Static, Dynamic: v.Val_Dynamic }
+    };
+    const buildObj = (domainVal, mobilityVal) => {
+      return v.Role_Domain.bind(domainVal).add(v.Role_Mobility.bind(mobilityVal)).normalize();
+    };
+    explorer.itemMemory = {
+      Drone: { color: '#ef4444', vector: buildObj(v.Val_Air, v.Val_Dynamic) },
+      Rover: { color: '#34d399', vector: buildObj(v.Val_Ground, v.Val_Dynamic) },
+      Beacon: { color: '#22d3ee', vector: buildObj(v.Val_Ground, v.Val_Static) }
+    };
+    explorer.items = seedItems();
+    explorer.queryPoint = null; explorer.pipelineState = null; explorer.mode = 'place'; explorer.selectedObjType = 'Drone';
+    renderAll();
+  }
 
-    function resize() {
-        const r = canvas.getBoundingClientRect();
-        const w = Math.round(r.width  || canvas.offsetWidth  || 400);
-        const h = Math.round(r.height || canvas.offsetHeight || 320);
-        if (canvas.width !== w || canvas.height !== h) {
-            canvas.width  = w;
-            canvas.height = h;
-        }
-    }
-    window.addEventListener('resize', resize);
-    requestAnimationFrame(resize);
+  function getSSP(x, y) { return explorer.vocab.X.power(x).bind(explorer.vocab.Y.power(y)); }
+  function getMapVector() {
+    let M = zeroVector();
+    explorer.items.forEach(item => { M = M.add(getSSP(item.x, item.y).bind(explorer.itemMemory[item.type].vector)); });
+    return M;
+  }
 
-    function draw() {
-        requestAnimationFrame(draw);
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = '#020617';
-        ctx.fillRect(0, 0, w, h);
-        // grid
-        ctx.strokeStyle = 'rgba(34,211,238,.05)';
-        ctx.lineWidth = 1;
-        for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
-        for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
-        // labels
-        ctx.fillStyle = 'rgba(34,211,238,.5)';
-        ctx.font = '10px "JetBrains Mono",monospace';
-        ctx.fillText('MODE: ' + mode.toUpperCase(), 8, 18);
-        ctx.fillText(agents.length + ' agents', 8, 32);
-        // query ring
-        if (queryResult) {
-            ctx.beginPath(); ctx.arc(queryResult.x, queryResult.y, queryResult.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(52,211,153,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.fillStyle = 'rgba(52,211,153,.08)'; ctx.fill();
-        }
-        // agents
-        agents.forEach(ag => {
-            const cfg = AGENT_CFG[ag.type];
-            const grd = ctx.createRadialGradient(ag.x, ag.y, 0, ag.x, ag.y, 14);
-            grd.addColorStop(0, cfg.col + '44'); grd.addColorStop(1, 'transparent');
-            ctx.fillStyle = grd;
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 14, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 6, 0, Math.PI * 2);
-            ctx.fillStyle = cfg.col; ctx.fill();
-            ctx.fillStyle = '#000'; ctx.font = 'bold 8px monospace';
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText(cfg.label, ag.x, ag.y);
-            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-        });
-    }
-    draw();
-
-    canvas.addEventListener('click', e => {
-        const r = canvas.getBoundingClientRect();
-        const cx = e.clientX - r.left, cy = e.clientY - r.top;
-        if (mode === 'place') {
-            const phase = (Math.atan2(cy - canvas.height/2, cx - canvas.width/2) + Math.PI*2) % (Math.PI*2);
-            agents.push({ x: cx, y: cy, type: agentType, phase });
-            updateVSAUI();
-        } else if (mode === 'query_loc') {
-            queryResult = { x: cx, y: cy, radius: 40 };
-            const near = agents.filter(a => Math.hypot(a.x-cx, a.y-cy) < 40);
-            document.getElementById('vsa-status').textContent = 'Query: found ' + near.length + ' agent(s) within radius';
-            setTimeout(() => { queryResult = null; }, 1500);
-        } else {
-            const found = agents.filter(a => a.type === agentType);
-            document.getElementById('vsa-status').textContent = 'Item query: ' + agentType + ' → ' + found.length + ' match(es)';
-        }
+  function cleanupFeature(noisyVec, memoryDict) {
+    let bestSim = -1, bestName = null, scores = [];
+    Object.keys(memoryDict).forEach(key => {
+      const sim = noisyVec.similarity(memoryDict[key]);
+      scores.push({ name: key, score: sim });
+      if (sim > bestSim) { bestSim = sim; bestName = key; }
     });
+    return { winner: bestName, scores };
+  }
 
-    function updateVSAUI() {
-        const n = agents.length;
-        let sumX = 0, sumY = 0;
-        agents.forEach(a => { sumX += Math.cos(a.phase); sumY += Math.sin(a.phase); });
-        const meanPhase = Math.atan2(sumY / (n||1), sumX / (n||1));
-        const nx = 60 + 50 * Math.cos(meanPhase);
-        const ny = 60 + 50 * Math.sin(meanPhase);
-        document.getElementById('phase-needle').setAttribute('x2', nx.toFixed(1));
-        document.getElementById('phase-needle').setAttribute('y2', ny.toFixed(1));
-        document.getElementById('vsa-trace-fill').style.width = Math.min(100, n * 6) + '%';
-        document.getElementById('vsa-status').textContent = n + ' agent' + (n===1?'':'s') + ' encoded';
+  function handleMapClick(x, y) {
+    if (!explorer.itemMemory) return;
+    if (explorer.mode === 'place') {
+      explorer.items.push({ id: Date.now(), type: explorer.selectedObjType, x, y, color: objTypes.find(o=>o.name===explorer.selectedObjType).color });
+      explorer.pipelineState = null; explorer.queryPoint = null;
+    } else if (explorer.mode === 'query_loc') {
+      explorer.queryPoint = { x, y };
+      const noisyItem = getMapVector().bind(getSSP(x, y).inverse());
+      let bestItemSim = -1, cleanItemName = null, cleanItemVector = null, itemScores = [];
+      Object.keys(explorer.itemMemory).forEach(key => {
+        const sim = noisyItem.similarity(explorer.itemMemory[key].vector);
+        itemScores.push({ name: key, score: sim, color: explorer.itemMemory[key].color });
+        if (sim > bestItemSim) { bestItemSim = sim; cleanItemName = key; cleanItemVector = explorer.itemMemory[key].vector; }
+      });
+      if (bestItemSim < 0.1) { explorer.pipelineState = { status: 'empty', itemScores }; renderAll(); return; }
+      explorer.pipelineState = {
+        status: 'found', itemScores, cleanItem: { name: cleanItemName, color: explorer.itemMemory[cleanItemName].color },
+        domainCleanUp: cleanupFeature(cleanItemVector.bind(explorer.vocab.Role_Domain.inverse()), explorer.featureMemory.domains),
+        mobilityCleanUp: cleanupFeature(cleanItemVector.bind(explorer.vocab.Role_Mobility.inverse()), explorer.featureMemory.mobility)
+      };
     }
+    renderAll();
+  }
 
-    window.vsaSetMode = m => {
-        mode = m; queryResult = null;
-        ['place','query_loc','query_item'].forEach(id => {
-            document.getElementById('vsa-mode-' + id).classList.toggle('active', id === m);
-        });
-    };
-    window.vsaSetAgent = type => {
-        agentType = type;
-        ['DRONE','ROVER','SENSOR','RELAY'].forEach(t => {
-            document.getElementById('vsa-agent-' + t).classList.toggle('active', t === type);
-        });
-    };
-    window.vsaHardReset = () => {
-        agents = []; queryResult = null;
-        document.getElementById('vsa-trace-fill').style.width = '0%';
-        document.getElementById('vsa-status').textContent = '0 agents encoded';
-        document.getElementById('phase-needle').setAttribute('x2', '110');
-        document.getElementById('phase-needle').setAttribute('y2', '60');
-    };
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr)); canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { width: rect.width, height: rect.height };
+  }
+  function worldToCanvas(x, y, w, h) { return { x: ((x + GRID_SIZE) / (GRID_SIZE * 2)) * w, y: ((GRID_SIZE - y) / (GRID_SIZE * 2)) * h }; }
+  function canvasToWorld(px, py, w, h) { return { x: (px / w) * (GRID_SIZE * 2) - GRID_SIZE, y: GRID_SIZE - (py / h) * (GRID_SIZE * 2) }; }
+
+  function drawGrid(w, h) {
+    ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= GRID_SIZE * 2; i++) {
+      const x = (i / (GRID_SIZE * 2)) * w, y = (i / (GRID_SIZE * 2)) * h;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+    ctx.strokeStyle = 'rgba(34,211,238,0.2)'; ctx.lineWidth = 1.25;
+    const center = worldToCanvas(0, 0, w, h);
+    ctx.beginPath(); ctx.moveTo(center.x, 0); ctx.lineTo(center.x, h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, center.y); ctx.lineTo(w, center.y); ctx.stroke();
+  }
+
+  function drawHeatmap(w, h) {
+    if (explorer.mode !== 'query_item' || explorer.items.length === 0) return;
+    const queryVec = getMapVector().bind(explorer.itemMemory[explorer.selectedObjType].vector.inverse());
+    const cellW = w / HEAT_RES, cellH = h / HEAT_RES;
+    for (let ix = 0; ix < HEAT_RES; ix++) {
+      const sspX = explorer.vocab.X.power((ix / HEAT_RES) * (GRID_SIZE * 2) - GRID_SIZE);
+      for (let iy = 0; iy < HEAT_RES; iy++) {
+        const sim = queryVec.similarity(sspX.bind(explorer.vocab.Y.power(GRID_SIZE - (iy / HEAT_RES) * (GRID_SIZE * 2))));
+        if (sim > 0.05) {
+          ctx.fillStyle = `rgba(34, 211, 238, ${0.12 + Math.min(1, Math.pow(sim, 2) * 3.2) * 0.75})`;
+          ctx.fillRect(ix * cellW, iy * cellH, cellW + 1, cellH + 1);
+        }
+      }
+    }
+  }
+
+  function drawQueryRing(w, h) {
+    if (explorer.mode !== 'query_loc' || !explorer.queryPoint) return;
+    const p = worldToCanvas(explorer.queryPoint.x, explorer.queryPoint.y, w, h);
+    ctx.beginPath(); ctx.arc(p.x, p.y, 18, 0, Math.PI * 2); ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(168,85,247,0.9)'; ctx.fill();
+  }
+
+  function drawItems(w, h) {
+    explorer.items.forEach(item => {
+      const p = worldToCanvas(item.x, item.y, w, h);
+      ctx.save(); ctx.translate(p.x, p.y);
+      if (item.type === 'Drone') {
+        ctx.strokeStyle = item.color; ctx.fillStyle = item.color; ctx.globalAlpha = 0.95;
+        ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(10, 10); ctx.lineTo(-10, 10); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 24); ctx.stroke();
+      } else if (item.type === 'Rover') {
+        ctx.fillStyle = item.color; ctx.fillRect(-12, -7, 24, 14);
+        ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(-8, -4, 16, 8);
+      } else {
+        ctx.strokeStyle = item.color; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 10); ctx.lineTo(0, -10); ctx.stroke();
+        ctx.fillStyle = item.color; ctx.beginPath(); ctx.arc(0, -12, 5, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    });
+  }
+
+  function renderPhaseWheel(value) {
+    if (!explorer.vocab || !phaseWheelRoot) return;
+    const baseVector = explorer.vocab.X;
+    const lines = Array.from({ length: 64 }, (_, i) => {
+      const angle = baseVector.freqs[i] * value;
+      const px = Math.cos(angle) * 100, py = Math.sin(angle) * 100;
+      const color = `hsl(${(i / 64) * 360}, 80%, 65%)`;
+      return `<g><line x1="0" y1="0" x2="${(px * 0.9).toFixed(2)}" y2="${(py * 0.9).toFixed(2)}" stroke="${color}" stroke-width="1.5" opacity="0.6"></line><circle cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="3" fill="${color}" stroke="rgba(0,0,0,0.5)" stroke-width="1"></circle></g>`;
+    }).join('');
+    phaseWheelRoot.innerHTML = `<svg viewBox="-110 -110 220 220" class="w-full h-full"><circle cx="0" cy="0" r="100" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width="2"></circle><circle cx="0" cy="0" r="4" fill="#94a3b8"></circle>${lines}</svg>`;
+  }
+
+  function scoreRows(scores, formatter) {
+    return scores.map(s => {
+      const w = Math.max(2, Math.min(100, ((s.score + 1) / 2) * 100));
+      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#22d3ee'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#22d3ee'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
+    }).join('');
+  }
+
+  function renderInspector() {
+    if (!inspector) return;
+    if (explorer.mode === 'place') {
+      inspector.innerHTML = `<div class="flex h-full items-center justify-center p-4 text-center text-sm text-slate-500">Select <strong class="mx-1 text-cyan-300">Decode Map</strong> and click the grid to execute associative clean-up pipeline.</div>`;
+      return;
+    }
+    if (explorer.mode === 'query_item') {
+      const count = explorer.items.filter(item => item.type === explorer.selectedObjType).length;
+      const accent = explorer.itemMemory[explorer.selectedObjType].color;
+      inspector.innerHTML = `<div class="flex h-full flex-col justify-center p-4 text-center"><div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2" style="border-color:${accent}55;color:${accent}">◉</div><p class="text-sm text-slate-300">Scanning the global trace for <strong style="color:${accent}">${explorer.selectedObjType}</strong> and rendering a decoded location heatmap.</p><p class="mt-3 text-xs text-slate-500">${count} matching agents directly contribute to representation.</p></div>`;
+      return;
+    }
+    if (!explorer.queryPoint) {
+      inspector.innerHTML = `<div class="flex h-full items-center justify-center p-4 text-center text-sm text-slate-500">Click a location to decode the bundled object representation at that coordinate.</div>`;
+      return;
+    }
+    if (!explorer.pipelineState || explorer.pipelineState.status === 'empty') {
+      const rows = explorer.pipelineState ? scoreRows(explorer.pipelineState.itemScores, n => n.toFixed(2)) : '';
+      inspector.innerHTML = `<div class="space-y-4"><div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-red-300">No stable recovery</div><p class="mt-2 text-sm leading-7 text-slate-300">The queried location did not clearly identify an item above threshold.</p></div><div class="space-y-3">${rows}</div></div>`;
+      return;
+    }
+    const state = explorer.pipelineState;
+    inspector.innerHTML = `<div class="space-y-5"><div class="rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Recovered concept</div><div class="mt-2 text-lg font-black" style="color:${state.cleanItem.color}">${state.cleanItem.name}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Item similarity</div><div class="space-y-3">${scoreRows(state.itemScores, n => n.toFixed(2))}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Decoded features</div><div class="space-y-4 rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-cyan-300">Domain → ${state.domainCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.domainCleanUp.scores.map(s => ({...s, color:'#22d3ee'})), n => n.toFixed(2))}</div></div><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Mobility → ${state.mobilityCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.mobilityCleanUp.scores.map(s => ({...s, color:'#34d399'})), n => n.toFixed(2))}</div></div></div></div></div>`;
+  }
+
+  function renderButtons() {
+    if (modeButtons) modeButtons.forEach(btn => {
+      const active = btn.dataset.vsaMode === explorer.mode;
+      btn.className = `px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${active ? 'bg-white/10 text-cyan-400' : 'text-slate-400 hover:text-slate-200'}`;
+    });
+    if (typeButtonRoot) {
+      typeButtonRoot.innerHTML = objTypes.map(obj => {
+        const active = explorer.selectedObjType === obj.name;
+        return `<button data-vsa-type="${obj.name}" class="px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest border transition-all ${active ? 'opacity-100 shadow-[0_0_10px_rgba(0,0,0,0.2)]' : 'border-transparent opacity-50 hover:opacity-100 bg-white/5'}" style="color:${active ? obj.color : '#94a3b8'};border-color:${active ? obj.color : 'transparent'}">${obj.name}</button>`;
+      }).join('');
+      typeButtonRoot.querySelectorAll('[data-vsa-type]').forEach(btn => {
+        btn.addEventListener('click', () => { explorer.selectedObjType = btn.dataset.vsaType; renderAll(); });
+      });
+    }
+  }
+
+  function renderAll() {
+    if (range) { range.value = explorer.inspectorVal; rangeValue.textContent = explorer.inspectorVal.toFixed(1); }
+    renderButtons(); renderPhaseWheel(explorer.inspectorVal);
+    if (itemCount) itemCount.textContent = explorer.items.length;
+    if (traceBar) traceBar.style.width = `${Math.min(100, explorer.items.length * 8)}%`;
+    if (status) status.textContent = `mode: ${explorer.mode} • ` + (explorer.queryPoint ? `x=${explorer.queryPoint.x.toFixed(1)}, y=${explorer.queryPoint.y.toFixed(1)}` : 'no query');
+    renderInspector();
+    const { width, height } = resizeCanvas();
+    drawGrid(width, height);
+    if (explorer.vocab && explorer.itemMemory) { drawHeatmap(width, height); drawQueryRing(width, height); drawItems(width, height); }
+  }
+
+  if (range) range.addEventListener('input', () => { explorer.inspectorVal = parseFloat(range.value); renderAll(); });
+  if (resetBtn) resetBtn.addEventListener('click', initVocab);
+  if (modeButtons) modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => { explorer.mode = btn.dataset.vsaMode; explorer.pipelineState = null; if(explorer.mode !== 'query_loc') explorer.queryPoint = null; renderAll(); });
+  });
+  if (canvas) canvas.addEventListener('click', e => {
+    const r = canvas.getBoundingClientRect();
+    const world = canvasToWorld(e.clientX - r.left, e.clientY - r.top, r.width, r.height);
+    handleMapClick(world.x, world.y);
+  });
+  window.addEventListener('resize', () => { if(explorer.vocab) renderAll(); }, { passive: true });
+  initVocab();
 })();
 </script>
 
