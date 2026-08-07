@@ -11,6 +11,15 @@
        • VSA Explorer — Canvas2D interactive agent encoding exhibit
        • Lazy-loaded video (poster → iframe on click)
        • Keyword tag pills on publication cards
+     Added in v9 (ICRA talk visual redesign):
+       • #hypervectors — Hypervectors Explained: real FHRR phasor maths,
+         interactive dial grid, similarity kernel, bind/unbind, capacity
+       • #slam — From the ICRA Talk: live SSP-SLAM demo (drift vs vector-map
+         correction with a genuine FHRR memory), grid cells from hexagonal SSPs
+       • #cognitive-map — VSA Explorer replaced by a REAL one-vector cognitive
+         map: place items, unbind-and-correlate query heatmaps, tweaks panel
+       All widget maths runs the honest construction (phase arrays, seeded
+       mulberry32 draws) — the same algebra as sspslam / VSACognitiveMapping.
      ============================================================ -->
 <html lang="en">
 <head>
@@ -19,9 +28,9 @@
     <title>Paul Kirkland — Neuromorphic Systems Researcher</title>
 
     <!-- SEO / Social meta -->
-    <meta name="description" content="Paul Kirkland researches neuromorphic sensing, Vector Symbolic Architectures, and edge AI at Western Sydney University ICNS.">
+    <meta name="description" content="Paul Kirkland researches neuromorphic sensing, Vector Symbolic Architectures, and edge AI at Western Sydney University ICNS. Interactive, visual explanations of hypervector maths and spiking SLAM.">
     <meta property="og:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
-    <meta property="og:description" content="Spiking neural networks and event cameras for real-time autonomous perception at the edge.">
+    <meta property="og:description" content="Spiking neural networks, event cameras and vector-symbolic maps — explained visually with live, real-maths demos.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
@@ -107,14 +116,37 @@
         .play-circle { width:72px; height:72px; border-radius:50%; border:2px solid #22d3ee; background:rgba(34,211,238,.1); display:flex; align-items:center; justify-content:center; transition:background .2s; }
         .play-circle:hover { background:rgba(34,211,238,.25); }
 
-        /* VSA Explorer canvas */
-        #vsa-canvas { width:100%; height:320px; background:#020617; border-radius:.75rem; border:1px solid rgba(255,255,255,.08); cursor:crosshair; display:block; }
+        /* Small pill buttons (cognitive map modes/items — inherited from the v8 explorer) */
         .vsa-btn { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:.5rem; color:#94a3b8; padding:.35rem .7rem; font-size:.72rem; cursor:pointer; font-family:'JetBrains Mono',monospace; transition:all .15s; }
         .vsa-btn.active { background:rgba(34,211,238,.15); border-color:rgba(34,211,238,.5); color:#22d3ee; }
         .vsa-btn.danger { border-color:rgba(239,68,68,.3); color:#f87171; }
         .vsa-btn.danger:hover { background:rgba(239,68,68,.1); }
-        .vsa-trace-bar { height:6px; background:rgba(255,255,255,.06); border-radius:9999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
-        .vsa-trace-fill { height:100%; background:#22d3ee; width:0%; transition:width .3s; }
+
+        /* ── v9 widget system (Hypervectors / SLAM / Cognitive Map) ── */
+        .hv-canvas { width:100%; display:block; background:#020617; border-radius:.75rem; border:1px solid rgba(255,255,255,.08); }
+        .hv-panel  { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:.75rem; padding:1.25rem; }
+        .hv-cap    { font-size:.8rem; color:#94a3b8; line-height:1.65; }
+        .hv-cap b, .hv-cap strong { color:#e2e8f0; font-weight:700; }
+        .hv-out    { font-family:'JetBrains Mono',monospace; font-size:.72rem; color:#94a3b8; line-height:1.9; }
+        .hv-out b  { color:#e2e8f0; }
+        .hv-out .ok { color:#34d399; } .hv-out .no { color:#f87171; }
+        .eq        { font-family:'JetBrains Mono',monospace; background:rgba(34,211,238,.06); border:1px solid rgba(34,211,238,.15);
+                     border-radius:.5rem; padding:.6rem 1rem; color:#a5f3fc; font-size:.85rem; display:inline-block; }
+        .eq sub, .eq sup { font-size:.62em; }
+        .op-chip   { display:inline-flex; align-items:center; gap:.5rem; border-radius:.5rem; padding:.45rem .8rem; font-size:.75rem;
+                     background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); color:#94a3b8; }
+        .op-chip .op-sym { font-family:'JetBrains Mono',monospace; font-weight:700; color:#22d3ee; font-size:1rem; }
+        .hv-slider { width:100%; accent-color:#22d3ee; cursor:ew-resize; }
+        .hv-lab    { font-size:10px; font-family:'JetBrains Mono',monospace; color:#64748b; text-transform:uppercase; letter-spacing:.12em; }
+        .hv-val    { font-family:'JetBrains Mono',monospace; font-size:.75rem; color:#22d3ee; }
+        .chip-d    { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:.5rem; color:#94a3b8;
+                     padding:.3rem .65rem; font-size:.72rem; cursor:pointer; font-family:'JetBrains Mono',monospace; transition:all .15s; }
+        .chip-d[aria-pressed="true"] { background:rgba(34,211,238,.15); border-color:rgba(34,211,238,.5); color:#22d3ee; }
+        .legend-ramp { height:8px; border-radius:4px; background:linear-gradient(to right,#020617,#0e7490,#22d3ee,#ecfeff); border:1px solid rgba(255,255,255,.1); }
+        .slam-toggle { position:relative; width:46px; height:24px; border-radius:12px; background:#1e293b; border:1px solid rgba(255,255,255,.15); cursor:pointer; transition:background .2s; flex-shrink:0; }
+        .slam-toggle::after { content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#64748b; transition:all .2s; }
+        .slam-toggle[aria-pressed="true"] { background:rgba(34,211,238,.3); }
+        .slam-toggle[aria-pressed="true"]::after { left:24px; background:#22d3ee; }
 
         /* Mobile menu */
         #mobile-menu { display:none; }
@@ -148,9 +180,11 @@
                 <span class="text-[9px] font-mono text-slate-500 uppercase tracking-widest">@SynapticScotsman</span>
             </div>
         </button>
-        <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-400">
+        <div class="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-slate-400">
             <a href="#about"        class="hover:text-cyan-400 transition-colors">Overview</a>
             <a href="#projects"     class="hover:text-cyan-400 transition-colors">Projects</a>
+            <a href="#hypervectors" class="hover:text-cyan-400 transition-colors">The Maths</a>
+            <a href="#slam"         class="hover:text-cyan-400 transition-colors">ICRA Talk</a>
             <a href="#exhibits"     class="hover:text-cyan-400 transition-colors">Research Hub</a>
             <a href="#publications" class="hover:text-cyan-400 transition-colors">Outputs</a>
             <a href="#contact" class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Let's Talk</a>
@@ -168,6 +202,8 @@
 <nav id="mobile-menu" class="fixed top-[81px] inset-x-0 z-30 flex-col gap-6 bg-slate-950/97 border-b border-white/5 px-8 py-8 backdrop-blur-md" aria-label="Mobile navigation">
     <a href="#about"        class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Overview</a>
     <a href="#projects"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Projects</a>
+    <a href="#hypervectors" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">The Maths</a>
+    <a href="#slam"         class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">ICRA Talk</a>
     <a href="#exhibits"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Research Hub</a>
     <a href="#publications" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Outputs</a>
     <a href="#contact"      class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Contact</a>
@@ -233,8 +269,8 @@
         <article class="project-card" aria-labelledby="proj2-title">
             <span class="project-tag">VSA · Cognitive Mapping</span>
             <h3 id="proj2-title" class="text-lg font-bold tracking-tight">VSA Cognitive Mapping</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Binding log-polar event features into superposed hypervectors (FHRR) to build compact, queryable spatial maps on edge hardware — bridging continuous neuromorphic perception with discrete symbolic reasoning.</p>
-            <a href="#vsa-explorer" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Try the VSA Explorer →</a>
+            <p class="text-sm text-slate-400 leading-relaxed">Binding event features into superposed hypervectors (FHRR) to build compact, queryable spatial maps on edge hardware — a whole room's worth of memories in one fixed-size vector, queried by algebra alone.</p>
+            <a href="#cognitive-map" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Build a one-vector map →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj3-title">
@@ -266,6 +302,278 @@
             <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
         </article>
 
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     HYPERVECTORS EXPLAINED — real FHRR maths, visually (new in v9)
+     ══════════════════════════════════════════════════════════════════ -->
+<section id="hypervectors" class="py-24 px-6 max-w-7xl mx-auto space-y-10 scroll-mt-24" aria-labelledby="hv-heading">
+    <div class="text-center mb-6 max-w-3xl mx-auto">
+        <h2 class="text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] mb-2">The Maths, Visually</h2>
+        <h3 id="hv-heading" class="text-4xl font-black mb-6">Hypervectors Explained</h3>
+        <p class="text-slate-400 leading-relaxed md:text-lg">
+            Everything my maps remember lives in <strong class="text-white">one fixed-size vector</strong>.
+            Think of it as a strip of tape holding thousands of tiny <strong class="text-white">clock hands</strong>,
+            each frozen at some angle. Three operations on those angles are the whole algebra —
+            and every widget below runs the <em>honest</em> construction live in your browser, not a mock-up.
+        </p>
+    </div>
+    <div class="flex flex-wrap justify-center gap-3 mb-4" aria-label="The three operations">
+        <span class="op-chip"><span class="op-sym">⊗</span> bind = add the angles — attach a <em>what</em> to a <em>where</em></span>
+        <span class="op-chip"><span class="op-sym">+</span> bundle = superpose — many memories on one tape</span>
+        <span class="op-chip"><span class="op-sym">⊘</span> unbind = subtract the angles — ask a question</span>
+    </div>
+
+    <!-- H1 · Position is a spin of every clock hand -->
+    <div class="exhibit-card p-8" aria-labelledby="hv1-heading">
+        <div class="mb-6">
+            <h4 id="hv1-heading" class="text-xl font-black uppercase tracking-tight mb-1">1 · A Place Is a Pattern of Clock Hands</h4>
+            <p class="hv-cap max-w-3xl">Drag the sliders to move a point around a room. Each dial below is one dimension of the
+            vector: moving in <b>x</b> spins every hand at its own fixed rate (and <b>y</b> at another) — that is
+            <b>fractional power encoding</b>. No two places share a pattern, yet nearby places nearly do.</p>
+            <div class="mt-4"><span class="eq">S(x,y) = B<sub>x</sub><sup>x/ℓ</sup> ⊗ B<sub>y</sub><sup>y/ℓ</sup> = 𝓕<sup>−1</sup>{ e<sup>iA·(x,y)/ℓ</sup> }</span></div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div>
+                <canvas id="cvHvDial" class="hv-canvas" style="aspect-ratio:1/1" aria-label="Grid of 64 phasor dials showing the first dimensions of the position vector"></canvas>
+                <div class="mt-4 space-y-3">
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="hv-lab">x position</span><span class="hv-val" id="hv-xv">0.00 m</span></div>
+                        <input type="range" id="hv-x" class="hv-slider" min="-3" max="3" step="0.05" value="0.6" aria-label="x position in metres">
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="hv-lab">y position</span><span class="hv-val" id="hv-yv">0.00 m</span></div>
+                        <input type="range" id="hv-y" class="hv-slider" min="-3" max="3" step="0.05" value="0.4" aria-label="y position in metres">
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <canvas id="cvHvField" class="hv-canvas" style="aspect-ratio:16/9" aria-label="Similarity heatmap between the chosen position and every point in the room"></canvas>
+                    <div class="flex items-center gap-3 mt-2">
+                        <span class="hv-lab">similarity</span>
+                        <div class="legend-ramp flex-1"></div>
+                        <span class="hv-lab" id="hv-fieldrange">0 → 1</span>
+                    </div>
+                </div>
+                <canvas id="cvHvSlice" class="hv-canvas" style="aspect-ratio:16/7" aria-label="Similarity versus displacement — the kernel slice"></canvas>
+            </div>
+        </div>
+        <div class="hv-out mt-6 p-4 rounded-xl bg-slate-950 border border-white/5" id="hv1-out" aria-live="polite"></div>
+        <p class="hv-cap mt-4"><b>What you're seeing.</b> The bright blob is <i>similarity</i>: the mean of cos(phase difference) across all
+        dimensions. It falls to half height by ≈0.3ℓ — which is exactly why every "where is it?" answer later on this page is a
+        <b>blob, not a lit pixel</b>. And because S(a) ⊗ S(b) = S(a+b) <i>exactly</i>, moving a whole memory is a single
+        elementwise multiply — no decoding, no grid, no approximation.</p>
+    </div>
+
+    <!-- H2 · Bind / unbind -->
+    <div class="exhibit-card p-8" aria-labelledby="hv2-heading">
+        <div class="mb-6">
+            <h4 id="hv2-heading" class="text-xl font-black uppercase tracking-tight mb-1">2 · Binding Attaches <span class="text-cyan-400">What</span> to <span class="text-cyan-400">Where</span></h4>
+            <p class="hv-cap max-w-3xl">Bind an object's identity to a place and the result resembles <b>neither</b> — it looks like
+            noise. Like stacking two tinted transparencies: unreadable, but nothing is lost. Hold the <b>right</b> complementary
+            filter (unbind key) up to it and the place snaps back into focus. The wrong key returns pure static.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between mb-1"><span class="hv-lab">CHAIR — identity atom (random phases)</span></div>
+                    <canvas id="cvHvStripA" class="hv-canvas" style="height:34px" aria-label="Phase strip of the CHAIR identity vector"></canvas>
+                </div>
+                <div class="text-center text-cyan-400 font-mono text-sm select-none" aria-hidden="true">⊗ &nbsp;bind (add the angles)</div>
+                <div>
+                    <div class="flex justify-between mb-1"><span class="hv-lab">S(1.6, −0.8) — place vector</span></div>
+                    <canvas id="cvHvStripP" class="hv-canvas" style="height:34px" aria-label="Phase strip of the place vector"></canvas>
+                </div>
+                <div class="text-center text-slate-500 font-mono text-sm select-none" aria-hidden="true">=</div>
+                <div>
+                    <div class="flex justify-between mb-1"><span class="hv-lab">CHAIR ⊗ S(1.6, −0.8) — the stored memory</span></div>
+                    <canvas id="cvHvStripB" class="hv-canvas" style="height:34px" aria-label="Phase strip of the bound memory — resembles neither input"></canvas>
+                </div>
+                <div class="pt-2">
+                    <div class="hv-lab mb-2">unbind ⊘ with key:</div>
+                    <div class="flex gap-2 flex-wrap" role="group" aria-label="Choose an unbind key">
+                        <button class="chip-d" id="hv2-key-CHAIR" aria-pressed="true"  onclick="hv2SetKey('CHAIR')">CHAIR</button>
+                        <button class="chip-d" id="hv2-key-TABLE" aria-pressed="false" onclick="hv2SetKey('TABLE')">TABLE</button>
+                        <button class="chip-d" id="hv2-key-PLANT" aria-pressed="false" onclick="hv2SetKey('PLANT')">PLANT</button>
+                        <button class="chip-d" id="hv2-key-ROBOT" aria-pressed="false" onclick="hv2SetKey('ROBOT')">ROBOT</button>
+                    </div>
+                </div>
+            </div>
+            <div class="space-y-3">
+                <div class="flex justify-between mb-1"><span class="hv-lab">memory ⊘ key, correlated over the whole room</span><span class="hv-val" id="hv2-peak"></span></div>
+                <canvas id="cvHvRec" class="hv-canvas" style="aspect-ratio:16/10" aria-label="Heatmap of the recovered vector correlated against every room position"></canvas>
+                <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5" id="hv2-out" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- H3 · Capacity -->
+    <div class="exhibit-card p-8" aria-labelledby="hv3-heading">
+        <div class="mb-6">
+            <h4 id="hv3-heading" class="text-xl font-black uppercase tracking-tight mb-1">3 · One Vector Holds Many Memories — Until Crosstalk Wins</h4>
+            <p class="hv-cap max-w-3xl">Bundle k (object ⊗ place) memories onto <b>one tape</b> — the tape never gets longer, the
+            recordings just get noisier. Unbind object #0 and check its place against 40 candidates: the correct one carries
+            signal ≈ 1/k, the rest are <b>crosstalk</b>. The margin between them is predicted by <b>√(2D/k)</b> — dimensionality
+            buys capacity, and you can watch it run out.</p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+            <div>
+                <canvas id="cvHvBars" class="hv-canvas" style="aspect-ratio:16/9" aria-label="Similarity of the unbound residual against 40 candidate places"></canvas>
+            </div>
+            <div>
+                <canvas id="cvHvMarg" class="hv-canvas" style="aspect-ratio:16/9" aria-label="Retrieval margin versus number of bundled items, measured against theory"></canvas>
+            </div>
+        </div>
+        <div class="flex flex-col md:flex-row gap-6 items-start md:items-center mt-6">
+            <div class="flex-1 w-full">
+                <div class="flex justify-between mb-1"><span class="hv-lab">items bundled, k</span><span class="hv-val" id="hv-kv">8 of 40</span></div>
+                <input type="range" id="hv-k" class="hv-slider" min="1" max="40" step="1" value="8" aria-label="Number of items bundled into the trace">
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="hv-lab">dimensions D:</span>
+                <button class="chip-d" id="hv3-d-256"  aria-pressed="false" onclick="hv3SetD(256)">256</button>
+                <button class="chip-d" id="hv3-d-1024" aria-pressed="true"  onclick="hv3SetD(1024)">1024</button>
+                <button class="chip-d" id="hv3-d-4096" aria-pressed="false" onclick="hv3SetD(4096)">4096</button>
+            </div>
+        </div>
+        <div class="hv-out mt-4 p-4 rounded-xl bg-slate-950 border border-white/5" id="hv3-out" aria-live="polite"></div>
+    </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     FROM THE ICRA TALK — SSP-SLAM, live (new in v9)
+     ══════════════════════════════════════════════════════════════════ -->
+<section id="slam" class="py-24 px-6 border-y border-white/5 scroll-mt-24" style="background:rgba(255,255,255,.02)" aria-labelledby="slam-heading">
+    <div class="max-w-7xl mx-auto space-y-10">
+        <div class="text-center mb-6 max-w-3xl mx-auto">
+            <h2 class="text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] mb-2">From the ICRA Talk</h2>
+            <h3 id="slam-heading" class="text-4xl font-black mb-6">SLAM That Thinks in Vectors</h3>
+            <p class="text-slate-400 leading-relaxed md:text-lg">
+                A robot in a new building must answer <em class="text-white not-italic font-bold">"where am I?"</em> and
+                <em class="text-white not-italic font-bold">"where is everything?"</em> at the same time. Counting your steps in
+                the dark — path integration — inevitably <strong class="text-white">drifts</strong>. The fix: every landmark the robot
+                sees is <strong class="text-white">bound into the same vector memory</strong> you just met above, and recognising one
+                later lets the algebra pull the position estimate back. Below, that loop runs live — with a genuine
+                FHRR memory doing the corrections, crosstalk and all.
+            </p>
+        </div>
+
+        <!-- pipeline stepper -->
+        <div class="exhibit-card p-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 relative mb-10">
+                <div class="hidden md:block absolute top-1/2 left-10 right-10 h-px bg-white/10 z-0" style="transform:translateY(-50%)" aria-hidden="true"></div>
+                <button class="pipeline-btn relative z-10" id="slam-step-0" onclick="slamSetStep(0)" aria-pressed="true">
+                    <div class="pipeline-circle" id="slam-circ-0"><span class="font-black text-lg">1</span></div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-center max-w-[120px]">Path Integration</div>
+                </button>
+                <button class="pipeline-btn inactive relative z-10" id="slam-step-1" onclick="slamSetStep(1)" aria-pressed="false">
+                    <div class="pipeline-circle" id="slam-circ-1"><span class="font-black text-lg">2</span></div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-center max-w-[120px]">Landmark Perception</div>
+                </button>
+                <button class="pipeline-btn inactive relative z-10" id="slam-step-2" onclick="slamSetStep(2)" aria-pressed="false">
+                    <div class="pipeline-circle" id="slam-circ-2"><span class="font-black text-lg">3</span></div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-center max-w-[120px]">Bind Into the Map</div>
+                </button>
+                <button class="pipeline-btn inactive relative z-10" id="slam-step-3" onclick="slamSetStep(3)" aria-pressed="false">
+                    <div class="pipeline-circle" id="slam-circ-3"><span class="font-black text-lg">4</span></div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-center max-w-[120px]">Correct the Drift</div>
+                </button>
+            </div>
+            <div class="p-6 bg-slate-950 rounded-xl border border-white/5 relative overflow-hidden min-h-[120px] flex items-center">
+                <div id="slam-colorbar" class="absolute top-0 left-0 w-1 h-full" aria-hidden="true"></div>
+                <p id="slam-step-desc" class="text-slate-300 leading-relaxed pl-6"></p>
+            </div>
+        </div>
+
+        <!-- live demo -->
+        <div class="exhibit-card p-8" aria-labelledby="slamdemo-heading">
+            <div class="flex flex-col md:flex-row justify-between items-start gap-4 mb-6">
+                <div>
+                    <h4 id="slamdemo-heading" class="text-xl font-black uppercase tracking-tight mb-1">Live: Drift vs. The Vector Map</h4>
+                    <p class="hv-cap max-w-2xl">One agent, three position estimates. <b style="color:#94a3b8">Grey</b> is the truth.
+                    <b style="color:#d97706">Amber</b> integrates noisy velocity and slowly drifts away.
+                    <b style="color:#22d3ee">Cyan</b> integrates the <i>same</i> noisy velocity — but each landmark sighting is bound into a
+                    real FHRR memory, and each re-sighting is decoded back out of it (unbind → correlate → peak) to correct the estimate.</p>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <button id="slam-play" class="chip-d" aria-pressed="true">❚❚ Pause</button>
+                    <button class="chip-d" onclick="slamReset()">⟳ Reset</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2">
+                    <canvas id="cvSlam" class="hv-canvas" style="aspect-ratio:4/3" aria-label="Live SLAM simulation: true path, dead-reckoning path and vector-map-corrected path in a room with landmarks"></canvas>
+                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex items-center justify-between gap-3 hv-panel">
+                        <div>
+                            <div class="text-sm font-bold">Map corrections</div>
+                            <div class="hv-lab">unbind → correlate → snap</div>
+                        </div>
+                        <button id="slam-corr" class="slam-toggle" role="switch" aria-checked="true" aria-pressed="true" aria-label="Toggle map corrections"></button>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="hv-lab">position error (m)</span><span class="hv-lab">last 60 s</span></div>
+                        <canvas id="cvSlamErr" class="hv-canvas" style="aspect-ratio:16/9" aria-label="Position error over time for dead reckoning versus the corrected estimate"></canvas>
+                    </div>
+                    <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5" id="slam-mem" aria-live="off"></div>
+                    <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5 min-h-[52px]" id="slam-log" aria-live="polite">—</div>
+                </div>
+            </div>
+            <p class="hv-cap mt-5"><b>What you're seeing.</b> This is the SSP-SLAM loop in miniature: the full system
+            (<a href="https://doi.org/10.3389/fnins.2023.1190515" target="_blank" rel="noopener noreferrer" class="text-cyan-400 hover:text-white underline decoration-cyan-400/30">Dumont et&nbsp;al., Frontiers in Neuroscience 2023</a>)
+            runs the same algebra in spiking neurons — the position vector lives in a population of
+            <b>velocity-controlled oscillators</b> with attractor dynamics, and the map is an associative memory learned online with
+            PES. Turn corrections off and watch amber and cyan drift together; turn them back on and the next landmark
+            sighting snaps cyan home. The decode is honest, so with a small D the correction itself is noisy — that's crosstalk, not a bug.</p>
+        </div>
+
+        <!-- grid cells -->
+        <div class="exhibit-card p-8" aria-labelledby="gc-heading">
+            <div class="mb-6">
+                <h4 id="gc-heading" class="text-xl font-black uppercase tracking-tight mb-1">Why the Brain Appears — Grid Cells Fall Out of the Maths</h4>
+                <p class="hv-cap max-w-3xl">Build the position code from <b>hexagonally arranged</b> frequency components
+                (three plane waves at 120°, as in <code class="text-cyan-400">HexagonalSSPSpace</code>) and the similarity map of a
+                single module is a hexagonal firing lattice — the signature of <b>entorhinal grid cells</b>. Stack modules at
+                different scales and rotations and the lattice interference collapses into a single bump: a <b>place cell</b>.
+                Slide to add modules.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+                <canvas id="cvGrid" class="hv-canvas" style="aspect-ratio:1/1;max-width:480px;margin:0 auto" aria-label="Similarity map of the hexagonal position code — a grid-cell-like lattice collapsing to a single place bump as modules are added"></canvas>
+                <div class="space-y-5">
+                    <div>
+                        <div class="flex justify-between mb-1"><span class="hv-lab">grid modules combined</span><span class="hv-val" id="grid-modsv">1 module</span></div>
+                        <input type="range" id="grid-mods" class="hv-slider" min="1" max="6" step="1" value="1" aria-label="Number of grid modules combined">
+                    </div>
+                    <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5" id="grid-out" aria-live="polite"></div>
+                    <p class="hv-cap">One module says <i>"you are at one of these lattice points"</i> — periodic, ambiguous.
+                    Six modules at co-prime scales agree at exactly <b>one</b> place. That is the residue-number-system trick the
+                    mammalian brain appears to use, and it is why the path integrator can be built from populations of
+                    oscillating <b>grid cells</b>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- resources -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a href="https://doi.org/10.3389/fnins.2023.1190515" target="_blank" rel="noopener noreferrer" class="hv-panel hover:border-cyan-500/30 transition-colors group">
+                <div class="hv-lab mb-2 group-hover:text-cyan-400 transition-colors">Foundations · Paper</div>
+                <div class="text-sm font-bold leading-snug">Exploiting semantic information in a spiking neural SLAM system</div>
+                <div class="hv-cap mt-1">Dumont et al., Frontiers in Neuroscience 2023 — the SSP-SLAM model this talk builds on.</div>
+            </a>
+            <a href="https://github.com/SynapticScotsman/Semantic-Spiking-Neural-SLAM-2023" target="_blank" rel="noopener noreferrer" class="hv-panel hover:border-cyan-500/30 transition-colors group">
+                <div class="hv-lab mb-2 group-hover:text-cyan-400 transition-colors">Code · sspslam</div>
+                <div class="text-sm font-bold leading-snug">Semantic-Spiking-Neural-SLAM</div>
+                <div class="hv-cap mt-1">Nengo networks: SSP spaces, VCO path integrator, associative map, semantic queries via CLIP.</div>
+            </a>
+            <a href="https://raw.githack.com/neuromorphs/VSACognitiveMapping/astm/astm/docs/demo_page.html" target="_blank" rel="noopener noreferrer" class="hv-panel hover:border-cyan-500/30 transition-colors group">
+                <div class="hv-lab mb-2 group-hover:text-cyan-400 transition-colors">Real Robot · Live Demo</div>
+                <div class="text-sm font-bold leading-snug">VSA Cognitive Mapping on Spot</div>
+                <div class="hv-cap mt-1">A real classroom walk (Telluride neuromorphs) — every query answered from single fixed-size vectors.</div>
+            </a>
+        </div>
     </div>
 </section>
 
@@ -399,53 +707,63 @@
         </div>
     </div>
 
-    <!-- Exhibit 4: VSA Explorer (new in v8) -->
-    <div class="exhibit-card p-8" id="vsa-explorer" aria-labelledby="vsa-heading">
+    <!-- Exhibit 4: Cognitive Map — REAL one-vector memory (v9, replaces the v8 mock VSA Explorer) -->
+    <div class="exhibit-card p-8 scroll-mt-24" id="cognitive-map" aria-labelledby="cm-heading">
         <div class="mb-8">
-            <h4 id="vsa-heading" class="text-xl font-black uppercase tracking-tight mb-1">VSA Explorer — Agent Encoding</h4>
-            <p class="text-sm text-slate-400 max-w-2xl">Click the map to <strong class="text-white">place agents</strong> — each is bound into a superposition hypervector (Domain ⊗ Val ⊕ Mobility ⊗ Val). Switch to <strong class="text-white">Query Loc</strong> or <strong class="text-white">Query Item</strong> to decode the memory. The phase wheel tracks mean superposition angle.</p>
+            <h4 id="cm-heading" class="text-xl font-black uppercase tracking-tight mb-1">Cognitive Map — A Room in One Vector</h4>
+            <p class="text-sm text-slate-400 max-w-3xl">Click the room to <strong class="text-white">place objects</strong>. Every placement is
+            genuinely computed as <span class="text-cyan-400 font-mono text-xs">M&nbsp;+=&nbsp;OBJECT&nbsp;⊗&nbsp;S(x,y)</span> into one
+            fixed-size memory vector — the same algebra as the widgets above. Then <strong class="text-white">ask it questions</strong>:
+            <em>where are the chairs?</em> unbinds CHAIR and correlates the residue against every position (the heatmap is the raw
+            answer, crosstalk included). <em>What is here?</em> unbinds a place and checks the residue against each object.</p>
         </div>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2">
-                <canvas id="vsa-canvas" aria-label="VSA agent placement map — click to encode agents"></canvas>
+                <canvas id="cm-canvas" class="hv-canvas" style="aspect-ratio:16/10;cursor:crosshair" aria-label="Cognitive map room — click to place objects or query the memory"></canvas>
+                <div class="flex items-center gap-3 mt-2">
+                    <span class="hv-lab">similarity</span>
+                    <div class="legend-ramp flex-1"></div>
+                    <span class="hv-lab" id="cm-heatrange">—</span>
+                </div>
             </div>
             <div class="flex flex-col gap-4">
-                <!-- Mode -->
                 <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Mode</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-mode-place"      onclick="vsaSetMode('place')">Place</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-loc"  onclick="vsaSetMode('query_loc')">Query Loc</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-item" onclick="vsaSetMode('query_item')">Query Item</button>
+                    <div class="hv-lab mb-2">Mode</div>
+                    <div class="flex gap-2 flex-wrap" role="group" aria-label="Interaction mode">
+                        <button class="vsa-btn active" id="cm-mode-place" onclick="cmSetMode('place')">Place</button>
+                        <button class="vsa-btn"        id="cm-mode-where" onclick="cmSetMode('where')">Where is…?</button>
+                        <button class="vsa-btn"        id="cm-mode-what"  onclick="cmSetMode('what')">What is here?</button>
                     </div>
                 </div>
-                <!-- Agent type -->
                 <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Agent Type</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-agent-DRONE"  onclick="vsaSetAgent('DRONE')"  style="border-color:rgba(34,211,238,.4)">DRONE</button>
-                        <button class="vsa-btn"        id="vsa-agent-ROVER"  onclick="vsaSetAgent('ROVER')"  style="border-color:rgba(0,255,136,.3)">ROVER</button>
-                        <button class="vsa-btn"        id="vsa-agent-SENSOR" onclick="vsaSetAgent('SENSOR')" style="border-color:rgba(168,85,247,.3)">SENSOR</button>
-                        <button class="vsa-btn"        id="vsa-agent-RELAY"  onclick="vsaSetAgent('RELAY')"  style="border-color:rgba(248,113,113,.3)">RELAY</button>
+                    <div class="hv-lab mb-2">Object</div>
+                    <div class="flex gap-2 flex-wrap" role="group" aria-label="Object type">
+                        <button class="vsa-btn active" id="cm-item-CHAIR" onclick="cmSetItem('CHAIR')" style="border-color:rgba(8,145,178,.6)">CHAIR</button>
+                        <button class="vsa-btn"        id="cm-item-TABLE" onclick="cmSetItem('TABLE')" style="border-color:rgba(217,119,6,.6)">TABLE</button>
+                        <button class="vsa-btn"        id="cm-item-PLANT" onclick="cmSetItem('PLANT')" style="border-color:rgba(5,150,105,.6)">PLANT</button>
+                        <button class="vsa-btn"        id="cm-item-ROBOT" onclick="cmSetItem('ROBOT')" style="border-color:rgba(139,92,246,.6)">ROBOT</button>
                     </div>
                 </div>
-                <!-- Phase wheel -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Superposition Phase</div>
-                    <svg id="phase-wheel-svg" viewBox="0 0 120 120" class="w-28" aria-label="Phase wheel">
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(34,211,238,.12)" stroke-width="2"/>
-                        <circle cx="60" cy="60" r="35" fill="none" stroke="rgba(34,211,238,.06)" stroke-width="1"/>
-                        <line id="phase-needle" x1="60" y1="60" x2="110" y2="60" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="60" cy="60" r="4" fill="#22d3ee"/>
-                        <text x="60" y="118" text-anchor="middle" fill="rgba(34,211,238,.4)" font-size="9" font-family="monospace">0°</text>
-                    </svg>
-                    <div class="vsa-trace-bar mt-2"><div class="vsa-trace-fill" id="vsa-trace-fill"></div></div>
-                    <div class="text-[11px] font-mono text-slate-500 mt-1" id="vsa-status" aria-live="polite">0 agents encoded</div>
+                <div class="hv-panel">
+                    <div class="hv-lab mb-3">Tweaks — rebuilds the memory live</div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="hv-lab">D:</span>
+                        <button class="chip-d" id="cm-d-256"  aria-pressed="false" onclick="cmSetD(256)">256</button>
+                        <button class="chip-d" id="cm-d-1024" aria-pressed="true"  onclick="cmSetD(1024)">1024</button>
+                        <button class="chip-d" id="cm-d-4096" aria-pressed="false" onclick="cmSetD(4096)">4096</button>
+                    </div>
+                    <div class="flex justify-between mb-1"><span class="hv-lab">length scale ℓ</span><span class="hv-val" id="cm-ellv">0.75 m</span></div>
+                    <input type="range" id="cm-ell" class="hv-slider" min="0.3" max="2" step="0.05" value="0.75" aria-label="Length scale of the position code in metres">
                 </div>
-                <!-- Reset -->
-                <button class="vsa-btn danger" onclick="vsaHardReset()">⟳ Hard Reset</button>
+                <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5" id="cm-mem"></div>
+                <div class="hv-out p-4 rounded-xl bg-slate-950 border border-white/5 min-h-[64px]" id="cm-out" aria-live="polite">Click the room to place your first object.</div>
+                <button class="vsa-btn danger" onclick="cmReset()">⟳ Wipe the memory</button>
             </div>
         </div>
+        <p class="hv-cap mt-5"><b>Watch the trade-off happen.</b> The memory readout above never grows — ten objects or a
+        hundred, it is the same D numbers. Add many objects and the <em>Where is…?</em> heatmap gets speckly (crosstalk),
+        exactly as the capacity widget predicts with √(2D/k). Drop D to 256 to make it fail sooner; raise ℓ and blobs widen but
+        neighbouring objects start to blur together. This is the engineering dial the real system lives on.</p>
     </div>
 </section>
 
@@ -662,7 +980,10 @@ let scrollProgress = 0;
 })();
 
 // ── THREE.JS ──────────────────────────────────────────────────────────
+// Guarded: if the CDN is unreachable the hero degrades gracefully instead
+// of killing every interactive exhibit further down the script.
 (function initThree() {
+    if (typeof THREE === 'undefined') return;
     const container = document.getElementById('three-canvas');
     const W = container.clientWidth || window.innerWidth;
     const H = container.clientHeight || window.innerHeight;
@@ -1020,119 +1341,918 @@ setPipeline(0);
     }, 800);
 })();
 
-// ── VSA EXPLORER ──────────────────────────────────────────────────────
-(function VSAExplorer() {
-    const canvas = document.getElementById('vsa-canvas');
-    const ctx    = canvas.getContext('2d');
-    let agents = [], mode = 'place', agentType = 'DRONE', queryResult = null;
-
-    const AGENT_CFG = {
-        DRONE:  { col: '#22d3ee', label: 'D' },
-        ROVER:  { col: '#00ff88', label: 'R' },
-        SENSOR: { col: '#a855f7', label: 'S' },
-        RELAY:  { col: '#f87171', label: 'L' }
-    };
-
-    function resize() {
-        const r = canvas.getBoundingClientRect();
-        const w = Math.round(r.width  || canvas.offsetWidth  || 400);
-        const h = Math.round(r.height || canvas.offsetHeight || 320);
-        if (canvas.width !== w || canvas.height !== h) {
-            canvas.width  = w;
-            canvas.height = h;
-        }
+// ═════════════════════════════════════════════════════════════════════
+// v9 — FHRR PHASOR ENGINE + WIDGETS
+// The honest construction: a hypervector is carried as its D phases.
+// bind = add phases · unbind = subtract · bundle = complex sum ·
+// similarity = mean cos(phase difference). Seeded draws (mulberry32)
+// so every visitor sees the same vectors.
+// ═════════════════════════════════════════════════════════════════════
+const HV = (() => {
+    const TAU = Math.PI * 2;
+    function rng(seed) {
+        let a = seed >>> 0;
+        return function () {
+            a = (a + 0x6D2B79F5) | 0;
+            let t = Math.imul(a ^ (a >>> 15), 1 | a);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
     }
-    window.addEventListener('resize', resize);
-    requestAnimationFrame(resize);
+    function uniPh(n, rnd) { const p = new Float64Array(n); for (let i = 0; i < n; i++) p[i] = rnd() * TAU; return p; }
 
-    function draw() {
-        requestAnimationFrame(draw);
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = '#020617';
-        ctx.fillRect(0, 0, w, h);
-        // grid
-        ctx.strokeStyle = 'rgba(34,211,238,.05)';
-        ctx.lineWidth = 1;
-        for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
-        for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
-        // labels
-        ctx.fillStyle = 'rgba(34,211,238,.5)';
-        ctx.font = '10px "JetBrains Mono",monospace';
-        ctx.fillText('MODE: ' + mode.toUpperCase(), 8, 18);
-        ctx.fillText(agents.length + ' agents', 8, 32);
-        // query ring
-        if (queryResult) {
-            ctx.beginPath(); ctx.arc(queryResult.x, queryResult.y, queryResult.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(52,211,153,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.fillStyle = 'rgba(52,211,153,.08)'; ctx.fill();
+    // sequential cyan ramp (dark → cyan → near-white), lightness-monotone
+    const LUT = (() => {
+        const stops = [[2,6,23],[14,116,144],[34,211,238],[236,254,255]], pos = [0,.45,.8,1], out = [];
+        for (let i = 0; i < 256; i++) {
+            const t = i / 255;
+            let k = 0; while (k < pos.length - 2 && t > pos[k+1]) k++;
+            const f = (t - pos[k]) / (pos[k+1] - pos[k]);
+            out.push(stops[k].map((c, j) => Math.round(c + (stops[k+1][j] - c) * f)));
         }
-        // agents
-        agents.forEach(ag => {
-            const cfg = AGENT_CFG[ag.type];
-            const grd = ctx.createRadialGradient(ag.x, ag.y, 0, ag.x, ag.y, 14);
-            grd.addColorStop(0, cfg.col + '44'); grd.addColorStop(1, 'transparent');
-            ctx.fillStyle = grd;
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 14, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 6, 0, Math.PI * 2);
-            ctx.fillStyle = cfg.col; ctx.fill();
-            ctx.fillStyle = '#000'; ctx.font = 'bold 8px monospace';
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText(cfg.label, ag.x, ag.y);
-            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        return out;
+    })();
+    const lutCss = t => { const c = LUT[Math.max(0, Math.min(255, Math.round(t * 255)))]; return `rgb(${c[0]},${c[1]},${c[2]})`; };
+
+    function fit(cv) {
+        const r = cv.getBoundingClientRect();
+        const w = Math.round(r.width), h = Math.round(r.height);
+        if (!w || !h) return null;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const bw = Math.round(w * dpr), bh = Math.round(h * dpr);
+        if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
+        const ctx = cv.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        return { ctx, w, h };
+    }
+
+    // draw a nx×ny scalar field (row j = increasing y, drawn bottom-up) via a
+    // tiny offscreen canvas scaled with smoothing — cheap, blobby, correct
+    const scratch = document.createElement('canvas');
+    function drawField(ctx, w, h, field, nx, ny, lo, hi) {
+        scratch.width = nx; scratch.height = ny;
+        const sctx = scratch.getContext('2d');
+        const img = sctx.createImageData(nx, ny);
+        const r = (hi - lo) || 1;
+        for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+            const t = (field[j * nx + i] - lo) / r;
+            const c = LUT[Math.max(0, Math.min(255, Math.round(t * 255)))];
+            const o = ((ny - 1 - j) * nx + i) * 4;
+            img.data[o] = c[0]; img.data[o+1] = c[1]; img.data[o+2] = c[2]; img.data[o+3] = 255;
+        }
+        sctx.putImageData(img, 0, 0);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(scratch, 0, 0, w, h);
+    }
+
+    // minimal line chart: recessive axes, series with optional dash + direct label
+    function drawChart(cv, o) {
+        const f = fit(cv); if (!f) return;
+        const { ctx, w, h } = f;
+        const L = 42, R = 10, T = 12, B = 26;
+        ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+        const xs = o.x;
+        let lo = Infinity, hi = -Infinity;
+        o.series.forEach(s => { for (const v of s.y) { if (v < lo) lo = v; if (v > hi) hi = v; } });
+        if (o.hline !== undefined) { lo = Math.min(lo, o.hline); hi = Math.max(hi, o.hline); }
+        if (o.ylo !== undefined) lo = o.ylo;
+        if (o.yhi !== undefined) hi = o.yhi;
+        const pad = (hi - lo) * 0.08 || 0.1; lo -= pad; hi += pad;
+        const x0 = xs[0], x1 = xs[xs.length - 1];
+        const PX = v => L + (v - x0) / (x1 - x0) * (w - L - R);
+        const PY = v => T + (1 - (v - lo) / (hi - lo)) * (h - T - B);
+        ctx.strokeStyle = 'rgba(255,255,255,.08)'; ctx.lineWidth = 1;
+        ctx.strokeRect(L + .5, T + .5, w - L - R - 1, h - T - B - 1);
+        ctx.font = '10px "JetBrains Mono",monospace'; ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText((o.yfmt || (v => v.toFixed(1)))(hi - pad), L - 5, PY(hi - pad));
+        ctx.fillText((o.yfmt || (v => v.toFixed(1)))(lo + pad), L - 5, PY(lo + pad));
+        (o.vlines || []).forEach(v => {
+            ctx.setLineDash([4, 3]); ctx.strokeStyle = 'rgba(148,163,184,.35)';
+            ctx.beginPath(); ctx.moveTo(PX(v.t), T); ctx.lineTo(PX(v.t), h - B); ctx.stroke(); ctx.setLineDash([]);
+            if (v.label) { ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = '#64748b'; ctx.fillText(v.label, PX(v.t), h - B + 4); }
         });
+        if (o.hline !== undefined) {
+            ctx.setLineDash([5, 4]); ctx.strokeStyle = 'rgba(34,211,238,.55)';
+            ctx.beginPath(); ctx.moveTo(L, PY(o.hline)); ctx.lineTo(w - R, PY(o.hline)); ctx.stroke(); ctx.setLineDash([]);
+        }
+        o.series.forEach(s => {
+            ctx.setLineDash(s.dash || []); ctx.strokeStyle = s.color; ctx.lineWidth = s.lw || 2;
+            ctx.beginPath();
+            for (let i = 0; i < xs.length; i++) { const px = PX(xs[i]), py = PY(s.y[i]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+            ctx.stroke(); ctx.setLineDash([]);
+        });
+        // direct labels — identity never by colour alone
+        ctx.textBaseline = 'top'; ctx.textAlign = 'left'; ctx.font = '10px "JetBrains Mono",monospace';
+        let ly = T + 4;
+        o.series.forEach(s => { if (s.label) { ctx.fillStyle = s.color; ctx.fillText(s.label, L + 8, ly); ly += 13; } });
+        if (o.mark) {
+            ctx.beginPath(); ctx.arc(PX(o.mark[0]), PY(o.mark[1]), 4, 0, TAU);
+            ctx.fillStyle = '#fff'; ctx.fill();
+            ctx.lineWidth = 2; ctx.strokeStyle = '#020617'; ctx.stroke();
+        }
+        if (o.xlabel) { ctx.fillStyle = '#64748b'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(o.xlabel, L + (w - L - R) / 2, h - 4); }
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     }
-    draw();
 
-    canvas.addEventListener('click', e => {
-        const r = canvas.getBoundingClientRect();
-        const cx = e.clientX - r.left, cy = e.clientY - r.top;
-        if (mode === 'place') {
-            const phase = (Math.atan2(cy - canvas.height/2, cx - canvas.width/2) + Math.PI*2) % (Math.PI*2);
-            agents.push({ x: cx, y: cy, type: agentType, phase });
-            updateVSAUI();
-        } else if (mode === 'query_loc') {
-            queryResult = { x: cx, y: cy, radius: 40 };
-            const near = agents.filter(a => Math.hypot(a.x-cx, a.y-cy) < 40);
-            document.getElementById('vsa-status').textContent = 'Query: found ' + near.length + ' agent(s) within radius';
-            setTimeout(() => { queryResult = null; }, 1500);
+    function raf1(fn) { let q = false; return function () { if (q) return; q = true; requestAnimationFrame(() => { q = false; fn(); }); }; }
+    const sci = v => v === 0 ? '0' : Number(v).toExponential(2);
+    const sgn = (v, d) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(d);
+
+    return { TAU, rng, uniPh, lutCss, fit, drawField, drawChart, raf1, sci, sgn };
+})();
+
+// shared redraw hooks (fired on resize so canvases re-fit)
+const hvRedraws = [];
+window.addEventListener('resize', HV.raf1(() => hvRedraws.forEach(f => f())));
+
+// ── H1 · POSITION CODE — dials, field, kernel ────────────────────────
+(function () {
+    const cvD = document.getElementById('cvHvDial'), cvF = document.getElementById('cvHvField'),
+          cvS = document.getElementById('cvHvSlice'), sx = document.getElementById('hv-x'),
+          sy = document.getElementById('hv-y');
+    if (!cvD) return;
+    const D = 1024, L = 0.75, TAU = HV.TAU;
+    const rnd = HV.rng(0x51DE01);
+    const BX = HV.uniPh(D, rnd), BY = HV.uniPh(D, rnd);
+    const EXT = [-3, 3, -1.7, 1.7];
+    sy.min = '-1.6'; sy.max = '1.6';
+
+    function kern(dx, dy) {
+        let s = 0; const u = dx / L, v = dy / L;
+        for (let m = 0; m < D; m++) s += Math.cos(BX[m] * u + BY[m] * v);
+        return s / D;
+    }
+    const NX = 44, NY = 25, field = new Float64Array(NX * NY);
+    function computeField(x, y) {
+        let lo = Infinity, hi = -Infinity;
+        for (let j = 0; j < NY; j++) {
+            const gy = EXT[2] + (j + .5) / NY * (EXT[3] - EXT[2]);
+            for (let i = 0; i < NX; i++) {
+                const gx = EXT[0] + (i + .5) / NX * (EXT[1] - EXT[0]);
+                const s = kern(gx - x, gy - y);
+                field[j * NX + i] = s;
+                if (s < lo) lo = s; if (s > hi) hi = s;
+            }
+        }
+        return [lo, hi];
+    }
+    const NS = 161, SXa = new Float64Array(NS), SA = new Float64Array(NS);
+    for (let i = 0; i < NS; i++) { SXa[i] = -4 + 8 * i / (NS - 1); SA[i] = kern(SXa[i], 0); }
+
+    function drawDials(x, y) {
+        const f = HV.fit(cvD); if (!f) return;
+        const { ctx, w, h } = f, n = 8;
+        ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+        const cw = w / n, ch = h / n, R = Math.min(cw, ch) / 2 - 4;
+        for (let m = 0; m < n * n; m++) {
+            const cx = (m % n) * cw + cw / 2, cy = ((m / n) | 0) * ch + ch / 2;
+            const a = BX[m] * x / L + BY[m] * y / L;
+            ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU);
+            ctx.fillStyle = HV.lutCss((1 + Math.cos(a)) / 2); ctx.fill();
+            ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,.12)'; ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + R * .8 * Math.cos(a), cy - R * .8 * Math.sin(a));
+            ctx.lineWidth = 2.4; ctx.strokeStyle = 'rgba(2,6,23,.75)'; ctx.stroke();
+            ctx.lineWidth = 1.2; ctx.strokeStyle = '#fff'; ctx.stroke();
+        }
+    }
+    // the homomorphism, done honestly: complex-multiply the two vectors and
+    // compare against the directly encoded sum
+    function homo(ax, ay, bx, by) {
+        let maxB = 0, dot = 0;
+        const ua = ax / L, va = ay / L, ub = bx / L, vb = by / L;
+        for (let m = 0; m < D; m++) {
+            const pa = BX[m] * ua + BY[m] * va, pb = BX[m] * ub + BY[m] * vb, pc = BX[m] * (ua + ub) + BY[m] * (va + vb);
+            const ca = Math.cos(pa), sa = Math.sin(pa), cb = Math.cos(pb), sb = Math.sin(pb);
+            const re = ca * cb - sa * sb, im = ca * sb + sa * cb;
+            const cc = Math.cos(pc), ss = Math.sin(pc);
+            const d = Math.hypot(re - cc, im - ss);
+            if (d > maxB) maxB = d;
+            dot += re * cc + im * ss;
+        }
+        return [maxB, dot / D];
+    }
+    const HSMALL = homo(0.10, 0.05, 0.07, -0.03)[0];
+
+    function render() {
+        const x = parseFloat(sx.value), y = parseFloat(sy.value);
+        document.getElementById('hv-xv').textContent = x.toFixed(2) + ' m';
+        document.getElementById('hv-yv').textContent = y.toFixed(2) + ' m';
+        drawDials(x, y);
+        const [lo, hi] = computeField(x, y);
+        const ff = HV.fit(cvF);
+        if (ff) {
+            HV.drawField(ff.ctx, ff.w, ff.h, field, NX, NY, lo, hi);
+            const px = (x - EXT[0]) / (EXT[1] - EXT[0]) * ff.w, py = (1 - (y - EXT[2]) / (EXT[3] - EXT[2])) * ff.h;
+            const ox = (0 - EXT[0]) / (EXT[1] - EXT[0]) * ff.w, oy = (1 - (0 - EXT[2]) / (EXT[3] - EXT[2])) * ff.h;
+            ff.ctx.lineWidth = 1.5; ff.ctx.strokeStyle = 'rgba(255,255,255,.75)';
+            ff.ctx.beginPath(); ff.ctx.arc(ox, oy, 7, 0, HV.TAU); ff.ctx.stroke();
+            ff.ctx.beginPath(); ff.ctx.moveTo(px - 8, py); ff.ctx.lineTo(px + 8, py); ff.ctx.moveTo(px, py - 8); ff.ctx.lineTo(px, py + 8); ff.ctx.stroke();
+            ff.ctx.font = '10px "JetBrains Mono",monospace'; ff.ctx.fillStyle = 'rgba(255,255,255,.7)';
+            ff.ctx.fillText('origin', ox + 10, oy - 6);
+        }
+        document.getElementById('hv-fieldrange').textContent = lo.toFixed(2) + ' → ' + hi.toFixed(2);
+        const s0 = kern(x, y);
+        HV.drawChart(cvS, {
+            x: SXa,
+            series: [{ y: SA, color: '#22d3ee', lw: 2, label: 'sim vs displacement' }],
+            hline: s0,
+            vlines: [{ t: -L, dash: [4,3] }, { t: L, label: 'ℓ = 0.75 m', dash: [4,3] }],
+            xlabel: 'displacement from the chosen point (m)',
+            yfmt: v => v.toFixed(2)
+        });
+        const H = homo(x, y, 1.30, -0.70);
+        document.getElementById('hv1-out').innerHTML =
+            '<div><b>sim(S(0,0), S(x,y))</b> = ' + HV.sgn(s0, 4) + ' &nbsp; <span style="color:#64748b">mean of cos(phase) over ' + D +
+            ' dims — the average shade of the dial grid; your point is ' + Math.hypot(x, y).toFixed(2) + ' m from the origin</span></div>' +
+            '<div style="margin-top:6px"><b>homomorphism check</b> &nbsp; S(a) ⊗ S(b) vs S(a+b), b = (1.30, −0.70) m: ' +
+            'max |difference| = <b>' + HV.sci(H[0]) + '</b>, similarity of the two sides = <b>' + H[1].toFixed(15) + '</b></div>' +
+            '<div style="color:#64748b">that residual is floating-point rounding, not error — with tiny displacements it falls to ' + HV.sci(HSMALL) + '</div>';
+    }
+    const rr = HV.raf1(render);
+    sx.addEventListener('input', rr); sy.addEventListener('input', rr);
+    hvRedraws.push(render);
+    render();
+})();
+
+// ── H2 · BIND / UNBIND — the wrong key returns static ────────────────
+(function () {
+    const cvA = document.getElementById('cvHvStripA');
+    if (!cvA) return;
+    const D = 1024, L = 0.75, TAU = HV.TAU;
+    const rnd = HV.rng(0x51DE01);                     // same draw as H1 → same bases
+    const BX = HV.uniPh(D, rnd), BY = HV.uniPh(D, rnd);
+    const arnd = HV.rng(0xA70A11);
+    const ATOMS = { CHAIR: HV.uniPh(D, arnd), TABLE: HV.uniPh(D, arnd), PLANT: HV.uniPh(D, arnd), ROBOT: HV.uniPh(D, arnd) };
+    const PX_ = 1.6, PY_ = -0.8;
+    const PLACE = new Float64Array(D);
+    for (let m = 0; m < D; m++) PLACE[m] = BX[m] * PX_ / L + BY[m] * PY_ / L;
+    const BOUND = new Float64Array(D);
+    for (let m = 0; m < D; m++) BOUND[m] = ATOMS.CHAIR[m] + PLACE[m];
+    let key = 'CHAIR';
+    const EXT = [-3, 3, -1.875, 1.875], NX = 44, NY = 27, field = new Float64Array(NX * NY);
+
+    function drawStrip(cv, phases) {
+        const f = HV.fit(cv); if (!f) return;
+        const { ctx, w, h } = f, n = Math.min(D, 240);
+        for (let i = 0; i < n; i++) {
+            ctx.fillStyle = HV.lutCss((1 + Math.cos(phases[Math.floor(i * D / n)])) / 2);
+            ctx.fillRect(i * w / n, 0, w / n + 1, h);
+        }
+    }
+    function render() {
+        drawStrip(cvA, ATOMS.CHAIR); drawStrip(document.getElementById('cvHvStripP'), PLACE);
+        drawStrip(document.getElementById('cvHvStripB'), BOUND);
+        // residual = memory ⊘ key; correlate against every room position
+        const K = ATOMS[key];
+        let lo = Infinity, hi = -Infinity, best = -Infinity, bx = 0, by = 0;
+        for (let j = 0; j < NY; j++) {
+            const gy = EXT[2] + (j + .5) / NY * (EXT[3] - EXT[2]);
+            for (let i = 0; i < NX; i++) {
+                const gx = EXT[0] + (i + .5) / NX * (EXT[1] - EXT[0]);
+                let s = 0;
+                for (let m = 0; m < D; m++) s += Math.cos(BOUND[m] - K[m] - (BX[m] * gx / L + BY[m] * gy / L));
+                s /= D;
+                field[j * NX + i] = s;
+                if (s < lo) lo = s; if (s > hi) hi = s;
+                if (s > best) { best = s; bx = gx; by = gy; }
+            }
+        }
+        const f = HV.fit(document.getElementById('cvHvRec'));
+        if (f) {
+            HV.drawField(f.ctx, f.w, f.h, field, NX, NY, lo, hi);
+            const tx = (PX_ - EXT[0]) / (EXT[1] - EXT[0]) * f.w, ty = (1 - (PY_ - EXT[2]) / (EXT[3] - EXT[2])) * f.h;
+            f.ctx.lineWidth = 1.5; f.ctx.strokeStyle = 'rgba(255,255,255,.8)';
+            f.ctx.setLineDash([4, 3]); f.ctx.beginPath(); f.ctx.arc(tx, ty, 9, 0, TAU); f.ctx.stroke(); f.ctx.setLineDash([]);
+            f.ctx.font = '10px "JetBrains Mono",monospace'; f.ctx.fillStyle = 'rgba(255,255,255,.75)';
+            f.ctx.fillText('true place', tx + 12, ty + 3);
+        }
+        document.getElementById('hv2-peak').textContent = 'peak ' + best.toFixed(3);
+        const good = key === 'CHAIR';
+        // exact sim at the true place with each candidate key
+        let sTrue = 0;
+        for (let m = 0; m < D; m++) sTrue += Math.cos(BOUND[m] - K[m] - PLACE[m]);
+        sTrue /= D;
+        document.getElementById('hv2-out').innerHTML =
+            '<div>memory ⊘ <b>' + key + '</b> vs the true place: sim = <b class="' + (good ? 'ok' : 'no') + '">' + sTrue.toFixed(4) + '</b>' +
+            (good ? ' <span class="ok">— snapped into focus</span>' : ' <span class="no">— static; wrong key, nothing recovered</span>') + '</div>' +
+            '<div style="color:#64748b">peak of the whole field sits at (' + bx.toFixed(1) + ', ' + by.toFixed(1) + ')' +
+            (good ? ' — the stored place (1.6, −0.8), recovered by algebra alone' : ' — an arbitrary noise ripple, not a memory') + '</div>';
+    }
+    window.hv2SetKey = k => {
+        key = k;
+        ['CHAIR', 'TABLE', 'PLANT', 'ROBOT'].forEach(t =>
+            document.getElementById('hv2-key-' + t).setAttribute('aria-pressed', String(t === k)));
+        render();
+    };
+    hvRedraws.push(render);
+    render();
+})();
+
+// ── H3 · CAPACITY — bundle k memories, watch the margin run out ──────
+(function () {
+    const cvB = document.getElementById('cvHvBars'), cvC = document.getElementById('cvHvMarg'),
+          sk = document.getElementById('hv-k');
+    if (!cvB) return;
+    const KMAX = 40;
+    let Dcur = 1024, kcur = 8, cum = [];
+    const KS = new Float64Array(KMAX), MARG = new Float64Array(KMAX), THEO = new Float64Array(KMAX),
+          sims = new Float64Array(KMAX);
+
+    // k (atom ⊗ place) pairs bundled into one trace, unbound by atom 0:
+    // cum[i][j] accumulates sim(bound_i ⊘ atom_0, place_j), so the bundle
+    // (a MEAN) at load k is just cum[k-1][j]/k
+    function build(D) {
+        const rnd = HV.rng(0x51DE03), AT = [], PC = [];
+        for (let i = 0; i < KMAX; i++) AT.push(HV.uniPh(D, rnd));
+        for (let i = 0; i < KMAX; i++) PC.push(HV.uniPh(D, rnd));
+        const A0 = AT[0], T = new Float64Array(D);
+        let prev = new Float64Array(KMAX);
+        cum = [];
+        for (let i = 0; i < KMAX; i++) {
+            for (let m = 0; m < D; m++) T[m] = AT[i][m] + PC[i][m] - A0[m];
+            const cu = new Float64Array(KMAX);
+            for (let j = 0; j < KMAX; j++) {
+                let s = 0; const Pj = PC[j];
+                for (let m = 0; m < D; m++) s += Math.cos(Pj[m] - T[m]);
+                cu[j] = prev[j] + s / D;
+            }
+            cum.push(cu); prev = cu;
+        }
+        for (let i = 0; i < KMAX; i++) {
+            const k = i + 1, sig = cum[i][0] / k;
+            let ss = 0;
+            for (let j = 1; j < KMAX; j++) { const v = cum[i][j] / k; ss += v * v; }
+            const rms = Math.sqrt(ss / (KMAX - 1)) || 1e-12;
+            KS[i] = k; MARG[i] = sig / rms; THEO[i] = Math.sqrt(2 * D / k);
+        }
+    }
+    function drawBars() {
+        const f = HV.fit(cvB); if (!f) return;
+        const { ctx, w, h } = f, L = 46, R = 10, T = 12, B = 30;
+        ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+        let hi = 0;
+        for (let j = 0; j < KMAX; j++) hi = Math.max(hi, Math.abs(sims[j]));
+        hi = hi || 1;
+        const PY = v => T + (1 - (v + hi) / (2 * hi)) * (h - T - B);
+        const bw = (w - L - R) / KMAX;
+        ctx.strokeStyle = 'rgba(255,255,255,.15)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(L, PY(0) + .5); ctx.lineTo(w - R, PY(0) + .5); ctx.stroke();
+        ctx.font = '10px "JetBrains Mono",monospace'; ctx.fillStyle = '#64748b';
+        ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText(hi.toFixed(2), L - 6, PY(hi)); ctx.fillText('0', L - 6, PY(0)); ctx.fillText('−' + hi.toFixed(2), L - 6, PY(-hi));
+        for (let j = 0; j < KMAX; j++) {
+            const x = L + j * bw, v = sims[j];
+            ctx.fillStyle = j === 0 ? '#22d3ee' : '#475569';
+            ctx.fillRect(x + 1, Math.min(PY(v), PY(0)), Math.max(1, bw - 2), Math.abs(PY(v) - PY(0)) + .5);
+        }
+        ctx.fillStyle = '#22d3ee'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillText('■ the place we asked for', L + 4, T);
+        ctx.fillStyle = '#64748b'; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        ctx.fillText('40 candidate places — everything except the cyan bar is crosstalk', (L + w - R) / 2, h - 5);
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    }
+    function render() {
+        kcur = parseInt(sk.value, 10);
+        document.getElementById('hv-kv').textContent = kcur + ' of 40';
+        const cu = cum[kcur - 1];
+        for (let j = 0; j < KMAX; j++) sims[j] = cu[j] / kcur;
+        drawBars();
+        HV.drawChart(cvC, {
+            x: KS,
+            series: [
+                { y: MARG, color: '#22d3ee', lw: 2, label: 'measured margin' },
+                { y: THEO, color: '#94a3b8', lw: 1.6, dash: [5, 4], label: '√(2D/k) prediction' }
+            ],
+            mark: [kcur, MARG[kcur - 1]],
+            xlabel: 'items bundled into the one trace, k',
+            yfmt: v => v.toFixed(0)
+        });
+        const sig = sims[0];
+        let ss = 0, mx = 0;
+        for (let j = 1; j < KMAX; j++) { const av = Math.abs(sims[j]); ss += sims[j] * sims[j]; if (av > mx) mx = av; }
+        const rms = Math.sqrt(ss / (KMAX - 1)), top1 = sig > mx;
+        document.getElementById('hv3-out').innerHTML =
+            '<div><b>D = ' + Dcur + '</b> · <b>k = ' + kcur + '</b> memories on one ' + Dcur + '-number tape <span style="color:#64748b">(same size at k = 1 and k = 40)</span></div>' +
+            '<div><b>signal</b> sim(residual, correct place) = <b>' + HV.sgn(sig, 4) + '</b> <span style="color:#64748b">≈ 1/k</span> &nbsp; · &nbsp; ' +
+            '<b>crosstalk</b> rms = <b>' + rms.toFixed(4) + '</b>, worst = <b>' + mx.toFixed(4) + '</b></div>' +
+            '<div><b>margin</b> = <b>' + (sig / (rms || 1e-12)).toFixed(1) + '</b> (theory ' + Math.sqrt(2 * Dcur / kcur).toFixed(1) + ') &nbsp; · &nbsp; <b>top-1</b> still correct? ' +
+            (top1 ? '<span class="ok">yes</span>' : '<span class="no">no — the readout has failed</span>') + '</div>';
+    }
+    window.hv3SetD = d => {
+        if (d === Dcur) return;
+        Dcur = d;
+        [256, 1024, 4096].forEach(v => document.getElementById('hv3-d-' + v).setAttribute('aria-pressed', String(v === d)));
+        build(d); render();
+    };
+    build(Dcur);
+    sk.addEventListener('input', HV.raf1(render));
+    hvRedraws.push(render);
+    render();
+})();
+
+// ── SLAM PIPELINE STEPPER ────────────────────────────────────────────
+const _slamDescs = [
+    "Counting steps in the dark. The agent's velocity drives the position vector directly through the homomorphism — S(x) ⊗ S(v·dt) = S(x + v·dt), one multiply per step. In the spiking model this is a bank of velocity-controlled oscillators (VCOs) with attractor dynamics: grid cells. It works — and, like all dead reckoning, it drifts.",
+    "Seeing something familiar. A landmark in view is turned into two vectors: a semantic identity atom (what it is) and a displacement 'it is 2 m that way' relative to the agent — the same information the brain's object-vector cells carry.",
+    "One bind writes the map. The sighting is stored as M += LANDMARK ⊗ S(position + displacement) — the landmark's identity bound to where the agent believes it sits. The map is a single fixed-size vector (in the full model, an associative memory learned online with PES). Ten landmarks or ten thousand: same size.",
+    "Closing the loop. Re-seeing a known landmark, the algebra runs backwards: unbind its identity from the map, correlate the residue against positions, take the peak. The recalled place minus the current sighting says where the agent really is — and the difference nudges the path integrator home. Drift can no longer accumulate."
+];
+const _slamColors = ['#22d3ee', '#a855f7', '#34d399', '#f59e0b'];
+function slamSetStep(i) {
+    [0, 1, 2, 3].forEach(j => {
+        const btn = document.getElementById('slam-step-' + j), circ = document.getElementById('slam-circ-' + j);
+        btn.setAttribute('aria-pressed', String(j === i));
+        if (j === i) {
+            btn.classList.remove('inactive');
+            circ.style.borderColor = _slamColors[j]; circ.style.color = _slamColors[j];
+            circ.style.boxShadow = '0 0 20px ' + _slamColors[j];
         } else {
-            const found = agents.filter(a => a.type === agentType);
-            document.getElementById('vsa-status').textContent = 'Item query: ' + agentType + ' → ' + found.length + ' match(es)';
+            btn.classList.add('inactive');
+            circ.style.borderColor = 'rgba(255,255,255,.1)'; circ.style.color = '#64748b'; circ.style.boxShadow = 'none';
         }
     });
+    document.getElementById('slam-step-desc').textContent = _slamDescs[i];
+    document.getElementById('slam-colorbar').style.background = _slamColors[i];
+}
+slamSetStep(0);
 
-    function updateVSAUI() {
-        const n = agents.length;
-        let sumX = 0, sumY = 0;
-        agents.forEach(a => { sumX += Math.cos(a.phase); sumY += Math.sin(a.phase); });
-        const meanPhase = Math.atan2(sumY / (n||1), sumX / (n||1));
-        const nx = 60 + 50 * Math.cos(meanPhase);
-        const ny = 60 + 50 * Math.sin(meanPhase);
-        document.getElementById('phase-needle').setAttribute('x2', nx.toFixed(1));
-        document.getElementById('phase-needle').setAttribute('y2', ny.toFixed(1));
-        document.getElementById('vsa-trace-fill').style.width = Math.min(100, n * 6) + '%';
-        document.getElementById('vsa-status').textContent = n + ' agent' + (n===1?'':'s') + ' encoded';
+// ── LIVE SSP-SLAM DEMO — drift vs a real vector-map correction ───────
+(function () {
+    const cv = document.getElementById('cvSlam');
+    if (!cv) return;
+    const TAU = HV.TAU, D = 384, L = 0.9;
+    const EXT = [-4, 4, -3, 3];                       // room, metres
+    const rnd = HV.rng(0x51A801);
+    const BX = HV.uniPh(D, rnd), BY = HV.uniPh(D, rnd);
+    const LMS = [
+        { name: 'DOOR',  letter: 'D', x: -2.6, y:  2.1 },
+        { name: 'DESK',  letter: 'K', x:  2.6, y:  1.9 },
+        { name: 'PLANT', 'letter': 'P', x:  2.8, y: -2.1 },
+        { name: 'CRATE', letter: 'C', x: -2.4, y: -2.0 }
+    ];
+    const lrnd = HV.rng(0x51A802);
+    LMS.forEach(l => l.atom = HV.uniPh(D, lrnd));
+    const VIEW_R = 1.5, GAIN = 0.4;
+    const nrnd = HV.rng(0xBADD1E);
+    const gauss = () => { const u = Math.max(nrnd(), 1e-9), v = nrnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(TAU * v); };
+
+    function posPh(x, y, out) { for (let m = 0; m < D; m++) out[m] = BX[m] * x / L + BY[m] * y / L; return out; }
+    const tmp = new Float64Array(D);
+
+    // state
+    let u = 0, playing = true, correcting = true;
+    let est = null, estDR = null, bias = [0, 0];
+    const mem = { re: new Float64Array(D), im: new Float64Array(D), known: new Set(), K: 0 };
+    const trails = { tru: [], dr: [], slam: [] };
+    const errbuf = [];                                 // {t, dr, slam}
+    let simT = 0, lastCorr = {}, flash = null, visible = true;
+    const PRM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (PRM) playing = false;
+
+    const truPos = uu => [3.0 * Math.sin(uu), 2.35 * Math.sin(2 * uu)];
+    const truVel = uu => [3.0 * Math.cos(uu), 4.7 * Math.cos(2 * uu)];
+
+    function reset() {
+        u = 0; simT = 0;
+        const p = truPos(0);
+        est = [p[0], p[1]]; estDR = [p[0], p[1]]; bias = [0, 0];
+        mem.re.fill(0); mem.im.fill(0); mem.known.clear(); mem.K = 0;
+        trails.tru.length = trails.dr.length = trails.slam.length = 0;
+        errbuf.length = 0; lastCorr = {}; flash = null;
+        log('memory wiped — walking…');
+        updateMem();
+    }
+    function log(msg) { document.getElementById('slam-log').innerHTML = msg; }
+    function updateMem() {
+        document.getElementById('slam-mem').innerHTML =
+            '<b>MAP MEMORY</b> · one vector · D = ' + D + ' · <b>' + mem.K + '</b> sighting' + (mem.K === 1 ? '' : 's') +
+            ' bound · ' + mem.known.size + '/4 landmarks known · <span style="color:#64748b">size constant</span>';
     }
 
-    window.vsaSetMode = m => {
-        mode = m; queryResult = null;
-        ['place','query_loc','query_item'].forEach(id => {
-            document.getElementById('vsa-mode-' + id).classList.toggle('active', id === m);
+    // decode a landmark's stored place from the memory: unbind → correlate → peak
+    const GNX = 34, GNY = 26;
+    function decode(lm) {
+        const rr = new Float64Array(D), ri = new Float64Array(D);
+        for (let m = 0; m < D; m++) {
+            const c = Math.cos(lm.atom[m]), s = Math.sin(lm.atom[m]);
+            rr[m] = mem.re[m] * c + mem.im[m] * s;     // rotate by −atom
+            ri[m] = mem.im[m] * c - mem.re[m] * s;
+        }
+        let best = -Infinity, bx = 0, by = 0;
+        for (let j = 0; j < GNY; j++) {
+            const gy = EXT[2] + (j + .5) / GNY * (EXT[3] - EXT[2]);
+            for (let i = 0; i < GNX; i++) {
+                const gx = EXT[0] + (i + .5) / GNX * (EXT[1] - EXT[0]);
+                let s = 0;
+                for (let m = 0; m < D; m++) {
+                    const p = BX[m] * gx / L + BY[m] * gy / L;
+                    s += rr[m] * Math.cos(p) + ri[m] * Math.sin(p);
+                }
+                if (s > best) { best = s; bx = gx; by = gy; }
+            }
+        }
+        return [bx, by, best / (D * Math.max(mem.K, 1))];
+    }
+
+    function step(dt) {
+        simT += dt;
+        u += dt * 0.42;
+        const p = truPos(u), v = truVel(u);
+        // odometry noise: slow bias random-walk + white — both estimates get the SAME noisy velocity
+        bias[0] += gauss() * 0.012 * Math.sqrt(dt); bias[1] += gauss() * 0.012 * Math.sqrt(dt);
+        const vx = v[0] * 0.42 + bias[0] + gauss() * 0.05, vy = v[1] * 0.42 + bias[1] + gauss() * 0.05;
+        estDR[0] += vx * dt; estDR[1] += vy * dt;
+        est[0] += vx * dt; est[1] += vy * dt;
+
+        // landmark logic runs off the TRUE pose (that is what a camera sees)
+        for (const lm of LMS) {
+            const dx = lm.x - p[0], dy = lm.y - p[1];
+            if (Math.hypot(dx, dy) > VIEW_R) { lm.inView = false; continue; }
+            const first = !lm.inView; lm.inView = true;
+            const mx = dx + gauss() * 0.03, my = dy + gauss() * 0.03;   // measured displacement
+            if (!mem.known.has(lm.name)) {
+                posPh(est[0] + mx, est[1] + my, tmp);                    // store at BELIEVED position
+                for (let m = 0; m < D; m++) { mem.re[m] += Math.cos(tmp[m] + lm.atom[m]); mem.im[m] += Math.sin(tmp[m] + lm.atom[m]); }
+                mem.known.add(lm.name); mem.K++;
+                updateMem();
+                log('<b>' + lm.name + '</b> first seen → bound into the map: M += ' + lm.name + ' ⊗ S(x+Δ)');
+                flash = { x: lm.x, y: lm.y, until: simT + 0.8, col: '#34d399' };
+            } else if (correcting && first && (lastCorr[lm.name] === undefined || simT - lastCorr[lm.name] > 2)) {
+                lastCorr[lm.name] = simT;
+                const [qx, qy, qs] = decode(lm);
+                const tx = qx - mx, ty = qy - my;
+                const corrMag = GAIN * Math.hypot(tx - est[0], ty - est[1]);
+                est[0] += GAIN * (tx - est[0]); est[1] += GAIN * (ty - est[1]);
+                log('<b>' + lm.name + '</b> recognised → M ⊘ ' + lm.name + ' decodes (' + qx.toFixed(1) + ', ' + qy.toFixed(1) +
+                    ') at sim ' + qs.toFixed(2) + ' → <b class="ok">correction ' + corrMag.toFixed(2) + ' m applied</b>');
+                flash = { x: lm.x, y: lm.y, until: simT + 0.8, col: '#22d3ee' };
+            }
+        }
+        trails.tru.push([p[0], p[1]]); trails.dr.push([estDR[0], estDR[1]]); trails.slam.push([est[0], est[1]]);
+        const MAXTRAIL = 900;
+        if (trails.tru.length > MAXTRAIL) { trails.tru.shift(); trails.dr.shift(); trails.slam.shift(); }
+        errbuf.push({ t: simT, dr: Math.hypot(estDR[0] - p[0], estDR[1] - p[1]), slam: Math.hypot(est[0] - p[0], est[1] - p[1]) });
+        while (errbuf.length && errbuf[0].t < simT - 60) errbuf.shift();
+    }
+
+    function draw() {
+        const f = HV.fit(cv); if (!f) return;
+        const { ctx, w, h } = f;
+        const PXc = x => (x - EXT[0]) / (EXT[1] - EXT[0]) * w;
+        const PYc = y => (1 - (y - EXT[2]) / (EXT[3] - EXT[2])) * h;
+        ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = 'rgba(34,211,238,.05)'; ctx.lineWidth = 1;
+        for (let gx = Math.ceil(EXT[0]); gx <= EXT[1]; gx++) { ctx.beginPath(); ctx.moveTo(PXc(gx), 0); ctx.lineTo(PXc(gx), h); ctx.stroke(); }
+        for (let gy = Math.ceil(EXT[2]); gy <= EXT[3]; gy++) { ctx.beginPath(); ctx.moveTo(0, PYc(gy)); ctx.lineTo(w, PYc(gy)); ctx.stroke(); }
+        function trail(arr, color, lw) {
+            if (arr.length < 2) return;
+            ctx.strokeStyle = color; ctx.lineWidth = lw;
+            ctx.beginPath();
+            arr.forEach((q, i) => { const px = PXc(q[0]), py = PYc(q[1]); i ? ctx.lineTo(px, py) : ctx.moveTo(px, py); });
+            ctx.stroke();
+        }
+        trail(trails.tru, 'rgba(148,163,184,.5)', 1.5);
+        trail(trails.dr, '#d97706', 1.8);
+        trail(trails.slam, '#22d3ee', 2);
+        const p = truPos(u);
+        // view radius
+        ctx.setLineDash([4, 4]); ctx.strokeStyle = 'rgba(148,163,184,.35)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(PXc(p[0]), PYc(p[1]), VIEW_R / (EXT[1] - EXT[0]) * w, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+        // landmarks: neutral rings + letters (identity by letter, never colour alone)
+        LMS.forEach(lm => {
+            const x = PXc(lm.x), y = PYc(lm.y);
+            ctx.beginPath(); ctx.arc(x, y, 11, 0, TAU);
+            ctx.fillStyle = mem.known.has(lm.name) ? 'rgba(226,232,240,.14)' : 'rgba(226,232,240,.05)'; ctx.fill();
+            ctx.lineWidth = 1.5; ctx.strokeStyle = lm.inView ? '#e2e8f0' : 'rgba(226,232,240,.4)'; ctx.stroke();
+            ctx.fillStyle = '#e2e8f0'; ctx.font = 'bold 10px "JetBrains Mono",monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(lm.letter, x, y + .5);
         });
-    };
-    window.vsaSetAgent = type => {
-        agentType = type;
-        ['DRONE','ROVER','SENSOR','RELAY'].forEach(t => {
-            document.getElementById('vsa-agent-' + t).classList.toggle('active', t === type);
+        if (flash && simT < flash.until) {
+            const t = 1 - (flash.until - simT) / 0.8;
+            ctx.beginPath(); ctx.arc(PXc(flash.x), PYc(flash.y), 12 + t * 22, 0, TAU);
+            ctx.strokeStyle = flash.col; ctx.globalAlpha = 1 - t; ctx.lineWidth = 2; ctx.stroke(); ctx.globalAlpha = 1;
+        }
+        // agents
+        function dot(q, color, r) { ctx.beginPath(); ctx.arc(PXc(q[0]), PYc(q[1]), r, 0, TAU); ctx.fillStyle = color; ctx.fill(); }
+        dot(p, '#e2e8f0', 5); dot(estDR, '#d97706', 4); dot(est, '#22d3ee', 4.5);
+        // in-canvas key (text carries identity)
+        ctx.font = '10px "JetBrains Mono",monospace'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        ctx.fillStyle = '#94a3b8'; ctx.fillText('● truth', 10, 10);
+        ctx.fillStyle = '#d97706'; ctx.fillText('● dead reckoning', 10, 24);
+        ctx.fillStyle = '#22d3ee'; ctx.fillText('● + vector map' + (correcting ? '' : ' (corrections OFF)'), 10, 38);
+        ctx.textBaseline = 'alphabetic';
+    }
+    function drawErr() {
+        if (errbuf.length < 2) return;
+        const xs = errbuf.map(e => e.t), dr = errbuf.map(e => e.dr), sl = errbuf.map(e => e.slam);
+        HV.drawChart(document.getElementById('cvSlamErr'), {
+            x: xs,
+            series: [
+                { y: dr, color: '#d97706', lw: 1.8, label: 'dead reckoning' },
+                { y: sl, color: '#22d3ee', lw: 1.8, label: 'with map' }
+            ],
+            ylo: 0,
+            yfmt: v => v.toFixed(1),
+            xlabel: 'time (s)'
         });
+    }
+
+    let last = null, errEvery = 0;
+    function frame(ts) {
+        requestAnimationFrame(frame);
+        if (!playing || !visible) { last = ts; return; }
+        if (last === null) last = ts;
+        let dt = Math.min((ts - last) / 1000, 0.05); last = ts;
+        step(dt);
+        draw();
+        if (++errEvery % 6 === 0) drawErr();
+    }
+    // pause when scrolled offscreen
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(en => { visible = en[0].isIntersecting; }, { threshold: 0.05 }).observe(cv);
+    }
+    const playBtn = document.getElementById('slam-play');
+    function setPlaying(v) {
+        playing = v;
+        playBtn.textContent = v ? '❚❚ Pause' : '▶ Play';
+        playBtn.setAttribute('aria-pressed', String(v));
+    }
+    playBtn.addEventListener('click', () => setPlaying(!playing));
+    setPlaying(playing);
+    const corrBtn = document.getElementById('slam-corr');
+    corrBtn.addEventListener('click', () => {
+        correcting = !correcting;
+        corrBtn.setAttribute('aria-pressed', String(correcting));
+        corrBtn.setAttribute('aria-checked', String(correcting));
+        log(correcting ? 'corrections <b class="ok">ON</b> — next recognised landmark snaps the estimate home'
+                       : 'corrections <b class="no">OFF</b> — cyan now drifts exactly like amber');
+    });
+    window.slamReset = reset;
+    reset();
+    draw(); drawErr();
+    hvRedraws.push(() => { draw(); drawErr(); });
+    requestAnimationFrame(frame);
+})();
+
+// ── GRID CELLS FROM HEXAGONAL SSPs ───────────────────────────────────
+(function () {
+    const cv = document.getElementById('cvGrid');
+    if (!cv) return;
+    const TAU = HV.TAU, EXTh = 2.2;
+    const slider = document.getElementById('grid-mods');
+    // module m: three plane waves at 120°, rotated + scaled per module
+    // (the construction inside HexagonalSSPSpace: n_rotates × n_scales)
+    const MODS = [];
+    for (let m = 0; m < 6; m++) {
+        const scale = 1.3 / Math.pow(1.42, m), rot = m * 0.55;
+        const axes = [];
+        for (let a = 0; a < 3; a++) {
+            const th = rot + a * TAU / 3;
+            axes.push([Math.cos(th) * TAU / scale, Math.sin(th) * TAU / scale]);
+        }
+        MODS.push(axes);
+    }
+    const N = 88, field = new Float64Array(N * N);
+    function render() {
+        const nm = parseInt(slider.value, 10);
+        document.getElementById('grid-modsv').textContent = nm + ' module' + (nm === 1 ? '' : 's');
+        let lo = Infinity, hi = -Infinity;
+        for (let j = 0; j < N; j++) {
+            const gy = -EXTh + (j + .5) / N * 2 * EXTh;
+            for (let i = 0; i < N; i++) {
+                const gx = -EXTh + (i + .5) / N * 2 * EXTh;
+                let s = 0, c = 0;
+                for (let m = 0; m < nm; m++) for (const ax of MODS[m]) { s += Math.cos(ax[0] * gx + ax[1] * gy); c++; }
+                const v = s / c;
+                field[j * N + i] = v;
+                if (v < lo) lo = v; if (v > hi) hi = v;
+            }
+        }
+        const f = HV.fit(cv); if (!f) return;
+        HV.drawField(f.ctx, f.w, f.h, field, N, N, lo, hi);
+        f.ctx.font = '10px "JetBrains Mono",monospace'; f.ctx.fillStyle = 'rgba(255,255,255,.7)';
+        f.ctx.textAlign = 'left';
+        f.ctx.fillText('sim( S(0,0), S(p) ) over a ' + (2 * EXTh).toFixed(1) + ' m square', 10, 16);
+        document.getElementById('grid-out').innerHTML = nm === 1
+            ? '<div><b>1 module</b> — three interfering plane waves at 120° make a <b>hexagonal lattice</b>: a grid cell\'s firing map. Position is ambiguous — every bright node matches.</div>'
+            : '<div><b>' + nm + ' modules</b> (scales 1–1.42<sup>' + (nm - 1) + '</sup>, each rotated) — the lattices only agree at <b>one</b> place. Ambiguity ' +
+              (nm < 4 ? 'shrinking…' : '<span class="ok">gone: a place cell</span>') + '.</div>';
+    }
+    slider.addEventListener('input', HV.raf1(render));
+    hvRedraws.push(render);
+    render();
+})();
+
+// ── COGNITIVE MAP — a room in ONE vector, queried by algebra ─────────
+(function () {
+    const cv = document.getElementById('cm-canvas');
+    if (!cv) return;
+    const TAU = HV.TAU, EXT = [-4, 4, -2.5, 2.5];
+    const ITEMS = {
+        CHAIR: { col: '#0891b2', letter: 'C' },
+        TABLE: { col: '#d97706', letter: 'T' },
+        PLANT: { col: '#059669', letter: 'P' },
+        ROBOT: { col: '#8b5cf6', letter: 'R' }
     };
-    window.vsaHardReset = () => {
-        agents = []; queryResult = null;
-        document.getElementById('vsa-trace-fill').style.width = '0%';
-        document.getElementById('vsa-status').textContent = '0 agents encoded';
-        document.getElementById('phase-needle').setAttribute('x2', '110');
-        document.getElementById('phase-needle').setAttribute('y2', '60');
+    let D = 1024, ELL = 0.75, mode = 'place', item = 'CHAIR';
+    let BX, BY, ATOMS = {};
+    const placements = [];
+    let mem = null;                                    // {re, im} complex accumulator
+    let heat = null;                                   // {field,nx,ny,lo,hi,label,peak:[x,y,v]}
+    let probe = null;                                  // WHAT-mode click marker
+
+    function rebuildBasis() {
+        const rnd = HV.rng(0xC06A17);
+        BX = HV.uniPh(D, rnd); BY = HV.uniPh(D, rnd);
+        const ar = HV.rng(0xC06A18);
+        ATOMS = {};
+        for (const k of Object.keys(ITEMS)) ATOMS[k] = HV.uniPh(D, ar);
+    }
+    function posPh(x, y, out) { for (let m = 0; m < D; m++) out[m] = BX[m] * x / ELL + BY[m] * y / ELL; return out; }
+    const tmp = () => new Float64Array(D);
+    function rebuildMemory() {
+        mem = { re: new Float64Array(D), im: new Float64Array(D) };
+        const t = tmp();
+        for (const pl of placements) {
+            posPh(pl.x, pl.y, t);
+            const A = ATOMS[pl.type];
+            for (let m = 0; m < D; m++) { mem.re[m] += Math.cos(t[m] + A[m]); mem.im[m] += Math.sin(t[m] + A[m]); }
+        }
+        heat = null; probe = null;
+        updateMem();
+    }
+    function addPlacement(type, x, y) {
+        placements.push({ type, x, y });
+        const t = tmp(), A = ATOMS[type];
+        posPh(x, y, t);
+        for (let m = 0; m < D; m++) { mem.re[m] += Math.cos(t[m] + A[m]); mem.im[m] += Math.sin(t[m] + A[m]); }
+        heat = null; probe = null;
+        updateMem();
+    }
+    function unbindAtom(A) {
+        const rr = new Float64Array(D), ri = new Float64Array(D);
+        for (let m = 0; m < D; m++) {
+            const c = Math.cos(A[m]), s = Math.sin(A[m]);
+            rr[m] = mem.re[m] * c + mem.im[m] * s;
+            ri[m] = mem.im[m] * c - mem.re[m] * s;
+        }
+        return [rr, ri];
+    }
+    const NXh = 52, NYh = 33;
+    function queryWhere(type) {
+        if (!placements.length) { out('The memory is empty — place something first.'); return; }
+        const K = placements.length, [rr, ri] = unbindAtom(ATOMS[type]);
+        const field = new Float64Array(NXh * NYh);
+        let lo = Infinity, hi = -Infinity, best = -Infinity, bx = 0, by = 0;
+        for (let j = 0; j < NYh; j++) {
+            const gy = EXT[2] + (j + .5) / NYh * (EXT[3] - EXT[2]);
+            for (let i = 0; i < NXh; i++) {
+                const gx = EXT[0] + (i + .5) / NXh * (EXT[1] - EXT[0]);
+                let s = 0;
+                for (let m = 0; m < D; m++) {
+                    const p = BX[m] * gx / ELL + BY[m] * gy / ELL;
+                    s += rr[m] * Math.cos(p) + ri[m] * Math.sin(p);
+                }
+                s /= D * K;
+                field[j * NXh + i] = s;
+                if (s < lo) lo = s; if (s > hi) hi = s;
+                if (s > best) { best = s; bx = gx; by = gy; }
+            }
+        }
+        heat = { field, lo, hi, peak: [bx, by, best], type };
+        probe = null;
+        const n = placements.filter(p => p.type === type).length;
+        const near = placements.filter(p => p.type === type && Math.hypot(p.x - bx, p.y - by) < 0.6).length;
+        out('<div><b>M ⊘ ' + type + '</b>, correlated against every position — the raw answer, crosstalk included.</div>' +
+            '<div>peak sim <b>' + best.toFixed(3) + '</b> at (' + bx.toFixed(1) + ', ' + by.toFixed(1) + ') · ' + type + '×' + n +
+            ' in memory' + (n ? (near ? ' — <span class="ok">peak lands on one of them</span>' : ' — <span class="no">peak missed (crosstalk won)</span>') :
+            ' — <span class="no">never stored, so this is pure noise</span>') + '</div>');
+        document.getElementById('cm-heatrange').textContent = lo.toFixed(2) + ' → ' + hi.toFixed(2);
+    }
+    function queryWhat(x, y) {
+        if (!placements.length) { out('The memory is empty — place something first.'); return; }
+        const K = placements.length, t = tmp();
+        posPh(x, y, t);
+        const [rr, ri] = unbindAtom(t);                // unbind the PLACE this time
+        const sims = Object.keys(ITEMS).map(k => {
+            const A = ATOMS[k];
+            let s = 0;
+            for (let m = 0; m < D; m++) s += rr[m] * Math.cos(A[m]) + ri[m] * Math.sin(A[m]);
+            return [k, s / (D * K)];
+        }).sort((a, b) => b[1] - a[1]);
+        probe = { x, y }; heat = null;
+        document.getElementById('cm-heatrange').textContent = '—';
+        const mx = Math.max(sims[0][1], 1e-9);
+        out('<div><b>M ⊘ S(' + x.toFixed(1) + ', ' + y.toFixed(1) + ')</b> vs each identity atom:</div>' +
+            sims.map(([k, v]) => {
+                const wpx = Math.max(2, Math.round(Math.max(v, 0) / mx * 90));
+                return '<div style="display:flex;align-items:center;gap:8px"><span style="width:52px;color:' + ITEMS[k].col + '">' + k +
+                    '</span><span style="display:inline-block;height:7px;width:' + wpx + 'px;background:' + ITEMS[k].col +
+                    ';border-radius:4px"></span> ' + HV.sgn(v, 3) + (k === sims[0][0] && v > 0.04 ? ' <b class="ok">← here</b>' : '') + '</div>';
+            }).join(''));
+    }
+    function out(html) { document.getElementById('cm-out').innerHTML = html; }
+    function updateMem() {
+        document.getElementById('cm-mem').innerHTML =
+            '<b>MEMORY</b> · one vector · D = ' + D + ' numbers · <b>' + placements.length + '</b> object' +
+            (placements.length === 1 ? '' : 's') + ' bound · ℓ = ' + ELL.toFixed(2) + ' m · <span style="color:#64748b">size never grows</span>';
+        draw();
+    }
+
+    function draw() {
+        const f = HV.fit(cv); if (!f) return;
+        const { ctx, w, h } = f;
+        const PXc = x => (x - EXT[0]) / (EXT[1] - EXT[0]) * w;
+        const PYc = y => (1 - (y - EXT[2]) / (EXT[3] - EXT[2])) * h;
+        ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+        if (heat) HV.drawField(ctx, w, h, heat.field, NXh, NYh, heat.lo, heat.hi);
+        ctx.strokeStyle = 'rgba(34,211,238,.06)'; ctx.lineWidth = 1;
+        for (let gx = Math.ceil(EXT[0]); gx <= EXT[1]; gx++) { ctx.beginPath(); ctx.moveTo(PXc(gx), 0); ctx.lineTo(PXc(gx), h); ctx.stroke(); }
+        for (let gy = Math.ceil(EXT[2]); gy <= EXT[3]; gy++) { ctx.beginPath(); ctx.moveTo(0, PYc(gy)); ctx.lineTo(w, PYc(gy)); ctx.stroke(); }
+        placements.forEach(pl => {
+            const cfg = ITEMS[pl.type], x = PXc(pl.x), y = PYc(pl.y);
+            const dim = heat && heat.type !== pl.type;
+            ctx.globalAlpha = dim ? 0.45 : 1;
+            const grd = ctx.createRadialGradient(x, y, 0, x, y, 15);
+            grd.addColorStop(0, cfg.col + '55'); grd.addColorStop(1, 'transparent');
+            ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, 15, 0, TAU); ctx.fill();
+            ctx.beginPath(); ctx.arc(x, y, 8, 0, TAU); ctx.fillStyle = cfg.col; ctx.fill();
+            ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.stroke();
+            ctx.fillStyle = '#fff'; ctx.font = 'bold 9px "JetBrains Mono",monospace';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(cfg.letter, x, y + .5);
+            ctx.globalAlpha = 1;
+        });
+        if (heat) {
+            const x = PXc(heat.peak[0]), y = PYc(heat.peak[1]);
+            ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.moveTo(x - 9, y); ctx.lineTo(x + 9, y); ctx.moveTo(x, y - 9); ctx.lineTo(x, y + 9); ctx.stroke();
+            ctx.font = '10px "JetBrains Mono",monospace'; ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+            ctx.fillText('peak: ' + heat.type + '?', x + 12, y - 6);
+        }
+        if (probe) {
+            const x = PXc(probe.x), y = PYc(probe.y);
+            ctx.setLineDash([4, 3]); ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.arc(x, y, 12, 0, TAU); ctx.stroke(); ctx.setLineDash([]);
+        }
+        ctx.font = '10px "JetBrains Mono",monospace'; ctx.fillStyle = 'rgba(34,211,238,.55)';
+        ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText('MODE: ' + (mode === 'place' ? 'PLACE — click to add ' + item : mode === 'where' ? 'WHERE IS ' + item + '? — click anywhere to ask' : 'WHAT IS HERE? — click a spot'), 8, h - 10);
+    }
+
+    cv.addEventListener('click', e => {
+        const r = cv.getBoundingClientRect();
+        const x = EXT[0] + (e.clientX - r.left) / r.width * (EXT[1] - EXT[0]);
+        const y = EXT[3] - (e.clientY - r.top) / r.height * (EXT[3] - EXT[2]);
+        if (mode === 'place') { addPlacement(item, x, y); out('Bound <b style="color:' + ITEMS[item].col + '">' + item + '</b> ⊗ S(' + x.toFixed(1) + ', ' + y.toFixed(1) + ') into M.'); }
+        else if (mode === 'where') queryWhere(item);
+        else queryWhat(x, y);
+        draw();
+    });
+    window.cmSetMode = m => {
+        mode = m;
+        ['place', 'where', 'what'].forEach(k => document.getElementById('cm-mode-' + k).classList.toggle('active', k === m));
+        if (m === 'where' && placements.length) queryWhere(item);
+        draw();
     };
+    window.cmSetItem = t => {
+        item = t;
+        Object.keys(ITEMS).forEach(k => document.getElementById('cm-item-' + k).classList.toggle('active', k === t));
+        if (mode === 'where' && placements.length) queryWhere(item);
+        draw();
+    };
+    window.cmSetD = d => {
+        if (d === D) return;
+        D = d;
+        [256, 1024, 4096].forEach(v => document.getElementById('cm-d-' + v).setAttribute('aria-pressed', String(v === d)));
+        rebuildBasis(); rebuildMemory();
+        if (mode === 'where' && placements.length) queryWhere(item);
+        draw();
+    };
+    document.getElementById('cm-ell').addEventListener('input', HV.raf1(() => {
+        ELL = parseFloat(document.getElementById('cm-ell').value);
+        document.getElementById('cm-ellv').textContent = ELL.toFixed(2) + ' m';
+        rebuildMemory();
+        if (mode === 'where' && placements.length) queryWhere(item);
+        draw();
+    }));
+    window.cmReset = () => {
+        placements.length = 0;
+        rebuildMemory();
+        out('Memory wiped — one empty vector, ready to hold a room.');
+        document.getElementById('cm-heatrange').textContent = '—';
+        draw();
+    };
+    rebuildBasis(); rebuildMemory();
+    // a starter scene so the first WHERE query has something to find
+    [['CHAIR', -2.6, 1.2], ['CHAIR', -2.0, 1.6], ['TABLE', 0.4, -0.9], ['PLANT', 3.1, 1.7], ['ROBOT', 2.2, -1.6]]
+        .forEach(([t, x, y]) => addPlacement(t, x, y));
+    out('A starter room is loaded: 2 chairs, a table, a plant, a robot — all in <b>one</b> vector. Try <b>Where is…?</b>');
+    hvRedraws.push(draw);
+    draw();
 })();
 </script>
 
