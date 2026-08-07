@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hypervectors, explained · Paul Kirkland</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="only light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+html{color-scheme:light only!important;background:#fafaf8!important;scroll-behavior:smooth}
+:root{color-scheme:light only!important;--bg:#fafaf8;--card:#fff;--ink:#1a1a1a;--ink-med:rgba(20,20,20,0.62);--ink-lo:rgba(20,20,20,0.4);--rule:rgba(20,20,20,0.12);--rule2:rgba(20,20,20,0.06);--accent:#c8553d;--accent-soft:rgba(200,85,61,0.1);--sans:"Geist",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,monospace;--serif:"Newsreader",Georgia,serif;--pad:clamp(24px,6vw,96px)}
+@media (prefers-color-scheme:dark){html,body{color-scheme:light only!important;background:#fafaf8!important}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,figure{margin:0}
+a{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(200,85,61,0.35)}
+a:hover{color:#a53f2b;border-bottom-color:#a53f2b}
+em{font-style:normal;color:var(--accent);font-weight:600}
+.mono{font-family:var(--mono)}
+#progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60}
+#progress>div{height:100%;width:0%;background:var(--accent)}
+.topbar{position:fixed;top:0;left:0;right:0;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--pad);background:rgba(250,250,248,0.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--rule2);font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-med);z-index:50}
+.topbar a{border:none;color:var(--ink-med)}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:120px var(--pad) 80px;max-width:1100px}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:22px}
+.hero h1{font-family:var(--serif);font-weight:300;font-size:clamp(38px,6.2vw,76px);line-height:1.06;letter-spacing:-0.01em;max-width:16ch}
+.hero h1 i{font-weight:400;color:var(--accent)}
+.hero p{margin-top:26px;font-size:clamp(16px,1.6vw,20px);color:var(--ink-med);max-width:52ch;text-wrap:pretty}
+.scrollhint{margin-top:56px;font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-lo)}
+section.step{padding:clamp(64px,10vh,128px) var(--pad);border-top:1px solid var(--rule2)}
+.row{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:clamp(32px,5vw,72px);align-items:start;max-width:1280px}
+.num{font-family:var(--mono);font-size:12px;letter-spacing:0.16em;color:var(--accent);margin-bottom:14px}
+.step h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,3.2vw,40px);line-height:1.12;margin-bottom:18px;text-wrap:pretty}
+.step .prose p{color:var(--ink-med);font-size:16px;margin-bottom:14px;text-wrap:pretty}
+.eq{font-family:var(--mono);font-size:13px;background:var(--accent-soft);color:#8f3a29;padding:3px 9px;border-radius:6px;white-space:nowrap}
+.eqline{margin:16px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:0 1px 2px rgba(20,20,20,0.04)}
+.card .cap{font-family:var(--mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-lo);margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{font-family:var(--mono);font-size:13px;padding:7px 14px;border-radius:999px;border:1px solid var(--rule);background:#fff;color:var(--ink);cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--accent)}
+.chip.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.ask{border-radius:8px}
+.fp-pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fp-slot .lab{font-family:var(--mono);font-size:12px;color:var(--ink-med);margin-bottom:6px}
+canvas.code{width:100%;height:44px;display:block;border-radius:6px}
+.readout{margin-top:14px;font-size:15px;color:var(--ink-med)}
+.readout strong{color:var(--accent);font-family:var(--mono)}
+canvas.pane{width:100%;height:180px;display:block}
+.dimrow{display:flex;align-items:center;gap:14px;margin-top:14px;font-family:var(--mono);font-size:13px}
+input[type=range]{flex:1;accent-color:var(--accent)}
+.bar-row{display:grid;grid-template-columns:64px 1fr 44px;gap:10px;align-items:center;margin-top:8px;font-family:var(--mono);font-size:12px}
+.bar-lab{color:var(--ink-med);text-align:right}
+.bar-tr{height:12px;background:var(--rule2);border-radius:6px;overflow:hidden}
+.bar-fill{display:block;height:100%;width:0;background:rgba(20,20,20,0.3);border-radius:6px;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.bar-fill.hot{background:var(--accent)}
+.bar-val{color:var(--ink-lo)}
+.dialrow{margin-top:12px}
+.dialrow .lab{font-family:var(--mono);font-size:12px;color:var(--ink-med);margin-bottom:4px;display:flex;justify-content:space-between}
+.dialrow .lab .hint{color:var(--ink-lo)}
+canvas.dials{width:100%;height:56px;display:block}
+canvas.dials.grab{cursor:grab}
+.gl-foot{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.btn{font-family:var(--mono);font-size:13px;padding:9px 16px;border-radius:8px;border:1px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#a53f2b;border-color:#a53f2b}
+.simline{font-family:var(--mono);font-size:12px;color:var(--ink-med)}
+.simline strong{color:var(--ink)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.on{opacity:1;transform:none}
+footer{padding:72px var(--pad) 96px;border-top:1px solid var(--rule2);color:var(--ink-med);font-size:15px;max-width:760px}
+footer .sig{font-family:var(--serif);font-size:22px;margin-bottom:10px;color:var(--ink)}
+@media (max-width:760px){.row{grid-template-columns:1fr}.fp-pair{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="progress"><div></div></div>
+<div class="topbar"><span>Paul Kirkland</span><span>hypervectors, explained</span></div>
+
+<header class="hero">
+<div class="kicker">A friendly guide to my research</div>
+<h1>How to fit a whole world into <i>one list of numbers</i></h1>
+<p>I teach robots to remember places a bit like brains might: no databases, no grid maps — just very long vectors and three algebra moves. Here's the whole idea, with toys to poke.</p>
+<div class="scrollhint">scroll ↓</div>
+</header>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">01 · FINGERPRINTS</div>
+<h2>Every thing gets a fingerprint</h2>
+<p>Forget neat little boxes. In my world, a concept — <em>mug</em>, <em>dog</em>, <em>kitchen</em> — is a long list of random numbers. Hundreds or thousands of them. That list is the concept's fingerprint, and here it's drawn as a colourful barcode.</p>
+<p>Random sounds careless. It's the whole trick: randomness guarantees every fingerprint is unmistakably itself.</p>
+<div class="eqline"><span class="eq">mug = [0.2, −0.9, 0.4, … ] × 256</span></div>
+</div>
+<div class="card">
+<div class="cap">Pick any two things</div>
+<div class="chips" id="fp-chips"></div>
+<div class="fp-pair">
+<div class="fp-slot"><div class="lab" id="fp-la">mug</div><canvas class="code" id="fp-a"></canvas></div>
+<div class="fp-slot"><div class="lab" id="fp-lb">dog</div><canvas class="code" id="fp-b"></canvas></div>
+</div>
+<div class="readout" id="fp-sim"></div>
+</div>
+</div>
+</section>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">02 · ELBOW ROOM</div>
+<h2>In high dimensions, everyone's a stranger</h2>
+<p>In 2-D, two random arrows often point roughly the same way. Add dimensions and that stops: by a few thousand, random fingerprints are almost exactly perpendicular — overlap hovering near zero.</p>
+<p>Slide the dimension count and watch the accidental-overlap pile squeeze onto zero. That squeeze is what lets one system hold millions of concepts without a filing system.</p>
+<div class="eqline"><span class="eq">typical overlap ≈ 1/√D</span></div>
+</div>
+<div class="card">
+<div class="cap">Overlap between 320 random pairs</div>
+<canvas class="pane" id="dim-hist"></canvas>
+<div class="dimrow"><span>D = <strong id="dim-d">256</strong></span><input type="range" id="dim-slider" min="0" max="5" step="1" value="3"><span id="dim-typ">±6%</span></div>
+<div class="readout" id="dim-quip"></div>
+</div>
+</div>
+</section>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">03 · THE BAG</div>
+<h2>Adding = tossing things in a bag</h2>
+<p>Add fingerprints together and you get a new vector that behaves like a bag: it resembles everything inside it, and nothing outside it.</p>
+<p>One vector now stands for a whole collection — and you can still check membership just by measuring overlap. No list. No lookup. Just geometry.</p>
+<div class="eqline"><span class="eq">bag = mug + keys + dog</span><span class="eq">overlap(bag, mug) ≈ 58%</span></div>
+</div>
+<div class="card">
+<div class="cap">Tap to toss in / take out</div>
+<div class="chips" id="bag-chips"></div>
+<div class="fp-slot"><div class="lab">the bag, as one vector</div><canvas class="code" id="bag-cv"></canvas></div>
+<div id="bag-bars"></div>
+</div>
+</div>
+</section>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">04 · THE GLUE</div>
+<h2>Multiplying = glue that dissolves on demand</h2>
+<p>Binding glues two fingerprints into a brand-new one — <em>kitchen ⊛ mug</em>, "the mug that lives in the kitchen". The child resembles neither parent. It's a fresh stranger.</p>
+<p>Here's the light math: each number in the vector is an angle on a little dial, and binding just adds angles, dial by dial. Which means it un-does perfectly — subtract the kitchen's angles and the mug walks out unharmed.</p>
+<div class="eqline"><span class="eq">θ_pair = θ_kitchen + θ_mug</span><span class="eq">pair ⊘ kitchen = mug</span></div>
+</div>
+<div class="card">
+<div class="cap">9 of 256 dials shown</div>
+<div class="dialrow"><div class="lab"><span>kitchen</span></div><canvas class="dials" id="gl-a"></canvas></div>
+<div class="dialrow"><div class="lab"><span>mug</span><span class="hint">← drag to spin</span></div><canvas class="dials grab" id="gl-b"></canvas></div>
+<div class="dialrow"><div class="lab"><span style="color:#c8553d;white-space:nowrap">kitchen ⊛ mug</span></div><canvas class="dials" id="gl-c"></canvas></div>
+<div class="gl-foot"><button class="btn" id="gl-btn">Dissolve the glue</button><span class="simline" id="gl-ca"></span><span class="simline" id="gl-cb"></span></div>
+<div class="readout" id="gl-msg"></div>
+</div>
+</div>
+</section>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">05 · THE PAYOFF</div>
+<h2>A whole scene, one vector</h2>
+<p>Now combine the moves. Glue each thing to its place, toss the pairs in a bag:</p>
+<div class="eqline"><span class="eq">memory = kitchen⊛mug + sofa⊛dog + garden⊛ball</span></div>
+<p style="margin-top:14px">That single vector is the robot's memory of the whole scene. To ask it a question, unbind a place: out comes a noisy fingerprint, and you recognise it the way you'd recognise your dog in a blurry photo — nearest match wins.</p>
+<p>No search through records. Asking is just arithmetic.</p>
+</div>
+<div class="card">
+<div class="cap">The entire memory</div>
+<div class="fp-slot"><canvas class="code" id="sc-cv"></canvas></div>
+<div class="chips" id="sc-btns" style="margin-top:16px"></div>
+<div id="sc-bars"></div>
+<div class="readout" id="sc-out">Ask the memory a question.</div>
+</div>
+</div>
+</section>
+
+<section class="step">
+<div class="row rv">
+<div class="prose">
+<div class="num">06 · SO WHAT?</div>
+<h2>Where my research comes in</h2>
+<p>These are <em>vector symbolic algebras</em>, and my work puts them on robots. Two upgrades make it real: places become smooth coordinates instead of separate fingerprints (spin the dials by <i>how far</i> you've moved), and a camera's neural network learns to produce the fingerprints directly from pixels.</p>
+<p>The result — presented at ICRA 2026 — is a robot that answers "where's the mug?" with algebra instead of a database: one vector for the world, three moves to use it.</p>
+</div>
+<div class="card" style="align-self:start">
+<div class="cap">The three moves, on a card</div>
+<div class="bar-row" style="grid-template-columns:84px 1fr"><span class="bar-lab">add ( + )</span><span>toss into a bag — resembles contents</span></div>
+<div class="bar-row" style="grid-template-columns:84px 1fr"><span class="bar-lab">bind ( ⊛ )</span><span>glue a pair — resembles neither, reversible</span></div>
+<div class="bar-row" style="grid-template-columns:84px 1fr"><span class="bar-lab">compare ( · )</span><span>measure overlap — recognition</span></div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="sig">Paul Kirkland</div>
+<p>Neuromorphic robotics · International Centre for Neuromorphic Systems, Western Sydney University. This page accompanies my ICRA 2026 work on algebraic spatial memory for embodied agents.</p>
+</footer>
+
+<script src="explainer-demos.js"></script>
+</body>
+</html>

@@ -515,6 +515,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   <div class="region-kicker"><span class="num">§02</span> BIND · COGNITIVE MAPS</div>
   <h2 class="statement max-w-4xl">The world isn't stored as pixels. <em>It's stored as relations.</em></h2>
   <p class="mt-8 max-w-2xl text-slate-300 text-lg leading-relaxed font-serif">A cognitive map is the brain's trick for navigating a world it has never fully seen — holding <em>what</em> you encountered, <em>where</em> you encountered it, and <em>how</em> the pieces relate, all in one substrate you can query from any angle. We borrow that trick. Hyperdimensional vectors let us bind an object to a place with a single multiplication, bundle many such bindings into one trace, and pull any piece back out by unbinding. No floor plan. No SLAM mesh. Just a vector that remembers.</p>
+  <p class="mt-4"><a href="explain/" class="vw-kicker" style="color:var(--accent);text-decoration:none">▸ PREFER THE GENTLE VERSION? — HYPERVECTORS, EXPLAINED →</a></p>
 
   <!-- diagram-as-explanation: 4 frames -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
@@ -672,11 +673,59 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
     </div>
   </div>
 
+
+  <!-- DROP. BIND. QUERY. — the live-demo slide from the ICRA deck -->
+  <div class="vsa-walk mt-16" id="drop-sim">
+    <div class="vw-head">
+      <div>
+        <div class="vw-kicker">DEMO 02-C · FROM THE ICRA DECK — DROP. BIND. QUERY.</div>
+        <h3 class="vw-title">A scene you can place, <em>then interrogate</em>.</h3>
+      </div>
+      <div class="vw-controls">
+        <button class="vw-btn" id="vsa-sim-auto">▶ auto-demo</button>
+        <button class="vw-btn vw-btn-ghost" id="vsa-sim-reset">reset</button>
+      </div>
+    </div>
+    <div class="vw-body">
+      <div class="vw-stage-wrap" id="vsa-sim-stage" style="aspect-ratio:16/10;cursor:crosshair;position:relative">
+        <canvas id="vsa-sim-grid" style="position:absolute;inset:0"></canvas>
+        <canvas id="vsa-sim-heat" style="position:absolute;inset:0"></canvas>
+        <canvas id="vsa-sim-ui"   style="position:absolute;inset:0"></canvas>
+      </div>
+      <aside class="vw-side">
+        <div class="vw-card">
+          <div class="vw-card-head"><span>drop</span><span class="vw-dim">D = 256</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="vw-btn vsa-btn active" data-mode="drop" data-item="mug"   style="border-color:rgba(224,68,94,.5)">mug</button>
+            <button class="vw-btn vsa-btn" data-mode="drop" data-item="book"  style="border-color:rgba(91,141,239,.5)">book</button>
+            <button class="vw-btn vsa-btn" data-mode="drop" data-item="chair" style="border-color:rgba(82,181,138,.5)">chair</button>
+          </div>
+          <div class="vw-card-head" style="margin-top:14px"><span>query · where is…</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <button class="vw-btn vsa-btn" data-mode="query" data-item="mug"   style="border-color:rgba(224,68,94,.5)">mug?</button>
+            <button class="vw-btn vsa-btn" data-mode="query" data-item="book"  style="border-color:rgba(91,141,239,.5)">book?</button>
+            <button class="vw-btn vsa-btn" data-mode="query" data-item="chair" style="border-color:rgba(82,181,138,.5)">chair?</button>
+          </div>
+        </div>
+        <div class="hv-out p-3 rounded-xl" style="background:#000;border:1px solid rgba(255,255,255,.08)">
+          <div id="vsa-sim-eq">ready · click on the canvas to drop <b>mug</b></div>
+          <div style="color:rgba(255,255,255,.4);margin-top:4px"><span id="vsa-sim-count">0</span> bindings in one vector · load <span id="vsa-sim-cap">0 / D</span></div>
+        </div>
+        <div class="vw-card">
+          <p class="vw-blurb">This is the live-demo slide from the deck, verbatim algebra: every drop is
+          <em>M += item ⊗ S(x,y)</em>, every query unbinds and sweeps. Drop several of the
+          <em>same</em> item — the query lights them all up at once.</p>
+          <a href="talks/icra-2026/" class="vw-kicker" style="display:inline-block;margin-top:6px;color:var(--accent);text-decoration:none">▸ OPEN THE FULL TALK DECK →</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
   <!-- carried v9 widgets — the quantitative story under the film -->
   <div class="vsa-walk mt-16" id="maths-position">
     <div class="vw-head">
       <div>
-        <div class="vw-kicker">DEMO 02-C · UNDER THE MATHS — THE POSITION CODE</div>
+        <div class="vw-kicker">DEMO 02-D · UNDER THE MATHS — THE POSITION CODE</div>
         <h3 class="vw-title">Spin the dials. The blob <em>is</em> the memory.</h3>
       </div>
       <div class="vw-eq" style="margin-left:0">S(x,y) = B<sub>x</sub><sup>x/ℓ</sup> ⊗ B<sub>y</sub><sup>y/ℓ</sup> = 𝓕⁻¹{ e<sup>iA·(x,y)/ℓ</sup> }</div>
@@ -704,6 +753,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
             <span class="hv-lab" id="hv-fieldrange">0 → 1</span>
           </div>
         </div>
+        <div class="hv-lab" style="margin-top:6px">drag the map to move the point — it wanders on its own until you do</div>
         <canvas id="cvHvSlice" class="hv-canvas" style="aspect-ratio:16/7" aria-label="Similarity versus displacement — the kernel slice"></canvas>
       </div>
     </div>
@@ -717,7 +767,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   <div class="vsa-walk mt-16" id="maths-capacity">
     <div class="vw-head">
       <div>
-        <div class="vw-kicker">DEMO 02-D · UNDER THE MATHS — CAPACITY</div>
+        <div class="vw-kicker">DEMO 02-E · UNDER THE MATHS — CAPACITY</div>
         <h3 class="vw-title">One tape, forty memories, <em>√(2D/k)</em>.</h3>
       </div>
       <div class="flex items-center gap-2">
@@ -975,11 +1025,12 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   <div class="region-kicker"><span class="num">§05</span> NOW · LATEST FROM THE LAB</div>
   <div class="grid md:grid-cols-3 gap-6 mt-12">
 
-    <div class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors">
+    <a href="talks/icra-2026/" class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors block">
       <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2026 · TALK</div>
-      <h4 class="text-lg font-bold mt-2">ICRA — SLAM that thinks in vectors</h4>
-      <p class="text-sm text-slate-400 mt-2">The talk's demos run live on this page — §02 the algebra, §03 the loop.</p>
-    </div>
+      <h4 class="text-lg font-bold mt-2">ICRA — what world models are missing</h4>
+      <p class="text-sm text-slate-400 mt-2">The full offline deck, speaker notes and all — plus its demos live on this page.</p>
+      <span class="font-mono text-[9px] tracking-[.2em]" style="color:var(--accent)">▸ OPEN THE DECK →</span>
+    </a>
     <div class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors">
       <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2026 · WORKSHOP</div>
       <h4 class="text-lg font-bold mt-2">VSA cognitive mapping on Spot</h4>
@@ -2217,11 +2268,36 @@ window.addEventListener('resize', HV.raf1(() => hvRedraws.forEach(f => f())));
     }
     const rr = HV.raf1(render);
     sx.addEventListener('input', rr); sy.addEventListener('input', rr);
+    // from the ICRA deck's fractional-binding plane: drag the field directly,
+    // and let the point drift on a slow lissajous until someone touches it
+    let idle = true, dragging = false;
+    function setFromEvent(e) {
+        const r = cvF.getBoundingClientRect();
+        const nx = EXT[0] + (e.clientX - r.left) / r.width * (EXT[1] - EXT[0]);
+        const ny = EXT[3] - (e.clientY - r.top) / r.height * (EXT[3] - EXT[2]);
+        sx.value = Math.max(-3, Math.min(3, nx)).toFixed(2);
+        sy.value = Math.max(-1.6, Math.min(1.6, ny)).toFixed(2);
+        rr();
+    }
+    cvF.style.cursor = 'crosshair';
+    cvF.style.touchAction = 'none';
+    cvF.addEventListener('pointerdown', e => { dragging = true; idle = false; cvF.setPointerCapture(e.pointerId); setFromEvent(e); });
+    cvF.addEventListener('pointermove', e => { if (dragging) setFromEvent(e); });
+    cvF.addEventListener('pointerup', () => dragging = false);
+    let fvis = true, it = 0;
+    if ('IntersectionObserver' in window)
+        new IntersectionObserver(en => fvis = en[0].isIntersecting, { threshold: .05 }).observe(cvF);
+    (function drift() {
+        requestAnimationFrame(drift);
+        if (!idle || !fvis || (window.__tweaks && window.__tweaks.reduceMotion)) return;
+        it += 0.008;
+        sx.value = (Math.cos(it) * 1.9).toFixed(2);
+        sy.value = (Math.sin(it * 1.3) * 1.1).toFixed(2);
+        rr();
+    })();
     hvRedraws.push(render);
     render();
 })();
-
-
 
 // ── H3 · CAPACITY — bundle k memories, watch the margin run out ──────
 (function () {
@@ -3254,6 +3330,186 @@ window.addEventListener('resize', HV.raf1(() => hvRedraws.forEach(f => f())));
   }
   applyInk(); render();
   if (T.sandboxD !== 1024) window.dispatchEvent(new CustomEvent('tweak-d', {detail: T.sandboxD}));
+})();
+
+</script>
+<script>
+
+// ── DROP. BIND. QUERY. — ported from the ICRA deck's interactives.js ──
+// Same construction, same choreography; colours lifted to the site's film
+// palette so the items match the FHRR film above.
+(function () {
+  var stage = document.getElementById('vsa-sim-stage');
+  var cGrid = document.getElementById('vsa-sim-grid');
+  var cHeat = document.getElementById('vsa-sim-heat');
+  var cUi   = document.getElementById('vsa-sim-ui');
+  var eqOut = document.getElementById('vsa-sim-eq');
+  var cntOut = document.getElementById('vsa-sim-count');
+  var capOut = document.getElementById('vsa-sim-cap');
+  if (!stage || !cGrid || !cHeat || !cUi) return;
+
+  var D = 256, GRID_N = 48, RANGE = 5;
+  var ITEM_COLORS = { mug: [224,68,94], book: [91,141,239], chair: [82,181,138] };
+  var rnd = HV.rng(0x1C2ADEC);
+  function rand() { var a = new Float64Array(D); for (var i = 0; i < D; i++) a[i] = rnd() * Math.PI * 2; return a; }
+  var phiX = rand(), phiY = rand();
+  var ITEMS = { mug: rand(), book: rand(), chair: rand() };
+  var M = []; for (var i = 0; i < D; i++) M.push({ re: 0, im: 0 });
+  var placed = [], mode = 'drop', item = 'mug';
+
+  var off = document.createElement('canvas');
+  off.width = GRID_N; off.height = GRID_N;
+  var offCtx = off.getContext('2d');
+
+  function sizeCanvases() {
+    var W = stage.offsetWidth, H = stage.offsetHeight;
+    if (!W || !H) return false;
+    var DPR = Math.min(2, window.devicePixelRatio || 1);
+    [cGrid, cHeat, cUi].forEach(function (c) {
+      c.width = W * DPR; c.height = H * DPR;
+      c.style.width = W + 'px'; c.style.height = H + 'px';
+      c.getContext('2d').setTransform(DPR, 0, 0, DPR, 0, 0);
+    });
+    drawGrid(); drawUi();
+    if (mode === 'query') drawHeatmap(item);
+    return true;
+  }
+  function drawGrid() {
+    var W = cGrid.offsetWidth, H = cGrid.offsetHeight, ctx = cGrid.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    ctx.strokeStyle = 'rgba(237,237,235,0.07)'; ctx.lineWidth = 1;
+    for (var i = 0; i <= 10; i++) {
+      var u = i / 10;
+      ctx.beginPath(); ctx.moveTo(u * W, 0); ctx.lineTo(u * W, H); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, u * H); ctx.lineTo(W, u * H); ctx.stroke();
+    }
+    ctx.strokeStyle = 'rgba(237,237,235,0.18)';
+    ctx.beginPath(); ctx.moveTo(W/2, 0); ctx.lineTo(W/2, H); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, H/2); ctx.lineTo(W, H/2); ctx.stroke();
+  }
+  function drawUi() {
+    var W = cUi.offsetWidth, H = cUi.offsetHeight, ctx = cUi.getContext('2d');
+    ctx.clearRect(0, 0, W, H);
+    placed.forEach(function (p) {
+      var px = ((p.x + RANGE) / (2 * RANGE)) * W;
+      var py = ((p.y + RANGE) / (2 * RANGE)) * H;
+      var c = ITEM_COLORS[p.item];
+      ctx.fillStyle = 'rgba(' + c.join(',') + ',1)';
+      ctx.strokeStyle = '#0e0e0d'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(px, py, 8, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(237,237,235,0.92)';
+      ctx.font = '12px "JetBrains Mono", ui-monospace, monospace';
+      ctx.fillText(p.item, px + 13, py + 4);
+    });
+  }
+  function encode(it, x, y) {
+    var phase = ITEMS[it];
+    for (var i = 0; i < D; i++) {
+      var a = phase[i] + x * phiX[i] + y * phiY[i];
+      M[i].re += Math.cos(a); M[i].im += Math.sin(a);
+    }
+    placed.push({ item: it, x: x, y: y });
+    if (cntOut) cntOut.textContent = placed.length;
+    if (capOut) capOut.textContent = placed.length + ' / ' + D;
+    if (eqOut) eqOut.innerHTML = 'M += <b>' + it + '</b> ⊗ S(' + x.toFixed(2) + ', ' + y.toFixed(2) + ')';
+    cHeat.getContext('2d').clearRect(0, 0, cHeat.offsetWidth, cHeat.offsetHeight);
+    drawUi();
+  }
+  function drawHeatmap(it) {
+    var W = cHeat.offsetWidth, H = cHeat.offsetHeight, hctx = cHeat.getContext('2d');
+    hctx.clearRect(0, 0, W, H);
+    if (!placed.length) { if (eqOut) eqOut.innerHTML = 'nothing stored yet — drop something first'; return; }
+    var q = ITEMS[it], Q = new Array(D);
+    for (var i = 0; i < D; i++) Q[i] = {
+      re: M[i].re * Math.cos(q[i]) + M[i].im * Math.sin(q[i]),
+      im: M[i].im * Math.cos(q[i]) - M[i].re * Math.sin(q[i])
+    };
+    var img = offCtx.createImageData(GRID_N, GRID_N);
+    var c = ITEM_COLORS[it], sims = new Float32Array(GRID_N * GRID_N), maxS = 1e-4;
+    for (var v = 0; v < GRID_N; v++) for (var u = 0; u < GRID_N; u++) {
+      var gx = (u / (GRID_N - 1)) * 2 * RANGE - RANGE;
+      var gy = (v / (GRID_N - 1)) * 2 * RANGE - RANGE;
+      var dot = 0;
+      for (var k = 0; k < D; k++) {
+        var p = gx * phiX[k] + gy * phiY[k];
+        dot += Q[k].re * Math.cos(p) + Q[k].im * Math.sin(p);
+      }
+      var s = Math.max(0, dot);
+      sims[v * GRID_N + u] = s;
+      if (s > maxS) maxS = s;
+    }
+    for (var j = 0; j < sims.length; j++) {
+      var a = Math.pow(sims[j] / maxS, 2.2) * 255, idx = j * 4;
+      img.data[idx] = c[0]; img.data[idx+1] = c[1]; img.data[idx+2] = c[2]; img.data[idx+3] = a;
+    }
+    offCtx.putImageData(img, 0, 0);
+    hctx.imageSmoothingEnabled = true;
+    hctx.imageSmoothingQuality = 'high';
+    hctx.drawImage(off, 0, 0, W, H);
+    if (eqOut) eqOut.innerHTML = 'query · M ⊘ <b>' + it + '</b>  →  correlate over every position';
+    drawUi();
+  }
+  function setMode(newMode, newItem) {
+    mode = newMode; item = newItem;
+    document.querySelectorAll('#drop-sim .vsa-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.mode === newMode && b.dataset.item === newItem);
+    });
+    if (newMode === 'query') drawHeatmap(newItem);
+    else {
+      cHeat.getContext('2d').clearRect(0, 0, cHeat.offsetWidth, cHeat.offsetHeight);
+      if (eqOut) eqOut.innerHTML = 'ready · click on the canvas to drop <b>' + newItem + '</b>';
+    }
+  }
+  function reset() {
+    M = []; for (var i = 0; i < D; i++) M.push({ re: 0, im: 0 });
+    placed.length = 0;
+    if (cntOut) cntOut.textContent = '0';
+    if (capOut) capOut.textContent = '0 / ' + D;
+    cHeat.getContext('2d').clearRect(0, 0, cHeat.offsetWidth, cHeat.offsetHeight);
+    if (eqOut) eqOut.innerHTML = 'M cleared · drop something';
+    drawUi();
+  }
+  document.querySelectorAll('#drop-sim .vsa-btn').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.dataset.mode, b.dataset.item); });
+  });
+  document.getElementById('vsa-sim-reset').addEventListener('click', reset);
+  stage.addEventListener('click', function (e) {
+    if (mode !== 'drop') return;
+    var r = stage.getBoundingClientRect();
+    encode(item,
+      ((e.clientX - r.left) / r.width) * 2 * RANGE - RANGE,
+      ((e.clientY - r.top) / r.height) * 2 * RANGE - RANGE);
+  });
+  var sleep = function (ms) { return new Promise(function (r) { setTimeout(r, ms); }); };
+  var running = false;
+  document.getElementById('vsa-sim-auto').addEventListener('click', async function () {
+    if (running) { running = false; this.textContent = '▶ auto-demo'; return; }
+    running = true; this.textContent = '■ stop';
+    while (running) {
+      reset();
+      await sleep(700); if (!running) break;
+      setMode('drop','mug');   encode('mug',  -2.5,  1.5);
+      await sleep(700); if (!running) break;
+      setMode('drop','book');  encode('book',  3.0,  0.0);
+      await sleep(700); if (!running) break;
+      setMode('drop','chair'); encode('chair', 0.5, -2.5);
+      await sleep(700); if (!running) break;
+      setMode('drop','mug');   encode('mug',   2.2,  2.4);
+      await sleep(1100); if (!running) break;
+      setMode('query','mug');   await sleep(2000); if (!running) break;
+      setMode('query','book');  await sleep(1800); if (!running) break;
+      setMode('query','chair'); await sleep(2400);
+    }
+    this.textContent = '▶ auto-demo';
+  });
+  function tryInit() {
+    if (sizeCanvases()) {
+      window.addEventListener('resize', sizeCanvases);
+      if (typeof ResizeObserver !== 'undefined')
+        new ResizeObserver(function () { sizeCanvases(); }).observe(stage);
+    } else setTimeout(tryInit, 120);
+  }
+  tryInit();
 })();
 
 </script>
