@@ -44,4 +44,4 @@ Review of westernsydney.edu.au/icns, 24 August 2026. Every broken link below was
 
 ## The short version
 
-The centre's strongest stories are all on the site: DeepSouth, event cameras on the International Space Station, the Intel partnership, 24 open PhD projects. The site hides them behind dead links, missing dates and a homepage still announcing its 2023 plans. Most of the fixes are ordinary edits in the university's web publishing system, no rebuild required. The full audit with a staged fix plan is available on request.
+The centre's strongest stories are all on the site: DeepSouth, event cameras on the International Space Station, the Intel partnership, 24 open PhD projects. The site hides them behind dead links, missing dates and a homepage still announcing its 2023 plans. Most of the fixes are ordinary edits in the university's web publishing system, Squiz Matrix, no rebuild required. The full audit with a staged fix plan is available on request.
