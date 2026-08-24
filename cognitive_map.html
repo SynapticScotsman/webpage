@@ -277,8 +277,8 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .vw-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:middle}
 .vw-dot-bot{background:#fbbf24}
 .vw-dot-tower{background:#22d3ee}
-.vw-dot-tree{background:#34d399}
-.vw-dot-rock{background:#f87171}
+.vw-dot-tree{background:#FFB000}
+.vw-dot-rock{background:#FF3DA6}
 .vw-dot-trail{background:rgba(167,139,250,.6)}
 .vw-eq{margin-left:auto;font-style:italic;color:rgba(255,255,255,.4);letter-spacing:.05em}
 
@@ -329,7 +329,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .ap-graph-legend{display:flex;gap:14px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.5);margin-top:6px}
 .ap-leg{display:inline-block;width:10px;height:2px;margin-right:5px;vertical-align:middle}
 .ap-leg-snn{background:#22d3ee}
-.ap-leg-spad{background:#f87171}
+.ap-leg-spad{background:#FF8C42}
 .ap-controls{display:flex;align-items:center;gap:14px;margin-top:14px;flex-wrap:wrap;padding-top:12px;border-top:1px solid rgba(255,255,255,.06)}
 .ap-slider-row{display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:rgba(255,255,255,.6)}
 .ap-slider-row b{color:var(--hi);font-weight:700;min-width:24px;text-align:right}
@@ -458,7 +458,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
              aria-label="Slide between frame and event view"/>
       <div class="fve-legend">
         <span><i style="background:#22d3ee"></i>ON event</span>
-        <span><i style="background:#f87171"></i>OFF event</span>
+        <span><i style="background:#FF8C42"></i>OFF event</span>
         <span class="fve-hint">left = frame · right = event</span>
       </div>
     </div>
@@ -1315,10 +1315,10 @@ let scrollProgress = 0;
   const LM = [
     {id:'tower_a', type:'tower', x:160, y:120, color:'#22d3ee', label:'tower α'},
     {id:'tower_b', type:'tower', x:620, y:90,  color:'#22d3ee', label:'tower β'},
-    {id:'tree_a',  type:'tree',  x:300, y:300, color:'#34d399', label:'tree α'},
-    {id:'tree_b',  type:'tree',  x:540, y:380, color:'#34d399', label:'tree β'},
-    {id:'rock_a',  type:'rock',  x:100, y:380, color:'#f87171', label:'rock α'},
-    {id:'rock_b',  type:'rock',  x:700, y:240, color:'#f87171', label:'rock β'},
+    {id:'tree_a',  type:'tree',  x:300, y:300, color:'#FFB000', label:'tree α'},
+    {id:'tree_b',  type:'tree',  x:540, y:380, color:'#FFB000', label:'tree β'},
+    {id:'rock_a',  type:'rock',  x:100, y:380, color:'#FF3DA6', label:'rock α'},
+    {id:'rock_b',  type:'rock',  x:700, y:240, color:'#FF3DA6', label:'rock β'},
   ];
   // robot
   const bot = { x: 380, y: 240, dragging:false, theta:0 };
@@ -1663,7 +1663,7 @@ let scrollProgress = 0;
       const py = y + (Math.random()-.5)*22 + dy*4;
       c.setAttribute('cx',px); c.setAttribute('cy',py);
       c.setAttribute('r', 1.3 + Math.random()*0.8);
-      c.setAttribute('fill', Math.random()>.5 ? '#22d3ee' : '#f87171');
+      c.setAttribute('fill', Math.random()>.5 ? '#22d3ee' : '#FF8C42');
       c.setAttribute('opacity','0.9');
       c.dataset.born = String(performance.now());
       eventsG.appendChild(c);
@@ -1737,7 +1737,7 @@ let scrollProgress = 0;
   const snnPath = document.createElementNS(NS,'path');
   snnPath.setAttribute('fill','none'); snnPath.setAttribute('stroke','#22d3ee'); snnPath.setAttribute('stroke-width','1.4');
   const spadPath = document.createElementNS(NS,'path');
-  spadPath.setAttribute('fill','none'); spadPath.setAttribute('stroke','#f87171'); spadPath.setAttribute('stroke-width','1.4');
+  spadPath.setAttribute('fill','none'); spadPath.setAttribute('stroke','#FF8C42'); spadPath.setAttribute('stroke-width','1.4');
   spadPath.setAttribute('stroke-dasharray','3 3');
   const thresh = document.createElementNS(NS,'line');
   thresh.setAttribute('x1','0'); thresh.setAttribute('x2','480'); thresh.setAttribute('y1', String(140*0.2)); thresh.setAttribute('y2', String(140*0.2));
@@ -1986,7 +1986,7 @@ let scrollProgress = 0;
     c.setAttribute('cx', x);
     c.setAttribute('cy', y);
     c.setAttribute('r', 1.6 + Math.random()*1.4);
-    c.setAttribute('fill', Math.random()>.5 ? '#22d3ee' : '#f87171');
+    c.setAttribute('fill', Math.random()>.5 ? '#22d3ee' : '#FF8C42');
     c.setAttribute('opacity', 0.85);
     eg.appendChild(c);
     stripDots.push({el:c, x, y, born:now});

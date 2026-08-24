@@ -38,6 +38,7 @@
                 colors: {
                     /* warm-dark / red re-theme: remap the palette the markup already uses */
                     cyan:  { 300:'#ea6d82', 400:'#E0445E', 500:'#E0445E', 600:'#c22b45' },
+                    emerald: { 400:'#7CE0C0', 500:'#7CE0C0' },
                     slate: { 300:'#d3d1c7', 400:'#b4b2a9', 500:'#8a8a86', 700:'#3a3937', 800:'#2a2927', 900:'#1f1e1c', 950:'#141412' }
                 }
             } }
@@ -421,7 +422,7 @@
             <div class="h-32 bg-slate-950 rounded-xl border border-white/10 relative p-4 flex items-end">
                 <div class="absolute left-0 w-full h-px border-t border-dashed border-red-500/50" style="top:20%"></div>
                 <div class="absolute left-4 text-[9px] font-mono text-red-500" style="top:calc(20% - 16px)">AMBIGUITY THRESHOLD (80%)</div>
-                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#E0445E,#ef4444)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#3B9BFF,#E0445E)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                 <div class="ml-6 font-mono text-3xl font-light text-white">
                     <span id="fallback-pct">20.0</span>% <span class="text-[10px] text-slate-500">UNCERTAINTY</span>
                 </div>
@@ -925,7 +926,7 @@ const _pipeDescs = [
     "The filtered neural spikes are translated into high-dimensional Spatial Semantic Pointers. Using Fourier Holographic Reduced Representations (FHRR), we bind object features to spatial coordinates mathematically via phase angles.",
     "A continuous monitor evaluates the clarity of the VSA resonance. When epistemic uncertainty peaks (e.g., scene ambiguity), the control loop triggers an active sensing fallback (like SPAD or LiDAR) to physically resolve the environment."
 ];
-const _pipeColors = ['#E0445E', '#a855f7', '#34d399'];
+const _pipeColors = ['#E0445E', '#3B9BFF', '#FFB000'];
 
 function setPipeline(i) {
     [0, 1, 2].forEach(j => {
@@ -962,11 +963,11 @@ setPipeline(0);
         const cnnAcc   = Math.max(12, 95 - vel * .9).toFixed(1);
         document.getElementById('cnn-power-val').textContent        = cnnPower + ' W';
         document.getElementById('cnn-power-bar').style.width        = Math.min(100, cnnPower) + '%';
-        document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#ef4444' : '#64748b';
+        document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#E0445E' : '#64748b';
         document.getElementById('cnn-acc-val').textContent          = cnnAcc + '%';
         document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#ededeb' : 'white';
         document.getElementById('cnn-acc-bar').style.width          = cnnAcc + '%';
-        document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#ef4444' : '#64748b';
+        document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#E0445E' : '#64748b';
         cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#141412';
         cnnCard.style.borderColor = vel > 60 ? 'rgba(239,68,68,.3)' : 'rgba(255,255,255,.05)';
         const snnPower = (0.5 + vel * .02).toFixed(2);
@@ -1000,10 +1001,10 @@ setPipeline(0);
         parent.appendChild(d); return d;
     }
 
-    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#E0445E', 6));
+    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#3B9BFF', 6));
     const phaseDots      = anchors.map(() => makeDot(phasePanel,   '#a855f7', 6));
     const noiseDots      = Array.from({ length: 100 }, () => {
-        const d = makeDot(spatialPanel, '#ef4444', 4);
+        const d = makeDot(spatialPanel, '#FFB000', 4);
         d.style.opacity = '0'; d.style.transition = 'opacity .2s';
         d.style.left = Math.random() * 100 + '%'; d.style.top = Math.random() * 100 + '%';
         return d;
@@ -1160,7 +1161,7 @@ class BaseVector {
   const ctx = canvas.getContext('2d');
   const GRID_SIZE = 10, DIM = 1024, HEAT_RES = 48, SPATIAL_FREQ_LIMIT = Math.PI / 4;
   const objTypes = [
-    { name: 'Drone', color: '#ef4444' }, { name: 'Rover', color: '#34d399' }, { name: 'Beacon', color: '#E0445E' }
+    { name: 'Drone', color: '#FF3DA6' }, { name: 'Rover', color: '#FFB000' }, { name: 'Beacon', color: '#3B9BFF' }
   ];
   
   const explorer = {
