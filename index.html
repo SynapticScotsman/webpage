@@ -28,7 +28,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -50,6 +50,13 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
         ::selection { background:#E0445E; color:#141412; }
+
+        /* Hero reveal: beat 1 = the feed alone, beat 2 = identity, beat 3 = the question */
+        .hero-beat-2, .hero-beat-3 { opacity:0; animation:heroFade .9s ease-out forwards; }
+        .hero-beat-2 { animation-delay:1.4s; }
+        .hero-beat-3 { animation-delay:2.6s; }
+        @keyframes heroFade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+        @media (prefers-reduced-motion: reduce) { .hero-beat-2, .hero-beat-3 { animation:none; opacity:1; } }
         ::-webkit-scrollbar { width:4px; }
         ::-webkit-scrollbar-track { background:#141412; }
         ::-webkit-scrollbar-thumb { background:#E0445E; }
@@ -186,7 +193,7 @@
 </nav>
 
 <!-- HERO -->
-<section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950" aria-labelledby="hero-heading">
+<section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black" aria-labelledby="hero-heading">
     <div class="absolute inset-0 z-0" style="opacity:.8">
         <div id="three-canvas" aria-hidden="true"></div>
         <div id="hud-overlay" aria-hidden="true">
@@ -197,37 +204,21 @@
             <div class="hud-slot" id="hud-4"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
         </div>
     </div>
-    <div class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center mt-12 pointer-events-none">
-        <div class="text-xs md:text-sm font-bold uppercase tracking-[0.35em] text-cyan-400 mb-6 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
-        <h1 id="hero-heading" class="hover-glitch text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter mb-4 text-white leading-none uppercase select-none drop-shadow-2xl">
-            Neuromorphic<br/>Perception <span class="text-cyan-400">&amp;</span> Cognition
+    <!-- legibility vignette: sits over the feed + HUD, under the text -->
+    <div class="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" style="background:radial-gradient(ellipse 70% 60% at 22% 78%, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 45%, transparent 75%)"></div>
+
+    <div class="absolute z-10 left-6 md:left-16 lg:left-24 bottom-24 md:bottom-28 max-w-4xl text-left pointer-events-none">
+        <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-4 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
+        <div class="hero-beat-2 text-xl md:text-3xl font-black uppercase tracking-tight text-white mb-6 drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
+        <h1 id="hero-heading" class="hero-beat-3 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif;font-style:italic">
+            How do <span class="text-cyan-400">you</span> see the world?
         </h1>
-        <div class="text-xl md:text-3xl text-cyan-400 font-light tracking-wide mb-12 italic drop-shadow-md bg-slate-950/20 px-6 py-2 rounded-2xl backdrop-blur-sm">
-            How do you see the world?
-        </div>
     </div>
-    <div class="absolute bottom-6 flex flex-col items-center gap-3 z-20">
-        <div class="w-px h-12 bg-gradient-to-b from-cyan-500 to-transparent" aria-hidden="true"></div>
+    <div class="hero-beat-3 absolute bottom-6 left-6 md:left-16 lg:left-24 flex items-center gap-3 z-20">
         <button class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-cyan-400 transition-colors" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">scroll ↓ · move mouse for ego-motion noise</button>
     </div>
 </section>
 
-<script>
-/* Hero variant B — question-first. View with ?hero=b ; default stays variant A. */
-if (new URLSearchParams(location.search).get('hero') === 'b') {
-    const kicker = document.querySelector('#hero-heading').previousElementSibling;
-    const h1 = document.getElementById('hero-heading');
-    const sub = h1.nextElementSibling;
-    kicker.className = 'font-mono text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-cyan-400 mb-8 drop-shadow-md';
-    kicker.textContent = 'Neuromorphic Perception & Cognition';
-    h1.className = 'text-5xl md:text-7xl lg:text-[6.5rem] font-light tracking-tight mb-8 text-white leading-[1.05] select-none drop-shadow-2xl';
-    h1.style.fontFamily = "'Newsreader', Georgia, serif";
-    h1.style.fontStyle = 'italic';
-    h1.innerHTML = 'How do <span class="text-cyan-400">you</span><br/>see the world?';
-    sub.className = 'font-mono text-xs md:text-sm uppercase tracking-[0.25em] text-slate-400 mb-12 drop-shadow-md';
-    sub.textContent = 'Paul Kirkland · ICNS · Western Sydney';
-}
-</script>
 
 <main id="main-content">
 
@@ -824,7 +815,7 @@ let scrollProgress = 0;
         }
     }
 
-    const TOTAL = Math.max(edgePoints.length / 3, 20000);
+    const TOTAL = edgePoints.length / 3 + 6000;  // always add sparse sensor-noise speckle
     for (let i = edgePoints.length / 3; i < TOTAL; i++) {
         edgePoints.push((Math.random() - .5) * 60, Math.random() * 20, -Math.random() * WORLD_DEPTH);
         if (Math.random() > .5) edgeColors.push(.23, .61, 1.0);
@@ -837,7 +828,7 @@ let scrollProgress = 0;
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeColors, 3));
-    const mat = new THREE.PointsMaterial({ size: .08, vertexColors: true, transparent: true, opacity: .8, blending: THREE.AdditiveBlending, depthWrite: false });
+    const mat = new THREE.PointsMaterial({ size: .1, vertexColors: true, transparent: true, opacity: .95, blending: THREE.NormalBlending, depthWrite: false });
     scene.add(new THREE.Points(geo, mat));
 
     let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0;
@@ -882,7 +873,7 @@ let scrollProgress = 0;
                 const rawDist = Math.abs(projVec.z - camera.position.z);
                 projVec.project(camera);
                 if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
-                if (Math.abs(projVec.x) < .38 && Math.abs(projVec.y) < .55) continue;
+                if (projVec.x < .15 && projVec.y < .2) continue; // keep the lower-left text frame clear
                 const sx = (projVec.x * .5 + .5) * rect.width;
                 const sy = (-projVec.y * .5 + .5) * rect.height;
                 const slot = hudSlots[visible];
