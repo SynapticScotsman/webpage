@@ -1,0 +1,302 @@
+<title>ICNS Website Audit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap">
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --panel: #F1EFE9;
+    --line: #DCDAD3;
+    --ink: #22252A;
+    --ink-dim: #6B6F76;
+    --brand: #990033;
+    --brand-soft: #F0D7D6;
+    --card: #FFFFFF;
+    --plate: #05070A;
+    --plate-ink: #E6E4DF;
+  }
+  :root:not([data-theme="light"]) { }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16181B;
+      --panel: #1E2125;
+      --line: #33373C;
+      --ink: #E6E4DF;
+      --ink-dim: #8A97A0;
+      --brand: #C33A50;
+      --brand-soft: #3A2226;
+      --card: #1E2125;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16181B;
+    --panel: #1E2125;
+    --line: #33373C;
+    --ink: #E6E4DF;
+    --ink-dim: #8A97A0;
+    --brand: #C33A50;
+    --brand-soft: #3A2226;
+    --card: #1E2125;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Gotham Narrow A", "Open Sans", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  .wrap { max-width: 74ch; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+
+  .eyebrow {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .71rem;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin: 0 0 .6rem;
+  }
+  h1 {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 .8rem;
+    text-wrap: balance;
+  }
+  .lede { font-family: Georgia, "Chronicle Text G1", serif; font-size: 1.08rem; color: var(--ink); max-width: 65ch; }
+  .lede em { color: var(--ink-dim); font-style: normal; }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 3rem 0 .8rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+    text-wrap: balance;
+  }
+  h2 .k {
+    display: block;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .68rem;
+    font-weight: 400;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: .35rem;
+  }
+  h3 { font-size: 1.02rem; font-weight: 700; margin: 1.6rem 0 .4rem; }
+  p { margin: .6rem 0 1rem; max-width: 70ch; }
+  a { color: var(--brand); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+  code {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .84em;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: .05em .3em;
+    overflow-wrap: anywhere;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 2rem 0 0;
+  }
+  .stat { background: var(--card); padding: .9rem 1rem; }
+  .stat b {
+    display: block;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: 1.3rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--brand);
+  }
+  .stat span { font-size: .78rem; color: var(--ink-dim); line-height: 1.35; display: block; margin-top: .15rem; }
+
+  .tag {
+    display: inline-block;
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .66rem;
+    letter-spacing: .1em;
+    padding: .1rem .45rem;
+    border-radius: 3px;
+    vertical-align: .12em;
+    margin-right: .4rem;
+  }
+  .p0 { background: var(--brand); color: #fff; }
+  .p1 { background: var(--brand-soft); color: var(--brand); border: 1px solid var(--brand); }
+  .p2 { background: transparent; color: var(--ink-dim); border: 1px solid var(--line); }
+
+  .tblwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; margin: 1rem 0 1.5rem; }
+  table { border-collapse: collapse; width: 100%; font-size: .875rem; background: var(--card); }
+  th {
+    font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    font-size: .66rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--ink-dim);
+    text-align: left;
+    padding: .55rem .8rem;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+  }
+  td { padding: .55rem .8rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  td.num { font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  ul { padding-left: 1.2rem; max-width: 70ch; }
+  li { margin: .35rem 0; }
+  li::marker { color: var(--brand); }
+
+  .note {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--brand);
+    border-radius: 4px;
+    padding: .8rem 1rem;
+    font-size: .9rem;
+    margin: 1.2rem 0;
+    max-width: 70ch;
+  }
+  .foot { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--ink-dim); }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">ICNS · Western Sydney University · site review · 24 Aug 2026</p>
+  <h1>ICNS website audit</h1>
+  <p class="lede">A full crawl and review of <a href="https://www.westernsydney.edu.au/icns">westernsydney.edu.au/icns</a>, roughly 100 pages across seven sections. The research story is strong. The site undersells it: the flagship supercomputer is still announced in the future tense, the newest news item is from late 2023, two listing pages are empty, and nine distinct link targets return 404 from primary navigation paths. <em>Everything below was verified against live HTTP responses and rendered pages on 24 August 2026.</em></p>
+
+  <div class="stats">
+    <div class="stat"><b>~100</b><span>pages crawled in the /icns tree</span></div>
+    <div class="stat"><b>9</b><span>broken link targets reachable from main pages</span></div>
+    <div class="stat"><b>Dec 2023</b><span>most recent news item</span></div>
+    <div class="stat"><b>2</b><span>listing pages showing "No results were found"</span></div>
+    <div class="stat"><b>48+</b><span>images missing alt text on three key pages alone</span></div>
+  </div>
+
+  <h2><span class="k">01 · Inventory</span>What the site contains</h2>
+  <div class="tblwrap"><table>
+    <tr><th>Section</th><th>Pages</th><th>State</th></tr>
+    <tr><td><b>About</b> (vision, people directory, ~25 profiles)</td><td class="num">~30</td><td>Content solid; profiles current; every portrait on the researchers listing lacks alt text; "Our People" in the nav skips the people index and lands on the researchers sub-list.</td></tr>
+    <tr><td><b>Research</b> (streams: perception / processing / principles; applications: sensors / algorithms / processors)</td><td class="num">~10</td><td>Best-written part of the site (the Perception page runs ~970 words of real explanation), but it links into a dead video tree.</td></tr>
+    <tr><td><b>Research projects</b> (11 current, 6 current PhD, 24 open PhD, past)</td><td class="num">~45</td><td>Genuinely rich. 24 open PhD projects is a recruitment asset. No dates or status on any project, and the past-projects tree exists twice under different URL styles.</td></tr>
+    <tr><td><b>Resources</b> (publications, videos, reproducible research)</td><td class="num">~15</td><td>Publications page is 131 words deferring to Google Scholar profiles. Videos date to 2020 and are duplicated across three URL trees.</td></tr>
+    <tr><td><b>Opportunities</b></td><td class="num">5</td><td>Three of the five cards on the landing page point at 404s. Vacancies and scholarships pages are empty shells.</td></tr>
+    <tr><td><b>Partnership</b></td><td class="num">3</td><td>Thin (43-word landing page) but functional.</td></tr>
+    <tr><td><b>News &amp; events</b></td><td class="num">~17</td><td>13 news articles, Feb 2019 to Dec 2023, no dates shown on the listing. Events section is frozen at "2023 Events".</td></tr>
+  </table></div>
+
+  <h2><span class="k">02 · Findings</span>What is broken, stale, or working against you</h2>
+
+  <h3><span class="tag p0">P0</span>Broken links on the main user journeys</h3>
+  <p>All verified as HTTP 404 on 24 Aug 2026. The Opportunities page is the worst case: a prospective student or partner clicking any of its three main cards hits a dead end, while the working versions of those pages exist at other URLs.</p>
+  <div class="tblwrap"><table>
+    <tr><th>Linked from</th><th>Dead target</th><th>Working page exists at</th></tr>
+    <tr><td>Opportunities (cards + footer, twice each)</td><td><code>/icns/opportunities/research-opportunities</code></td><td><code>/icns/research-projects/open-phd-projects</code></td></tr>
+    <tr><td>Opportunities</td><td><code>/icns/opportunities/masters-program</code></td><td><code>/icns/masters-program</code></td></tr>
+    <tr><td>Opportunities</td><td><code>/icns/opportunities/partner-with-us</code></td><td><code>/icns/partnership/partnership-opportunities</code></td></tr>
+    <tr><td>Research page + Perception page</td><td><code>/icns/research/research-videos</code></td><td><code>/icns/resources/research-videos</code></td></tr>
+    <tr><td>Perception page (6 video links)</td><td><code>/icns/research/research-streams/perception/*</code></td><td><code>/icns/resources/research-videos/*</code></td></tr>
+    <tr><td>News listing</td><td><code>/icns/news/first-images-from-space!2</code></td><td>none found</td></tr>
+    <tr><td>Our Vision page</td><td><code>/icns/archived-pages/impact</code></td><td>none (archived)</td></tr>
+    <tr><td>People listings (3 archive profiles)</td><td><code>/icns/about/people/*/archive/*</code></td><td>none (people have left)</td></tr>
+    <tr><td>Within the section</td><td><code>/icns/resources/student-support</code></td><td>none found</td></tr>
+  </table></div>
+
+  <h3><span class="tag p0">P0</span>The flagship is announced in the future tense</h3>
+  <p>The homepage hero and the newest news item both say ICNS is <em>going to build</em> DeepSouth, the brain-scale supercomputer. That announcement is from December 2023 and the machine launched in April 2024. Two years on, the centre's single strongest asset reads as a stale press release, and it doubles as the homepage meta description, so the future tense is also what Google shows. DeepSouth should be a permanent facility page in present tense: what it is, what it runs, how researchers get access.</p>
+
+  <h3><span class="tag p0">P0</span>Sections that say "nothing is happening here"</h3>
+  <ul>
+    <li><b>Current Vacancies</b> and <b>Current Scholarships</b> both render "No results were found". An empty page with no date is indistinguishable from an abandoned one. Either populate them, or replace with a short standing paragraph ("openings are advertised via ... register interest at ...").</li>
+    <li><b>Events</b> stops at "2023 Events" and a 2023 NeuroEng Workshop, and the landing page has 34 words. In the top navigation of every page, "2023 Events" is a freshness stamp working against you.</li>
+    <li><b>News</b> shows no dates on the listing, and the newest article is Dec 2023. Undated news hides staleness until a visitor clicks, then loses their trust when they notice.</li>
+  </ul>
+
+  <h3><span class="tag p1">P1</span>Three overlapping content trees</h3>
+  <p>The same material lives under <code>/icns/research</code>, <code>/icns/research-projects</code>, and <code>/icns/resources</code>, and the navigation lists "Research Videos" in two different sections. The videos actually resolve under three URL patterns (hyphen and underscore variants both return 200, plus the dead perception copies), which splits search ranking and makes the CMS harder to maintain. One "Research" tree covering streams, applications, projects, and outputs would remove most of the confusion and most of the broken links at their source.</p>
+
+  <h3><span class="tag p1">P1</span>Thin hub pages and slug cruft</h3>
+  <ul>
+    <li>Landing pages for Events (34 words), Partnership (43), Projects (67), Resources (75) exist only to hold links their parent nav already shows.</li>
+    <li><b>Publications</b>, for a research centre, is a 131-word page pointing at individual Google Scholar profiles. A curated "selected publications" list by year, or an automated feed, is table stakes for credibility with academic and defence-industry visitors.</li>
+    <li>Visible CMS versioning in public URLs: <code>reproducible-research3</code>, <code>publication-support-materials2</code>, <code>first-images-from-space!2</code>.</li>
+    <li>People are buried at <code>/icns/about/people/...</code> and the homepage never links to them. For a research centre, people are a primary destination and belong in the top navigation.</li>
+  </ul>
+
+  <h3><span class="tag p2">P2</span>Accessibility and polish</h3>
+  <ul>
+    <li>The homepage has no <code>h1</code>; its heading structure starts at duplicated <code>h2</code> nav items.</li>
+    <li>Missing alt text: 7 of 10 homepage images, 14 of 14 researcher portraits, all 27 open-PhD-project thumbnails.</li>
+    <li>Card descriptions are truncated mid-sentence with "..." followed by "Read More" on the research and applications pages, so the scannable text carries half a thought.</li>
+    <li>Contact page office address is incomplete ("Level 2, Building BA, Great Western Highway" with no campus or suburb for the street address).</li>
+    <li>Images ship as PNG/JPEG only; no WebP/AVIF variants.</li>
+  </ul>
+
+  <h2><span class="k">03 · Visual pass</span>What the pages look like</h2>
+  <p>The live site is the standard light WSU template: white ground, crimson <code>#990033</code> headings, dark text panels over the hero imagery. Verified against an extension-free render — an earlier pass through a browser running a dark-mode extension produced false findings (a "fixed dark theme" and an unreadable header) that are corrected here.</p>
+
+  <h3><span class="tag p1">P1</span>Homepage composition</h3>
+  <ul>
+    <li>The hero is a four-slide carousel with an underlined title and a "FIND OUT MORE..." button whose label trails off in an ellipsis. The slide imagery is a generic server-room render rather than a photo of DeepSouth itself, and only the first slide is ever seen by most visitors.</li>
+    <li>Section headings are underlined hyperlinks in the pattern "NEWS | Discover what's happening at ICNS", a 2010s portal idiom that makes every heading read as unvisited link text.</li>
+    <li>The welcome section leans on an embedded video thumbnail plus four bolded "We study / We design / We discover / We train" paragraphs; serviceable copy, but the page has no h1 above it.</li>
+  </ul>
+
+  <h3><span class="tag p1">P1</span>Cards and imagery</h3>
+  <ul>
+    <li>Card summaries truncate mid-word: "at the scale of the human b...", "further cements IC...", "pioneerin...". Nine near-identical outline "READ MORE" buttons repeat down the page, none saying where they lead.</li>
+    <li>Thumbnail imagery has no system: the Master's Program card is a text poster cropped so it reads "ER OF / OMORPHIC / EERING", Open PhD Projects gets an abstract grey 3D render, and news cards mix real photography (Astrosite container, satellite imagery) with stock-style graphics. The real photos are the strongest images on the site; the decoration is the weakest.</li>
+    <li>Portraits on the people pages are black-and-white with inconsistent crops, presented in a single wide column of alternating photo/text rows.</li>
+  </ul>
+
+  <h3><span class="tag p2">P2</span>Forced dark mode breaks the header</h3>
+  <p>Under a dark-mode browser extension (a common accessibility setting), the page ground turns near-black while the header keeps WSU black <code>#262223</code> for the centre's name and the logo's "UNIVERSITY" line — measured at 1.1:1 contrast, effectively invisible. Not a defect of the stock site, but worth knowing: a <code>color-scheme</code> declaration and a dark-safe header treatment would make the site degrade gracefully for those users.</p>
+
+  <h2><span class="k">04 · Strengths</span>What to keep and build on</h2>
+  <ul>
+    <li>The story inventory is enviable: DeepSouth, event cameras on the ISS, space imaging, the Intel partnership, a NASA internship, Astrosite. The raw material for a modern site already exists.</li>
+    <li>24 open PhD projects, each with its own page, is a real recruitment engine; it needs metadata (stream, supervisor, status, date), not rework.</li>
+    <li>The research stream pages are properly written explanations, not brochure copy.</li>
+    <li>The template is responsive, loads fast, and the navigation labels are sensible. This is a content and information-architecture problem more than a technology one.</li>
+  </ul>
+
+  <h2><span class="k">05 · Steps</span>How to correct it and make something good</h2>
+
+  <h3>Phase 1 — repair (CMS edits, roughly two days)</h3>
+  <ul>
+    <li><b>1. Retarget the 9 dead links</b> using the working URLs in the table above; delete the dead news item, archive-profile links, and the Vision page's impact link.</li>
+    <li><b>2. Put DeepSouth in the present tense.</b> Rewrite the hero slide and the news item as a standing facility page (what it is, what it runs, how to get access), and fix the homepage meta description.</li>
+    <li><b>3. Clear the staleness signals.</b> Dates on every news card; vacancies/scholarships shells replaced with two sentences of standing copy plus a contact; "2023 Events" renamed to an events archive or dropped from the nav; 2020 videos labelled as archive footage.</li>
+    <li><b>4. Homepage quick pass.</b> Give the page an h1, rename the "FIND OUT MORE..." buttons to say where they go, and fix the ellipsis labels.</li>
+  </ul>
+
+  <h3>Phase 2 — restructure (about a week)</h3>
+  <ul>
+    <li><b>5. One Research tree.</b> Merge <code>/research</code>, <code>/research-projects</code> and <code>/resources</code> into a single hierarchy (streams, applications, projects, publications, videos) with redirects from the old and underscore-duplicate URLs. This removes the class of bug that produced most of the 404s.</li>
+    <li><b>6. Promote People to the top navigation</b> and link them from the homepage; a research centre's people are a primary destination, not an About sub-sub-page.</li>
+    <li><b>7. Rewrite card copy to fit.</b> Every card gets a summary written to length (no mid-word "pioneerin..." truncation) and a labelled action ("View the program", not a ninth "READ MORE").</li>
+    <li><b>8. Real publications page.</b> Selected publications by year, curated or fed from ORCID/Scholar, replacing the 131-word pointer page.</li>
+    <li><b>9. Accessibility sweep.</b> Homepage h1, alt text on the 48+ images missing it (start with portraits and project thumbnails), untruncated link text.</li>
+  </ul>
+
+  <h3>Phase 3 — make it nice (design, two to four weeks)</h3>
+  <ul>
+    <li><b>10. Choose a colourway and commit.</b> Two defensible directions: keep the light WSU ground with all media (event-camera footage, star fields, figures) on dark plates, or take the whole site dark — neuromorphic imagery lives on black, and a dark centre site would stand out among WSU pages. Either way it needs a deliberate token set per the 2026 brand (white and crimson upweighted; on dark grounds use a brightened crimson, since raw <code>#990033</code> fails contrast on black), and a <code>color-scheme</code> declaration so forced-dark extensions degrade gracefully.</li>
+    <li><b>11. Replace the hero carousel with one static hero.</b> A real photograph of DeepSouth or the Astrosite dome, one sentence, one CTA. Carousels hide three-quarters of their content and this one ships with a visible scrollbar.</li>
+    <li><b>12. Fix the vertical rhythm.</b> Consistent section spacing (one scale, roughly 64–96px steps) in place of the current full-viewport voids between sections.</li>
+    <li><b>13. Build an imagery system from what ICNS already has.</b> Event-camera output is visually unlike anything other centres can show: star trails, spike rasters, the foosball robot, ISS footage. Use real captures and lab photography as the only thumbnail sources; retire cropped posters and stock renders.</li>
+    <li><b>14. One card system.</b> Date, stream tag, and status on every news/project card, set in a consistent metadata row, so freshness and ownership are visible at a glance.</li>
+  </ul>
+
+  <div class="note"><b>A note on ceilings.</b> Items 1–5 are achievable inside the university CMS and will fix the credibility problems, which are the real modernisation blockers. If the ambition is a genuinely contemporary research-centre site (live publication feeds, project filtering, interactive demos of event-camera output), that argues for a separately built centre site on the ICNS design system, with the CMS pages kept as the university-facing shell that links to it.</div>
+
+  <p class="foot">Method: breadth-first crawl of the /icns tree from the live site (fetch + DOM parse, ~130 URLs checked), HTTP status verification of every internal link found, rendered-page screenshots, and computed-style measurement in a live browser. All 404s and page contents quoted here were observed directly on 24 August 2026. Correction note: the first visual pass ran in a browser with a dark-mode extension active; theme and contrast findings were re-verified in an extension-free render and corrected. Not covered: pages behind search-only discovery.</p>
+</div>
