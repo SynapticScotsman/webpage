@@ -33,22 +33,29 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } }
+            theme: { extend: {
+                fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+                colors: {
+                    /* warm-dark / red re-theme: remap the palette the markup already uses */
+                    cyan:  { 300:'#ea6d82', 400:'#E0445E', 500:'#E0445E', 600:'#c22b45' },
+                    slate: { 300:'#d3d1c7', 400:'#b4b2a9', 500:'#8a8a86', 700:'#3a3937', 800:'#2a2927', 900:'#1f1e1c', 950:'#141412' }
+                }
+            } }
         }
     </script>
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#020617; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
+        body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
         ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-track { background:#020617; }
-        ::-webkit-scrollbar-thumb { background:#22d3ee; }
+        ::-webkit-scrollbar-track { background:#141412; }
+        ::-webkit-scrollbar-thumb { background:#E0445E; }
 
         /* Skip link */
         .skip-link {
             position:fixed; top:-100%; left:1rem; z-index:9999;
-            background:#22d3ee; color:#000; font-weight:700;
+            background:#E0445E; color:#000; font-weight:700;
             padding:.5rem 1rem; border-radius:0 0 4px 4px;
             text-decoration:none; transition:top .2s;
         }
@@ -59,53 +66,53 @@
 
         .hover-glitch:hover { animation:glitch .3s steps(2,end) infinite; }
         @keyframes glitch {
-            0%   { text-shadow: 2px 0 #22d3ee,-2px 0 #f87171; }
-            25%  { text-shadow:-2px 0 #22d3ee, 2px 0 #f87171; clip-path:inset(20% 0 30% 0); }
-            50%  { text-shadow: 3px 0 #a78bfa,-3px 0 #22d3ee; clip-path:inset(50% 0 10% 0); }
-            75%  { text-shadow:-3px 0 #f87171, 3px 0 #a78bfa; clip-path:inset(10% 0 70% 0); }
-            100% { text-shadow: 2px 0 #22d3ee,-2px 0 #f87171; clip-path:inset(0); }
+            0%   { text-shadow: 2px 0 #E0445E,-2px 0 #ededeb; }
+            25%  { text-shadow:-2px 0 #E0445E, 2px 0 #ededeb; clip-path:inset(20% 0 30% 0); }
+            50%  { text-shadow: 3px 0 #a78bfa,-3px 0 #E0445E; clip-path:inset(50% 0 10% 0); }
+            75%  { text-shadow:-3px 0 #ededeb, 3px 0 #a78bfa; clip-path:inset(10% 0 70% 0); }
+            100% { text-shadow: 2px 0 #E0445E,-2px 0 #ededeb; clip-path:inset(0); }
         }
 
         /* HUD */
         #hud-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
         .hud-slot { position:absolute; opacity:0; transform:translate(-50%,-50%); transition:opacity .075s; will-change:left,top,opacity; }
-        .hud-frame { width:80px; height:80px; border:1px solid rgba(34,211,238,.2); position:relative; }
-        .hud-corner { position:absolute; width:12px; height:12px; border-color:#22d3ee; border-style:solid; }
+        .hud-frame { width:80px; height:80px; border:1px solid rgba(224,68,94,.2); position:relative; }
+        .hud-corner { position:absolute; width:12px; height:12px; border-color:#E0445E; border-style:solid; }
         .hud-corner.tl { top:-2px; left:-2px; border-width:2px 0 0 2px; }
         .hud-corner.tr { top:-2px; right:-2px; border-width:2px 2px 0 0; }
         .hud-corner.bl { bottom:-2px; left:-2px; border-width:0 0 2px 2px; }
         .hud-corner.br { bottom:-2px; right:-2px; border-width:0 2px 2px 0; }
-        .hud-info { position:absolute; top:calc(100%+8px); left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:9px; color:#22d3ee; background:rgba(2,6,23,.8); padding:4px 8px; white-space:nowrap; border:1px solid rgba(34,211,238,.2); line-height:1.6; }
+        .hud-info { position:absolute; top:calc(100%+8px); left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:9px; color:#E0445E; background:rgba(20,20,18,.8); padding:4px 8px; white-space:nowrap; border:1px solid rgba(224,68,94,.2); line-height:1.6; }
 
         /* Cards */
         .pub-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; transition:all .3s ease; display:flex; flex-direction:column; justify-content:space-between; }
-        .pub-card:hover { border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.04); }
-        .pub-kw { font-size:.6rem; padding:.15rem .45rem; border-radius:3px; background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.2); color:#22d3ee; font-family:'JetBrains Mono',monospace; }
-        .partner-card { background:#020617; border:1px solid rgba(255,255,255,.05); border-radius:.75rem; transition:border-color .3s ease; text-align:center; }
-        .partner-card:hover { border-color:rgba(34,211,238,.3); }
-        .partner-card:hover .partner-icon { color:#22d3ee; }
+        .pub-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); }
+        .pub-kw { font-size:.6rem; padding:.15rem .45rem; border-radius:3px; background:rgba(224,68,94,.08); border:1px solid rgba(224,68,94,.2); color:#E0445E; font-family:'JetBrains Mono',monospace; }
+        .partner-card { background:#141412; border:1px solid rgba(255,255,255,.05); border-radius:.75rem; transition:border-color .3s ease; text-align:center; }
+        .partner-card:hover { border-color:rgba(224,68,94,.3); }
+        .partner-card:hover .partner-icon { color:#E0445E; }
         .partner-icon { color:#334155; transition:color .3s ease; }
 
         /* Project cards */
         .project-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; padding:1.5rem; transition:all .3s ease; display:flex; flex-direction:column; gap:.75rem; }
-        .project-card:hover { border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.04); transform:translateY(-2px); }
-        .project-tag { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#22d3ee; background:rgba(34,211,238,.1); display:inline-block; padding:.2rem .5rem; border-radius:3px; width:fit-content; }
+        .project-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); transform:translateY(-2px); }
+        .project-tag { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#E0445E; background:rgba(224,68,94,.1); display:inline-block; padding:.2rem .5rem; border-radius:3px; width:fit-content; }
 
         /* Exhibits */
         .exhibit-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; }
         .pipeline-btn { background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:opacity .3s; outline:none; padding:.5rem; }
         .pipeline-btn.inactive { opacity:.5; }
         .pipeline-btn:hover { opacity:1; }
-        .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#020617; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
+        .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#141412; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
         .metric-bar { height:6px; border-radius:9999px; transition:width .3s ease, background .3s ease; }
 
         /* Video */
-        .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#020617; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
+        .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#141412; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
         .video-iframe-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
-        .video-poster-ui { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; cursor:pointer; background:rgba(2,6,23,.6); transition:background .2s; }
-        .video-poster-ui:hover { background:rgba(2,6,23,.4); }
-        .play-circle { width:72px; height:72px; border-radius:50%; border:2px solid #22d3ee; background:rgba(34,211,238,.1); display:flex; align-items:center; justify-content:center; transition:background .2s; }
-        .play-circle:hover { background:rgba(34,211,238,.25); }
+        .video-poster-ui { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; cursor:pointer; background:rgba(20,20,18,.6); transition:background .2s; }
+        .video-poster-ui:hover { background:rgba(20,20,18,.4); }
+        .play-circle { width:72px; height:72px; border-radius:50%; border:2px solid #E0445E; background:rgba(224,68,94,.1); display:flex; align-items:center; justify-content:center; transition:background .2s; }
+        .play-circle:hover { background:rgba(224,68,94,.25); }
 
         /* VSA Explorer canvas */
         /* VSA Explorer canvas */
@@ -315,9 +322,9 @@
             </div>
             <div class="font-mono text-cyan-400 font-bold" id="vel-display" aria-live="polite">10 m/s</div>
         </div>
-        <input type="range" min="0" max="100" value="10" id="vel-slider" class="w-full mb-8" style="accent-color:#22d3ee;cursor:ew-resize" aria-label="Ego-motion velocity">
+        <input type="range" min="0" max="100" value="10" id="vel-slider" class="w-full mb-8" style="accent-color:#E0445E;cursor:ew-resize" aria-label="Ego-motion velocity">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="cnn-card" class="p-8 rounded-2xl border border-white/5 transition-colors duration-500" style="background:#020617">
+            <div id="cnn-card" class="p-8 rounded-2xl border border-white/5 transition-colors duration-500" style="background:#141412">
                 <h4 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8">Conventional Frame-Based Stack</h4>
                 <div class="space-y-6">
                     <div>
@@ -392,7 +399,7 @@
             <div class="h-32 bg-slate-950 rounded-xl border border-white/10 relative p-4 flex items-end">
                 <div class="absolute left-0 w-full h-px border-t border-dashed border-red-500/50" style="top:20%"></div>
                 <div class="absolute left-4 text-[9px] font-mono text-red-500" style="top:calc(20% - 16px)">AMBIGUITY THRESHOLD (80%)</div>
-                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#22d3ee,#ef4444)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#E0445E,#ef4444)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                 <div class="ml-6 font-mono text-3xl font-light text-white">
                     <span id="fallback-pct">20.0</span>% <span class="text-[10px] text-slate-500">UNCERTAINTY</span>
                 </div>
@@ -478,7 +485,7 @@
 
 <!-- VIDEO — lazy-loaded -->
 <section class="py-24 bg-slate-900 border-y border-white/5 relative overflow-hidden mt-20" aria-labelledby="video-heading">
-    <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(34,211,238,.08) 0%,transparent 70%);" aria-hidden="true"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(224,68,94,.08) 0%,transparent 70%);" aria-hidden="true"></div>
     <div class="max-w-6xl mx-auto px-6 relative z-10">
         <div class="text-center mb-12">
             <h2 class="text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] mb-2">Simulated Deployment</h2>
@@ -578,7 +585,7 @@
 </section>
 
 <!-- CTA -->
-<section id="contact" class="py-32 text-center px-6" style="background:#22d3ee;color:#000" aria-labelledby="contact-heading">
+<section id="contact" class="py-32 text-center px-6" style="background:#A20C32;color:#f4f1ea" aria-labelledby="contact-heading">
     <h2 id="contact-heading" class="text-5xl md:text-7xl font-black mb-8 tracking-tighter">Interested?</h2>
     <p class="text-lg md:text-2xl font-medium mb-12 max-w-2xl mx-auto" style="opacity:.8">Looking to collaborate on neuro-symbolic AI or apply these frameworks to real-world edge robotics?</p>
     <a href="mailto:p.kirkland@westernsydney.edu.au" class="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-bold uppercase tracking-widest text-sm rounded-full hover:scale-105 hover:shadow-2xl transition-all">
@@ -896,7 +903,7 @@ const _pipeDescs = [
     "The filtered neural spikes are translated into high-dimensional Spatial Semantic Pointers. Using Fourier Holographic Reduced Representations (FHRR), we bind object features to spatial coordinates mathematically via phase angles.",
     "A continuous monitor evaluates the clarity of the VSA resonance. When epistemic uncertainty peaks (e.g., scene ambiguity), the control loop triggers an active sensing fallback (like SPAD or LiDAR) to physically resolve the environment."
 ];
-const _pipeColors = ['#22d3ee', '#a855f7', '#34d399'];
+const _pipeColors = ['#E0445E', '#a855f7', '#34d399'];
 
 function setPipeline(i) {
     [0, 1, 2].forEach(j => {
@@ -935,10 +942,10 @@ setPipeline(0);
         document.getElementById('cnn-power-bar').style.width        = Math.min(100, cnnPower) + '%';
         document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#ef4444' : '#64748b';
         document.getElementById('cnn-acc-val').textContent          = cnnAcc + '%';
-        document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#f87171' : 'white';
+        document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#ededeb' : 'white';
         document.getElementById('cnn-acc-bar').style.width          = cnnAcc + '%';
         document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#ef4444' : '#64748b';
-        cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#020617';
+        cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#141412';
         cnnCard.style.borderColor = vel > 60 ? 'rgba(239,68,68,.3)' : 'rgba(255,255,255,.05)';
         const snnPower = (0.5 + vel * .02).toFixed(2);
         const snnLat   = (1.2 + vel * .05).toFixed(1);
@@ -971,7 +978,7 @@ setPipeline(0);
         parent.appendChild(d); return d;
     }
 
-    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#22d3ee', 6));
+    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#E0445E', 6));
     const phaseDots      = anchors.map(() => makeDot(phasePanel,   '#a855f7', 6));
     const noiseDots      = Array.from({ length: 100 }, () => {
         const d = makeDot(spatialPanel, '#ef4444', 4);
@@ -1131,7 +1138,7 @@ class BaseVector {
   const ctx = canvas.getContext('2d');
   const GRID_SIZE = 10, DIM = 1024, HEAT_RES = 48, SPATIAL_FREQ_LIMIT = Math.PI / 4;
   const objTypes = [
-    { name: 'Drone', color: '#ef4444' }, { name: 'Rover', color: '#34d399' }, { name: 'Beacon', color: '#22d3ee' }
+    { name: 'Drone', color: '#ef4444' }, { name: 'Rover', color: '#34d399' }, { name: 'Beacon', color: '#E0445E' }
   ];
   
   const explorer = {
@@ -1144,7 +1151,7 @@ class BaseVector {
     return [
       { id: 1, type: 'Drone', x: -4.2, y: 3.5, color: '#ef4444' },
       { id: 2, type: 'Rover', x: 3.2, y: -2.4, color: '#34d399' },
-      { id: 3, type: 'Beacon', x: -1.0, y: -4.5, color: '#22d3ee' },
+      { id: 3, type: 'Beacon', x: -1.0, y: -4.5, color: '#E0445E' },
       { id: 4, type: 'Drone', x: 4.6, y: 2.2, color: '#ef4444' }
     ];
   }
@@ -1171,7 +1178,7 @@ class BaseVector {
     explorer.itemMemory = {
       Drone: { color: '#ef4444', vector: buildObj(v.Val_Air, v.Val_Dynamic) },
       Rover: { color: '#34d399', vector: buildObj(v.Val_Ground, v.Val_Dynamic) },
-      Beacon: { color: '#22d3ee', vector: buildObj(v.Val_Ground, v.Val_Static) }
+      Beacon: { color: '#E0445E', vector: buildObj(v.Val_Ground, v.Val_Static) }
     };
     explorer.items = seedItems();
     explorer.queryPoint = null; explorer.pipelineState = null; explorer.mode = 'place'; explorer.selectedObjType = 'Drone';
@@ -1230,14 +1237,14 @@ class BaseVector {
   function canvasToWorld(px, py, w, h) { return { x: (px / w) * (GRID_SIZE * 2) - GRID_SIZE, y: GRID_SIZE - (py / h) * (GRID_SIZE * 2) }; }
 
   function drawGrid(w, h) {
-    ctx.fillStyle = '#020617'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#141412'; ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
     for (let i = 0; i <= GRID_SIZE * 2; i++) {
       const x = (i / (GRID_SIZE * 2)) * w, y = (i / (GRID_SIZE * 2)) * h;
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
     }
-    ctx.strokeStyle = 'rgba(34,211,238,0.2)'; ctx.lineWidth = 1.25;
+    ctx.strokeStyle = 'rgba(224,68,94,0.2)'; ctx.lineWidth = 1.25;
     const center = worldToCanvas(0, 0, w, h);
     ctx.beginPath(); ctx.moveTo(center.x, 0); ctx.lineTo(center.x, h); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, center.y); ctx.lineTo(w, center.y); ctx.stroke();
@@ -1252,7 +1259,7 @@ class BaseVector {
       for (let iy = 0; iy < HEAT_RES; iy++) {
         const sim = queryVec.similarity(sspX.bind(explorer.vocab.Y.power(GRID_SIZE - (iy / HEAT_RES) * (GRID_SIZE * 2))));
         if (sim > 0.05) {
-          ctx.fillStyle = `rgba(34, 211, 238, ${0.12 + Math.min(1, Math.pow(sim, 2) * 3.2) * 0.75})`;
+          ctx.fillStyle = `rgba(224,68,94, ${0.12 + Math.min(1, Math.pow(sim, 2) * 3.2) * 0.75})`;
           ctx.fillRect(ix * cellW, iy * cellH, cellW + 1, cellH + 1);
         }
       }
@@ -1300,7 +1307,7 @@ class BaseVector {
   function scoreRows(scores, formatter) {
     return scores.map(s => {
       const w = Math.max(2, Math.min(100, ((s.score + 1) / 2) * 100));
-      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#22d3ee'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#22d3ee'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
+      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
     }).join('');
   }
 
@@ -1326,7 +1333,7 @@ class BaseVector {
       return;
     }
     const state = explorer.pipelineState;
-    inspector.innerHTML = `<div class="space-y-5"><div class="rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Recovered concept</div><div class="mt-2 text-lg font-black" style="color:${state.cleanItem.color}">${state.cleanItem.name}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Item similarity</div><div class="space-y-3">${scoreRows(state.itemScores, n => n.toFixed(2))}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Decoded features</div><div class="space-y-4 rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-cyan-300">Domain → ${state.domainCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.domainCleanUp.scores.map(s => ({...s, color:'#22d3ee'})), n => n.toFixed(2))}</div></div><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Mobility → ${state.mobilityCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.mobilityCleanUp.scores.map(s => ({...s, color:'#34d399'})), n => n.toFixed(2))}</div></div></div></div></div>`;
+    inspector.innerHTML = `<div class="space-y-5"><div class="rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Recovered concept</div><div class="mt-2 text-lg font-black" style="color:${state.cleanItem.color}">${state.cleanItem.name}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Item similarity</div><div class="space-y-3">${scoreRows(state.itemScores, n => n.toFixed(2))}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Decoded features</div><div class="space-y-4 rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-cyan-300">Domain → ${state.domainCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.domainCleanUp.scores.map(s => ({...s, color:'#E0445E'})), n => n.toFixed(2))}</div></div><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Mobility → ${state.mobilityCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.mobilityCleanUp.scores.map(s => ({...s, color:'#34d399'})), n => n.toFixed(2))}</div></div></div></div></div>`;
   }
 
   function renderButtons() {
