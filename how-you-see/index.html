@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>How do you see the world? — Paul Kirkland · ICNS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An explainer on cognitive maps — how you, and a robot, build a world from what + where using vector-symbolic algebra." />
+  <meta name="color-scheme" content="only dark" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:        #181816;
+      --bg-2:      #232220;
+      --card:      #1f1e1c;
+      --ink:       #ededeb;
+      --ink-med:   rgba(237,237,235,0.66);
+      --ink-lo:    rgba(237,237,235,0.45);
+      --ink-xlo:   rgba(237,237,235,0.25);
+      --rule:      rgba(237,237,235,0.12);
+      --rule-2:    rgba(237,237,235,0.06);
+      --accent:    #E0445E;
+      --accent-soft: rgba(224,68,94,0.14);
+      --sans:  "Geist", system-ui, -apple-system, sans-serif;
+      --mono:  "Geist Mono", ui-monospace, "SF Mono", monospace;
+      --serif: "Newsreader", Georgia, serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--ink); font-family: var(--sans);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+    em { font-style: normal; color: var(--accent); font-weight: 600; }
+    .wrap { max-width: 1060px; margin: 0 auto; padding: 0 24px; }
+    .stripe { position: fixed; top: 0; left: 0; width: 240px; height: 5px; background: var(--accent); z-index: 10; }
+
+    .meta {
+      display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;
+      padding: 28px 0 0;
+      font-family: var(--mono); font-size: 12px;
+      color: var(--ink-lo); letter-spacing: 0.10em; text-transform: uppercase;
+    }
+    .meta a { color: var(--ink-lo); text-decoration: none; }
+    .meta a:hover { color: var(--accent); }
+    .meta .acc { color: var(--accent); }
+
+    .hero { min-height: 88vh; display: flex; flex-direction: column; justify-content: center; padding: 90px 0 60px; }
+    .kicker {
+      font-family: var(--mono); font-size: 13px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 24px;
+    }
+    .title-head {
+      font-weight: 600; font-size: clamp(44px, 8vw, 96px);
+      line-height: 1.0; letter-spacing: -0.03em; color: var(--ink);
+    }
+    .title-head .you { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); }
+    .title-sub {
+      font-family: var(--serif); font-weight: 300; font-style: italic;
+      font-size: clamp(20px, 3vw, 30px); line-height: 1.35; color: var(--ink-med);
+      margin-top: 26px; max-width: 46ch;
+    }
+    .title-sub em { font-style: italic; font-weight: 400; }
+    .hero-cue { margin-top: 48px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-xlo); }
+
+    section { padding: 72px 0; border-top: 1px solid var(--rule-2); }
+    .headline { font-weight: 500; font-size: clamp(28px, 4.4vw, 44px); line-height: 1.08; letter-spacing: -0.02em; }
+    .headline .dim { color: var(--ink-med); }
+    .lede {
+      font-family: var(--serif); font-weight: 300;
+      font-size: clamp(18px, 2.4vw, 22px); line-height: 1.5; color: var(--ink-med);
+      max-width: 64ch; margin-top: 16px;
+    }
+    .lede em { color: var(--accent); font-style: italic; font-weight: 400; }
+
+    .probcard { background: var(--card); border: 1px solid var(--rule); padding: 22px; display: flex; flex-direction: column; gap: 12px; }
+    .probcard.lead { border-color: var(--accent); background: var(--accent-soft); }
+    .probcard .ptag { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-lo); }
+    .probcard.lead .ptag, .ptag.acc { color: var(--accent); }
+    .probcard h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.1; }
+    .probcard p { font-family: var(--serif); font-weight: 300; font-size: 16px; line-height: 1.45; color: var(--ink-med); }
+    .probcard p b { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+    .palg { font-family: var(--mono); font-size: 14px; color: var(--ink); background: var(--bg-2); border: 1px solid var(--rule); padding: 8px 12px; margin-top: auto; }
+    .palg.acc { color: var(--accent); }
+    .parrow { display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 26px; color: var(--ink-xlo); padding: 6px 0; }
+    .gapline { margin-top: 26px; border-top: 1px solid var(--rule); padding-top: 20px; font-family: var(--serif); font-weight: 300; font-size: clamp(17px, 2.2vw, 21px); line-height: 1.45; color: var(--ink); }
+    .gapline em { font-style: italic; font-weight: 400; }
+    .mono { font-family: var(--mono); }
+
+    .recipe { display: grid; grid-template-columns: 1fr 48px 1fr 48px 1.12fr; align-items: stretch; margin-top: 36px; }
+    .ops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 32px; }
+    .bundlebar { margin-top: 22px; display: flex; align-items: center; gap: 18px; background: var(--card); border: 1px solid var(--rule); padding: 16px 20px; flex-wrap: wrap; }
+    .bundlebar .op { font-family: var(--mono); font-size: 18px; color: var(--accent); white-space: nowrap; }
+    .bundlebar .txt { font-family: var(--serif); font-weight: 300; font-size: 17px; color: var(--ink-med); line-height: 1.45; flex: 1; min-width: 240px; }
+    .bundlebar .txt b { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+
+    .phase-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 4px 0; }
+    .phase-cell { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+    .phase-cell span { font-family: var(--mono); font-size: 12px; color: var(--ink-lo); }
+    .phase-cell span.acc { color: var(--accent); }
+    .phase-op { font-family: var(--mono); font-size: 20px; color: var(--ink-xlo); }
+
+    footer { border-top: 1px solid var(--rule); padding: 40px 0 60px; }
+    .footlinks { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px; font-family: var(--mono); font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .footlinks a { color: var(--ink-med); text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+    .footlinks a:hover { color: var(--accent); border-color: var(--accent); }
+
+    @media (max-width: 760px) {
+      .recipe { grid-template-columns: 1fr; }
+      .ops { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="stripe"></div>
+
+<div class="wrap">
+  <div class="meta">
+    <span class="m-left"><a href="../index.html">← paul kirkland</a></span>
+    <span><span class="acc">neuromorphic perception and cognition</span> · icns · wsu</span>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="kicker">cognitive maps · an explainer</div>
+    <h1 class="title-head">How do <span class="you">you</span><br />see the world?</h1>
+    <p class="title-sub">Not the best method for building <em>a</em> world model — but how you, the one carrying a cognitive map around in your head, build a world at all. A robot can borrow the trick.</p>
+    <div class="hero-cue">↓ scroll · two ideas, no maths degree required</div>
+  </header>
+
+  <!-- 01 · YOU ALREADY DO THIS -->
+  <section>
+    <div class="kicker">01 · you already do this</div>
+    <h2 class="headline">Close your eyes. <span class="dim">Where's your mug?</span></h2>
+    <p class="lede">You didn't store a photograph of your desk. You stored a relation: <em>mug, near the keyboard, left of the lamp</em>. That's a cognitive map — what you encountered, bound to where you encountered it, all in one memory you can query from any angle. The rest of this page shows the same trick written as arithmetic a robot can run.</p>
+  </section>
+
+  <!-- 02 · WHAT + WHERE -->
+  <section>
+    <div class="kicker">02 · the recipe · one object at a time</div>
+    <h2 class="headline">Build the map from <em>what</em> + <em>where</em>.</h2>
+    <p class="lede">Every object you see becomes one vector: <em>bind</em> what it is to where it is, then <em>add</em> it to a single running pile.</p>
+
+    <div class="recipe">
+      <div class="probcard">
+        <div class="ptag acc">what · the object</div>
+        <h3>"mug"</h3>
+        <p>A fixed vector that names the thing itself.</p>
+        <div class="palg">mug_v</div>
+      </div>
+      <div class="parrow">⊗</div>
+      <div class="probcard">
+        <div class="ptag acc">where · the place</div>
+        <h3>(x, y)</h3>
+        <p>A vector for that exact spot in the room.</p>
+        <div class="palg">S(x, y)</div>
+      </div>
+      <div class="parrow">=</div>
+      <div class="probcard lead">
+        <div class="ptag">one bound pair</div>
+        <h3>mug-here</h3>
+        <p>Means "mug, at that location" — in one vector.</p>
+        <div class="palg acc">mug_v ⊗ S(x, y)</div>
+      </div>
+    </div>
+
+    <div class="bundlebar">
+      <div class="op">⊕ bundle</div>
+      <div class="txt">Add every pair into <b>M</b> — one fixed-size vector that holds the whole room, however many objects you add.</div>
+    </div>
+
+    <div class="gapline">No training, no growing memory. <em>M is the same width after 3 objects or 30</em> — and you read it back by running the recipe in reverse.</div>
+  </section>
+
+  <!-- 03 · WRITTEN AND READ -->
+  <section>
+    <div class="kicker">03 · bind · bundle · search — the three operations</div>
+    <h2 class="headline">How the map is <span class="dim">written and read.</span></h2>
+
+    <div class="ops">
+      <!-- BIND -->
+      <div class="probcard">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <div class="ptag">bind · write one item</div>
+          <span style="font-family:var(--mono);font-size:20px;color:var(--accent);">⊗</span>
+        </div>
+        <h3>Phases add.</h3>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="74.4" y2="20.9" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="74.4" cy="20.9" r="4" fill="var(--ink)"/>
+              <path d="M50,22 A28,28 0 0,1 67.8,27.4" fill="none" stroke="var(--ink-lo)" stroke-width="1.2"/>
+              <text x="60" y="20" font-family="Geist Mono" font-size="14" fill="var(--ink-lo)">φ</text>
+            </svg>
+            <span>mug_v</span>
+          </div>
+          <span class="phase-op">⊗</span>
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="85.7" y2="63.0" stroke="var(--ink-med)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="85.7" cy="63.0" r="4" fill="var(--ink-med)"/>
+              <path d="M50,22 A28,28 0 0,1 76.3,40.6" fill="none" stroke="var(--ink-lo)" stroke-width="1.2"/>
+              <text x="56" y="24" font-family="Geist Mono" font-size="14" fill="var(--ink-lo)">ψ</text>
+            </svg>
+            <span>S(x,y)</span>
+          </div>
+          <span class="phase-op">=</span>
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="72" height="72" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="69.0" y2="82.9" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="69.0" cy="82.9" r="4" fill="var(--accent)"/>
+              <path d="M50,22 A28,28 0 0,1 64.0,72.8" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7"/>
+              <text x="52" y="38" font-family="Geist Mono" font-size="13" fill="var(--accent)">φ+ψ</text>
+            </svg>
+            <span class="acc">bound</span>
+          </div>
+        </div>
+        <p>Each dimension multiplies: phases add. The result encodes both mug <em>and</em> location — neither is readable alone without the other key.</p>
+        <div class="palg">mug_v ⊗ S(x,y) → bound pair</div>
+      </div>
+
+      <!-- BUNDLE -->
+      <div class="probcard">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <div class="ptag">bundle · accumulate all items</div>
+          <span style="font-family:var(--mono);font-size:20px;color:var(--accent);">⊕</span>
+        </div>
+        <h3>Superposition.</h3>
+        <svg viewBox="0 0 420 220" style="width:100%;height:auto;" aria-hidden="true">
+          <g font-family="Geist Mono" font-size="14">
+            <text x="4" y="26" fill="var(--accent)" opacity="0.85">mug ⊗ S₁</text>
+            <text x="4" y="86" fill="var(--accent)" opacity="0.65">book ⊗ S₂</text>
+            <text x="4" y="146" fill="var(--accent)" opacity="0.45">chair ⊗ S₃</text>
+          </g>
+          <g transform="translate(108,10)">
+            <rect x="0" y="0" width="300" height="24" fill="none" stroke="var(--rule)" stroke-width="1"/>
+            <g fill="var(--accent)" opacity="0.8">
+              <rect x="5" y="3" width="12" height="18"/><rect x="35" y="7" width="12" height="13"/><rect x="75" y="2" width="12" height="20"/><rect x="120" y="9" width="12" height="12"/><rect x="170" y="4" width="12" height="17"/><rect x="225" y="11" width="12" height="10"/><rect x="268" y="3" width="12" height="18"/>
+            </g>
+          </g>
+          <text x="252" y="60" font-family="Geist Mono" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
+          <g transform="translate(108,70)">
+            <rect x="0" y="0" width="300" height="24" fill="none" stroke="var(--rule)" stroke-width="1"/>
+            <g fill="var(--accent)" opacity="0.6">
+              <rect x="18" y="4" width="12" height="16"/><rect x="56" y="2" width="12" height="20"/><rect x="100" y="10" width="12" height="11"/><rect x="148" y="5" width="12" height="15"/><rect x="200" y="2" width="12" height="20"/><rect x="252" y="8" width="12" height="13"/>
+            </g>
+          </g>
+          <text x="252" y="120" font-family="Geist Mono" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
+          <g transform="translate(108,130)">
+            <rect x="0" y="0" width="300" height="24" fill="none" stroke="var(--rule)" stroke-width="1"/>
+            <g fill="var(--accent)" opacity="0.4">
+              <rect x="8" y="7" width="12" height="12"/><rect x="46" y="3" width="12" height="18"/><rect x="90" y="9" width="12" height="13"/><rect x="140" y="4" width="12" height="17"/><rect x="190" y="10" width="12" height="10"/><rect x="240" y="2" width="12" height="20"/>
+            </g>
+          </g>
+          <line x1="108" y1="175" x2="408" y2="175" stroke="var(--rule)" stroke-width="1"/>
+          <text x="76" y="204" font-family="Geist Mono" font-size="20" fill="var(--ink)" text-anchor="end">M =</text>
+          <g transform="translate(108,183)">
+            <rect x="-2" y="-2" width="304" height="38" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+            <g fill="var(--ink)">
+              <rect x="5" y="8" width="8" height="24"/><rect x="18" y="3" width="8" height="30"/><rect x="31" y="14" width="8" height="18"/><rect x="44" y="2" width="8" height="32"/><rect x="57" y="18" width="8" height="14"/><rect x="70" y="7" width="8" height="26"/><rect x="83" y="15" width="8" height="18"/><rect x="96" y="3" width="8" height="30"/><rect x="109" y="19" width="8" height="13"/><rect x="122" y="9" width="8" height="23"/><rect x="135" y="5" width="8" height="28"/><rect x="148" y="20" width="8" height="12"/><rect x="161" y="2" width="8" height="31"/><rect x="174" y="12" width="8" height="21"/><rect x="187" y="16" width="8" height="17"/><rect x="200" y="4" width="8" height="29"/><rect x="213" y="10" width="8" height="23"/><rect x="226" y="21" width="8" height="11"/><rect x="239" y="6" width="8" height="26"/><rect x="252" y="15" width="8" height="18"/><rect x="265" y="1" width="8" height="32"/><rect x="278" y="17" width="8" height="15"/>
+            </g>
+          </g>
+        </svg>
+        <p>M is the same size as any single bound pair. The dimension is fixed; only the <em>density</em> of information grows.</p>
+        <div class="palg">M = Σ aᵢ ⊗ S(xᵢ,yᵢ)</div>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="probcard lead">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <div class="ptag">search · complex conjugate</div>
+          <span style="font-family:var(--mono);font-size:18px;color:var(--accent);">⊗ v*</span>
+        </div>
+        <h3>Phases subtract. The key cancels itself.</h3>
+        <div class="phase-row">
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="66" height="66" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="69.0" y2="82.9" stroke="var(--ink-med)" stroke-width="2.8" stroke-linecap="round"/>
+              <circle cx="69.0" cy="82.9" r="3.5" fill="var(--ink-med)"/>
+              <text x="56" y="42" font-family="Geist Mono" font-size="13" fill="var(--ink-lo)">φ+ψ</text>
+            </svg>
+            <span>M item</span>
+          </div>
+          <span class="phase-op">⊗</span>
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="66" height="66" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="74.4" y2="20.9" stroke="var(--ink-xlo)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
+              <line x1="50" y1="50" x2="25.6" y2="20.9" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="5 3"/>
+              <circle cx="25.6" cy="20.9" r="3.5" fill="var(--accent)"/>
+              <text x="10" y="22" font-family="Geist Mono" font-size="13" fill="var(--accent)">−φ</text>
+              <text x="62" y="22" font-family="Geist Mono" font-size="12" fill="var(--ink-xlo)" opacity="0.5">+φ</text>
+            </svg>
+            <span class="acc">mug_v*</span>
+          </div>
+          <span class="phase-op">=</span>
+          <div class="phase-cell">
+            <svg viewBox="0 0 100 100" width="66" height="66" aria-hidden="true">
+              <circle cx="50" cy="50" r="38" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
+              <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
+              <line x1="50" y1="50" x2="85.7" y2="63.0" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round"/>
+              <circle cx="85.7" cy="63.0" r="4.5" fill="var(--accent)"/>
+              <text x="52" y="26" font-family="Geist Mono" font-size="13" fill="var(--accent)">ψ</text>
+            </svg>
+            <span class="acc">≈ S(x,y)</span>
+          </div>
+        </div>
+        <div class="mono" style="font-size:14px;color:var(--ink-med);text-align:center;padding:4px 0;">(φ+ψ) + (−φ) = ψ &nbsp; the key's phase cancels</div>
+        <p>The conjugate <b>flips</b> the phase sign. Binding the target by its conjugate subtracts its angle exactly — leaving only the other factor. Everything else in M averages out to noise.</p>
+        <div class="palg" style="border-color:var(--accent);">M ⊗ mug_v* ≈ S(x,y) + noise</div>
+      </div>
+    </div>
+
+    <div class="gapline">
+      Ask "<em>where's the mug?</em>": <span class="mono" style="color:var(--accent);">M ⊗ mug_v*</span> → the answer peaks at its location. Ask "<em>what's over there?</em>": swap the key. One memory, queried from any angle — just like yours.
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap footlinks">
+    <a href="../index.html">← home</a>
+    <a href="../cognitive_map.html">see the full cognitive map →</a>
+  </div>
+</footer>
+
+</body>
+</html>

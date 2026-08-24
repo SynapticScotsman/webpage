@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Paul Kirkland â€” Cognitive Map of Embodied Intelligence</title>
+<title>Paul Kirkland — Cognitive Map of Embodied Intelligence</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,12 +23,12 @@ tailwind.config = { theme: { extend: {
   --ink:#000000;
   --ink-2:#0a0a0a;
   --paper:#f4f1ea;
-  --hi:#e7e9ec;          /* DEFAULT: monochrome â€” used everywhere unless overridden */
+  --hi:#e7e9ec;          /* DEFAULT: monochrome — used everywhere unless overridden */
   --hi-deep:#1a1a1a;
   --warm:#c2410c;
   --muted:#525252;
   --line:rgba(255,255,255,.12);
-  /* RESERVED accent â€” only used by .accent-* helpers */
+  /* RESERVED accent — only used by .accent-* helpers */
   --accent:#22d3ee;      /* cyan pop */
   --accent-warm:#fb923c; /* orange pop */
   --accent-alert:#f87171;/* red alert */
@@ -38,7 +38,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 ::-webkit-scrollbar-track{background:#000}
 ::-webkit-scrollbar-thumb{background:#333;border-radius:3px}
 
-/* monochrome accent helpers â€” apply to ANY element to give it a coloured pop */
+/* monochrome accent helpers — apply to ANY element to give it a coloured pop */
 .pop-cyan{color:var(--accent) !important}
 .pop-warm{color:var(--accent-warm) !important}
 .pop-alert{color:var(--accent-alert) !important}
@@ -102,7 +102,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .topnav a:hover{color:var(--hi)}
 .topnav a.active{color:var(--hi)}
 
-/* region anchors â€” generous spacing for pacing */
+/* region anchors — generous spacing for pacing */
 .region{position:relative;padding:140px 32px;max-width:1200px;margin:0 auto}
 .region-kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.25em;color:var(--hi);margin-bottom:14px;display:flex;align-items:center;gap:10px}
 .region-kicker .num{padding:4px 10px;border:1px solid var(--hi);border-radius:99px;font-weight:700}
@@ -185,7 +185,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 /* tweaks panel positioning */
 #tweaks-root{position:fixed;bottom:24px;right:24px;z-index:80}
 
-/* ink-colour theme variants â€” swap the ACCENT, not the surface */
+/* ink-colour theme variants — swap the ACCENT, not the surface */
 .ink-cyan{--accent:#22d3ee}
 .ink-blue{--accent:#60a5fa}
 .ink-black{--accent:#e7e9ec}
@@ -200,7 +200,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   .archive-row{grid-template-columns:80px 1fr 60px}
 }
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Walk-the-robot VSA sandbox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─────────────── Walk-the-robot VSA sandbox ─────────────── */
 .vsa-walk{
   position:relative;
   background:rgba(8,8,8,.7);
@@ -263,7 +263,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .vw-list li .coords{margin-left:auto;color:rgba(255,255,255,.35);font-size:9px}
 .vw-list li button{background:transparent;border:none;color:var(--hi);font:inherit;cursor:pointer;font-size:9px;letter-spacing:.1em}
 .vw-list li button:hover{color:#fff}
-.vw-list:empty::before{content:"trace empty â€” drag the robot near a landmark";display:block;font-family:'Newsreader',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,.35);text-align:center;padding:20px 0}
+.vw-list:empty::before{content:"trace empty — drag the robot near a landmark";display:block;font-family:'Newsreader',serif;font-style:italic;font-size:12px;color:rgba(255,255,255,.35);text-align:center;padding:20px 0}
 
 .vw-recall-row{display:flex;flex-wrap:wrap;gap:6px}
 .vw-recall-row button{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;
@@ -282,7 +282,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .vw-dot-trail{background:rgba(167,139,250,.6)}
 .vw-eq{margin-left:auto;font-style:italic;color:rgba(255,255,255,.4);letter-spacing:.05em}
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Drone-thru-maze viz â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─────────────── Drone-thru-maze viz ─────────────── */
 .maze-demo{
   position:relative;background:rgba(8,8,8,.7);
   border:1px solid rgba(255,255,255,.14);border-radius:18px;
@@ -305,7 +305,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   padding:6px 12px;border-radius:99px;cursor:pointer}
 .maze-replay:hover{background:rgba(255,255,255,.20)}
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Active-perception thermostat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─────────────── Active-perception thermostat ─────────────── */
 .ap-demo{margin-top:24px;background:rgba(8,8,8,.7);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:18px}
 .ap-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
 .ap-state-pill{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;
@@ -349,7 +349,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 
 <!-- TOP NAV -->
 <nav class="topnav">
-  <div class="font-mono text-xs tracking-[.18em] uppercase font-bold"><span class="pop-cyan">â—</span> PAUL KIRKLAND</div>
+  <a href="index.html" class="font-mono text-xs tracking-[.18em] uppercase font-bold"><span class="pop-cyan">●</span> PAUL KIRKLAND</a>
   <div class="hidden md:flex gap-6 items-center">
     <a href="#r-sense" data-region="01">01 Sense</a>
     <a href="#r-bind"  data-region="02">02 Bind</a>
@@ -361,7 +361,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   </div>
 </nav>
 
-<!-- â”€â”€ HERO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
 <section id="hero" class="relative h-screen overflow-hidden bg-slate-950">
   <div class="absolute inset-0 z-0" style="opacity:.8">
     <div id="three-canvas" aria-hidden="true"></div>
@@ -375,17 +375,17 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   </div>
 
   <div class="relative z-10 h-full flex flex-col items-center justify-center text-center px-6 pointer-events-none">
-    <div class="font-mono text-[10px] tracking-[.3em] pop-cyan mb-6 uppercase">Western Sydney University Â· ICNS Â· Paul Kirkland</div>
+    <div class="font-mono text-[10px] tracking-[.3em] pop-cyan mb-6 uppercase">Western Sydney University · ICNS · Paul Kirkland</div>
     <h1 class="glitch text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] uppercase drop-shadow-2xl">Embodied<br/>Intelligence</h1>
     <p class="mt-8 max-w-2xl font-serif font-light text-xl md:text-2xl text-slate-300 italic">A cognitive map of neuromorphic sensing,<br/>spatial memory, and edge robotics.</p>
     <div class="mt-12 text-xs tracking-[.3em] text-slate-400/70 uppercase">[ Move mouse rapidly for ego-motion noise ]</div>
-    <div class="mt-8 font-mono text-[10px] tracking-[.25em] text-white/70 animate-pulse">â†“ SCROLL Â· ASCEND Â· MAP REVEALS</div>
+    <div class="mt-8 font-mono text-[10px] tracking-[.25em] text-white/70 animate-pulse">↓ SCROLL · ASCEND · MAP REVEALS</div>
   </div>
 </section>
 
-<!-- â”€â”€ COGNITIVE MAP MINI-PILL (revealed after hero) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- ── COGNITIVE MAP MINI-PILL (revealed after hero) ──────────────── -->
 <aside class="minimap" id="minimap" aria-label="Cognitive map navigator">
-  <div class="head"><span>COGNITIVE MAP</span><b id="mm-current-label">â€” APPROACH</b></div>
+  <div class="head"><span>COGNITIVE MAP</span><b id="mm-current-label">— APPROACH</b></div>
   <svg viewBox="0 0 280 220" id="mm-svg">
     <defs>
       <pattern id="mm-grid" width="20" height="20" patternUnits="userSpaceOnUse">
@@ -422,25 +422,25 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   </div>
 </aside>
 
-<!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-     REGIONS Â· scrolling content over the cognitive map
-     â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+<!-- ═══════════════════════════════════════════════════════════════
+     REGIONS · scrolling content over the cognitive map
+     ═══════════════════════════════════════════════════════════════ -->
 <main>
 
-<!-- 01 Â· SENSE -->
+<!-- 01 · SENSE -->
 <section id="r-sense" class="region" data-region="01">
-  <div class="region-kicker"><span class="num">Â§01</span> SENSE Â· EVENT VISION</div>
+  <div class="region-kicker"><span class="num">§01</span> SENSE · EVENT VISION</div>
   <h2 class="statement max-w-3xl">A frame camera samples thirty times a second.<br/><em>An event sensor samples a million.</em></h2>
 
   <div class="grid md:grid-cols-2 gap-8 mt-16">
     <div>
-      <p class="text-slate-300 leading-relaxed text-lg">Biological retinas don't take snapshots â€” they fire spikes when something <em>changes</em>. By treating the world as a stream of asynchronous events, an agent spends its watts only when reality moves.</p>
-      <div class="mt-6 font-mono text-[10px] tracking-[.18em] text-white/85">â†“ INLINE DEMO Â· drag to feed the SNN</div>
+      <p class="text-slate-300 leading-relaxed text-lg">Biological retinas don't take snapshots — they fire spikes when something <em>changes</em>. By treating the world as a stream of asynchronous events, an agent spends its watts only when reality moves.</p>
+      <div class="mt-6 font-mono text-[10px] tracking-[.18em] text-white/85">↓ INLINE DEMO · drag to feed the SNN</div>
     </div>
     <!-- Frame vs Event sampling demo -->
     <div class="frame-vs-event">
       <div class="fve-head">
-        <div class="fve-label">FRAME Â· EVENT â€” DRAG SLIDER</div>
+        <div class="fve-label">FRAME · EVENT — DRAG SLIDER</div>
         <div class="fve-stats">
           <span>FRAMES <b id="fve-frames">30</b>/s</span>
           <span>EVENTS <b id="fve-events">0</b>/s</span>
@@ -459,7 +459,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
       <div class="fve-legend">
         <span><i style="background:#22d3ee"></i>ON event</span>
         <span><i style="background:#f87171"></i>OFF event</span>
-        <span class="fve-hint">left = frame Â· right = event</span>
+        <span class="fve-hint">left = frame · right = event</span>
       </div>
     </div>
   </div>
@@ -470,14 +470,14 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   <svg id="events-strip" viewBox="0 0 1400 240" preserveAspectRatio="none" style="width:100%;height:100%">
     <g id="events-g"></g>
   </svg>
-  <div class="absolute top-4 left-6 font-mono text-[10px] tracking-[.2em] text-white/60">ASYNCHRONOUS EVENT STREAM Â· LIVE CANVAS</div>
+  <div class="absolute top-4 left-6 font-mono text-[10px] tracking-[.2em] text-white/60">ASYNCHRONOUS EVENT STREAM · LIVE CANVAS</div>
 </div>
 
-<!-- 02 Â· BIND -->
+<!-- 02 · BIND -->
 <section id="r-bind" class="region" data-region="02">
-  <div class="region-kicker"><span class="num">Â§02</span> BIND Â· COGNITIVE MAPS</div>
+  <div class="region-kicker"><span class="num">§02</span> BIND · COGNITIVE MAPS</div>
   <h2 class="statement max-w-4xl">The world isn't stored as pixels. <em>It's stored as relations.</em></h2>
-  <p class="mt-8 max-w-2xl text-slate-300 text-lg leading-relaxed font-serif">A cognitive map is the brain's trick for navigating a world it has never fully seen â€” holding <em>what</em> you encountered, <em>where</em> you encountered it, and <em>how</em> the pieces relate, all in one substrate you can query from any angle. We borrow that trick. Hyperdimensional vectors let us bind an object to a place with a single multiplication, bundle many such bindings into one trace, and pull any piece back out by unbinding. No floor plan. No SLAM mesh. Just a vector that remembers.</p>
+  <p class="mt-8 max-w-2xl text-slate-300 text-lg leading-relaxed font-serif">A cognitive map is the brain's trick for navigating a world it has never fully seen — holding <em>what</em> you encountered, <em>where</em> you encountered it, and <em>how</em> the pieces relate, all in one substrate you can query from any angle. We borrow that trick. Hyperdimensional vectors let us bind an object to a place with a single multiplication, bundle many such bindings into one trace, and pull any piece back out by unbinding. No floor plan. No SLAM mesh. Just a vector that remembers.</p>
 
   <!-- diagram-as-explanation: 4 frames -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16">
@@ -505,11 +505,11 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
     <div class="border border-white/15 bg-white/[.025] rounded-xl p-5 hover:border-[var(--accent)] transition-colors cursor-pointer">
       <div class="font-mono text-[9px] tracking-[.2em] pop-cyan">FRAME 02</div>
       <div class="text-lg font-bold mt-1">Bind</div>
-      <div class="text-xs text-slate-400 mt-1">object âŠ— place â€” whatÂ·where fused</div>
+      <div class="text-xs text-slate-400 mt-1">object ⊗ place — what·where fused</div>
       <svg viewBox="0 0 200 100" class="mt-4 w-full">
         <circle cx="60" cy="50" r="22" fill="rgba(34,211,238,.18)" stroke="#22d3ee" stroke-width="1.5"/>
         <text x="60" y="54" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#bae6fd">obj</text>
-        <text x="100" y="55" text-anchor="middle" font-size="14" font-family="JetBrains Mono" fill="#fff">âŠ—</text>
+        <text x="100" y="55" text-anchor="middle" font-size="14" font-family="JetBrains Mono" fill="#fff">⊗</text>
         <circle cx="140" cy="50" r="22" fill="rgba(194,65,12,.18)" stroke="#c2410c" stroke-width="1.5"/>
         <text x="140" y="54" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#fdba74">pos</text>
       </svg>
@@ -523,7 +523,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
         <circle cx="82" cy="42" r="14" fill="rgba(34,211,238,.18)" stroke="#22d3ee" stroke-width="1.2"/>
         <circle cx="118" cy="42" r="14" fill="rgba(194,65,12,.18)" stroke="#c2410c" stroke-width="1.2"/>
         <circle cx="100" cy="68" r="14" fill="rgba(255,255,255,.07)" stroke="#22d3ee" stroke-width="1.2" opacity=".75"/>
-        <text x="100" y="96" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#94a3b8">Î£ (aâŠ—p)</text>
+        <text x="100" y="96" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#94a3b8">Σ (a⊗p)</text>
       </svg>
     </div>
     <div class="border border-white/15 bg-white/[.025] rounded-xl p-5 hover:border-[var(--accent)] transition-colors cursor-pointer">
@@ -533,7 +533,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
       <svg viewBox="0 0 200 100" class="mt-4 w-full">
         <circle cx="40" cy="50" r="18" fill="none" stroke="#c2410c" stroke-width="1.5"/>
         <text x="40" y="54" text-anchor="middle" font-size="10" font-family="JetBrains Mono" fill="#fdba74">trace</text>
-        <text x="82" y="54" text-anchor="middle" font-size="14" font-family="JetBrains Mono" fill="#fff">âŠ˜</text>
+        <text x="82" y="54" text-anchor="middle" font-size="14" font-family="JetBrains Mono" fill="#fff">⊘</text>
         <circle cx="120" cy="50" r="14" fill="rgba(194,65,12,.18)" stroke="#c2410c" stroke-width="1.2" stroke-dasharray="2 2"/>
         <text x="120" y="54" text-anchor="middle" font-size="9" font-family="JetBrains Mono" fill="#fdba74">key</text>
         <path d="M 145 50 L 175 50" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#a-arr)"/>
@@ -547,11 +547,11 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   <div class="vsa-walk mt-16">
     <div class="vw-head">
       <div>
-        <div class="vw-kicker">DEMO 02-A Â· WALK THE ROBOT</div>
+        <div class="vw-kicker">DEMO 02-A · WALK THE ROBOT</div>
         <h3 class="vw-title">Drag the bot. Watch the trace remember.</h3>
       </div>
       <div class="vw-controls">
-        <button class="vw-btn" id="vw-step">step â¤³</button>
+        <button class="vw-btn" id="vw-step">step ⤳</button>
         <button class="vw-btn" id="vw-auto">autopilot</button>
         <button class="vw-btn vw-btn-ghost" id="vw-reset">reset</button>
       </div>
@@ -559,11 +559,11 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
     <div class="vw-body">
       <div class="vw-stage-wrap">
         <canvas id="vw-stage" width="780" height="480"></canvas>
-        <div class="vw-stage-hint" id="vw-hint">drag the <b>â—‹</b> to walk Â· drop near a landmark to bind it into memory</div>
-        <div class="vw-stage-tag" id="vw-mode">MODE Â· ENCODE</div>
+        <div class="vw-stage-hint" id="vw-hint">drag the <b>○</b> to walk · drop near a landmark to bind it into memory</div>
+        <div class="vw-stage-tag" id="vw-mode">MODE · ENCODE</div>
         <div class="vw-mode-toggle">
           <button data-vw-mode="encode" class="active">encode</button>
-          <button data-vw-mode="recall">recall â†º</button>
+          <button data-vw-mode="recall">recall ↺</button>
         </div>
       </div>
       <aside class="vw-side">
@@ -574,12 +574,12 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
           </div>
           <p class="vw-blurb"><em>Each landmark</em> gets bound to <em>where</em> the bot was, then bundled into one fat hypervector. <em>Unbind</em> a landmark and the trace whispers back its place.</p>
           <div class="vw-trace-fill"><div id="vw-trace-bar"></div></div>
-          <div class="vw-trace-meta"><span id="vw-bound-n">0</span> landmarks bound Â· trace fill <span id="vw-fill">0%</span></div>
+          <div class="vw-trace-meta"><span id="vw-bound-n">0</span> landmarks bound · trace fill <span id="vw-fill">0%</span></div>
           <ul class="vw-list" id="vw-list"></ul>
         </div>
         <div class="vw-card vw-card-recall" id="vw-recall-card" style="display:none">
-          <div class="vw-card-head"><span>unbind Â· recall</span></div>
-          <p class="vw-blurb">pick a landmark â€” we recall its place from the trace, plus a halo of confidence:</p>
+          <div class="vw-card-head"><span>unbind · recall</span></div>
+          <p class="vw-blurb">pick a landmark — we recall its place from the trace, plus a halo of confidence:</p>
           <div class="vw-recall-row" id="vw-recall-row"></div>
         </div>
       </aside>
@@ -590,7 +590,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
       <span><i class="vw-dot vw-dot-tree"></i> tree</span>
       <span><i class="vw-dot vw-dot-rock"></i> rock</span>
       <span><i class="vw-dot vw-dot-trail"></i> visited</span>
-      <span class="vw-eq">trace = Î£áµ¢ ( place(xáµ¢,yáµ¢) âŠ— landmarká Žáµ¢ )</span>
+      <span class="vw-eq">trace = Σᵢ ( place(xᵢ,yᵢ) ⊗ landmark᠎ᵢ )</span>
     </div>
   </div>
 </section>
@@ -598,7 +598,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 <!-- pull-quote full-bleed break -->
 <div class="fullbleed" style="padding:120px 32px;background:linear-gradient(180deg, transparent, rgba(255,255,255,.04), transparent)">
   <div class="max-w-5xl mx-auto">
-    <div class="font-mono text-[10px] tracking-[.25em] text-white/60 mb-4">â€” THESIS</div>
+    <div class="font-mono text-[10px] tracking-[.25em] text-white/60 mb-4">— THESIS</div>
     <p class="font-serif italic font-light leading-[1.1] tracking-tight" style="font-size:clamp(36px,5vw,72px)">
       "Spatial awareness isn't a layer added on top of perception.<br/>
       <span class="text-white/85 not-italic">It is the perception.</span>"
@@ -606,92 +606,92 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
   </div>
 </div>
 
-<!-- 03 Â· ACT -->
+<!-- 03 · ACT -->
 <section id="r-act" class="region" data-region="03">
-  <div class="region-kicker"><span class="num">Â§03</span> ACT Â· CLOSING THE LOOP</div>
+  <div class="region-kicker"><span class="num">§03</span> ACT · CLOSING THE LOOP</div>
   <h2 class="statement max-w-3xl">A robot that knows <em>where</em> doesn't need to remember everything it has seen.</h2>
 
   <!-- Drone-thru-maze animated viz -->
   <div class="maze-demo mt-16">
     <div class="maze-head">
       <div>
-        <div class="vw-kicker">SIM VIZ Â· ILLUSTRATIVE DEMO</div>
+        <div class="vw-kicker">SIM VIZ · ILLUSTRATIVE DEMO</div>
         <h3 class="vw-title">A drone, a corridor, and 0.7&nbsp;milliwatts.</h3>
       </div>
       <div class="maze-stats">
         <div class="ms-pill"><b id="ms-power" class="pop-cyan">0.70</b><span>mW</span></div>
-        <div class="ms-pill"><b id="ms-lat" class="pop-cyan">1.7</b><span>Âµs latency</span></div>
+        <div class="ms-pill"><b id="ms-lat" class="pop-cyan">1.7</b><span>µs latency</span></div>
         <div class="ms-pill"><b id="ms-acc" class="pop-cyan">97</b><span>% acc.</span></div>
-        <div class="ms-pill"><b id="ms-fps">â€”</b><span>events/frame</span></div>
+        <div class="ms-pill"><b id="ms-fps">—</b><span>events/frame</span></div>
       </div>
     </div>
     <div class="maze-stage-wrap">
       <svg id="maze-svg" viewBox="0 0 900 420" preserveAspectRatio="xMidYMid meet"></svg>
-      <div class="maze-tag maze-tag-tl">â–¸ FOV Â· neuromorphic</div>
+      <div class="maze-tag maze-tag-tl">▸ FOV · neuromorphic</div>
       <div class="maze-tag maze-tag-tr" id="maze-clock">t=0.000s</div>
-      <button class="maze-replay" id="maze-replay">â†º replay</button>
+      <button class="maze-replay" id="maze-replay">↺ replay</button>
     </div>
   </div>
 
   <!-- horizontal trail of project waypoints -->
   <div class="mt-16">
-    <div class="font-mono text-[10px] tracking-[.2em] text-white/85 mb-4 px-1">â†³ THE TRAIL Â· ACTIVE PROJECT WAYPOINTS Â· scroll â†’</div>
+    <div class="font-mono text-[10px] tracking-[.2em] text-white/85 mb-4 px-1">↳ THE TRAIL · ACTIVE PROJECT WAYPOINTS · scroll →</div>
   </div>
 </section>
 
 <div class="fullbleed">
   <div class="trail-scroll">
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 01 Â· ACTIVE-SENSE</div>
+      <div class="code">▸ WAYPOINT 01 · ACTIVE-SENSE</div>
       <h4>Uncertainty-Driven Active Perception</h4>
-      <p>An epistemic uncertainty monitor over VSA resonance directs attention â€” triggering SPAD or LiDAR fallback only when the scene gets ambiguous.</p>
+      <p>An epistemic uncertainty monitor over VSA resonance directs attention — triggering SPAD or LiDAR fallback only when the scene gets ambiguous.</p>
     </article>
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 02 Â· SNN-SEG</div>
+      <div class="code">▸ WAYPOINT 02 · SNN-SEG</div>
       <h4>Event Camera SNN Segmentation</h4>
-      <p>First unsupervised semantic and instance segmentation SNNs operating directly on DVS event data â€” no frames, no labels.</p>
+      <p>First unsupervised semantic and instance segmentation SNNs operating directly on DVS event data — no frames, no labels.</p>
     </article>
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 03 Â· LOG-POLAR</div>
+      <div class="code">▸ WAYPOINT 03 · LOG-POLAR</div>
       <h4>Bio-inspired Retinal Sampling</h4>
       <p>Foveated event cameras for fast attentive tracking with a fraction of the bandwidth.</p>
     </article>
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 04 Â· VSA-SBX</div>
+      <div class="code">▸ WAYPOINT 04 · VSA-SBX</div>
       <h4>Vector Symbolic Architecture Sandbox</h4>
       <p>Public sandbox demonstrating bind / unbind / superposition over high-D phase codes.</p>
     </article>
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 05 Â· PHASE-BIND</div>
+      <div class="code">▸ WAYPOINT 05 · PHASE-BIND</div>
       <h4>Holographic Ego-motion Compensation</h4>
-      <p>Phase-stable spatial memory under heavy noise injection â€” a working draft.</p>
+      <p>Phase-stable spatial memory under heavy noise injection — a working draft.</p>
     </article>
     <article class="waypoint">
-      <div class="code">â–¸ WAYPOINT 06 Â· SPAD-3D</div>
+      <div class="code">▸ WAYPOINT 06 · SPAD-3D</div>
       <h4>Single-Photon Event-driven Imaging</h4>
       <p>First asynchronous 3D imaging pipeline using single-photon avalanche diodes.</p>
     </article>
   </div>
 </div>
 
-<!-- 04 Â· REFLECT -->
+<!-- 04 · REFLECT -->
 <section id="r-reflect" class="region" data-region="04">
-  <div class="region-kicker"><span class="num">Â§04</span> REFLECT Â· UNCERTAINTY + ARCHIVE</div>
+  <div class="region-kicker"><span class="num">§04</span> REFLECT · UNCERTAINTY + ARCHIVE</div>
   <h2 class="statement max-w-3xl">A good agent <em>knows when it doesn't know</em>.</h2>
 
   <div class="grid md:grid-cols-2 gap-12 mt-16 items-center">
-    <p class="text-slate-300 leading-relaxed text-lg font-serif">Uncertainty is treated as a first-class signal. When it crosses a threshold, the agent stops <em>watching</em> and starts <em>probing</em> â€” switching to active perception, asking the world questions until ambiguity collapses.</p>
+    <p class="text-slate-300 leading-relaxed text-lg font-serif">Uncertainty is treated as a first-class signal. When it crosses a threshold, the agent stops <em>watching</em> and starts <em>probing</em> — switching to active perception, asking the world questions until ambiguity collapses.</p>
 
     <!-- Active perception fallback live demo -->
     <div class="ap-demo">
       <div class="ap-head">
-        <div class="vw-kicker">DEMO 04-A Â· uncertainty thermostat</div>
-        <div class="ap-state-pill" id="ap-pill">SNN Â· PASSIVE</div>
+        <div class="vw-kicker">DEMO 04-A · uncertainty thermostat</div>
+        <div class="ap-state-pill" id="ap-pill">SNN · PASSIVE</div>
       </div>
       <div class="ap-body">
         <div class="ap-meter-wrap">
           <div class="ap-meter">
-            <div class="ap-meter-thresh" style="bottom:80%"><span>threshold Â· 80%</span></div>
+            <div class="ap-meter-thresh" style="bottom:80%"><span>threshold · 80%</span></div>
             <div class="ap-meter-bar" id="ap-bar"></div>
           </div>
           <div class="ap-pct"><span id="ap-pct">22</span>% <small>uncertainty</small></div>
@@ -710,116 +710,117 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
           <input type="range" id="ap-noise" min="0" max="100" value="35">
           <b id="ap-noise-val">35</b>
         </label>
-        <button class="vw-btn" id="ap-burst">â–¸ inject ambiguity burst</button>
+        <button class="vw-btn" id="ap-burst">▸ inject ambiguity burst</button>
         <span class="ap-hint">when uncertainty crosses the dotted line, the bot stops <em>watching</em> and starts <em>probing</em></span>
       </div>
     </div>
   </div>
 
   <div class="mt-24">
-    <div class="font-mono text-[10px] tracking-[.25em] text-white/85 mb-6">â–¸ ARCHIVE Â· selected outputs</div>
+    <div class="font-mono text-[10px] tracking-[.25em] text-white/85 mb-6">▸ ARCHIVE · selected outputs</div>
     <div class="archive-row">
       <div class="yr">2025</div>
       <div>
         <div class="pap">Spiking Neural Networks for event-based action recognition</div>
-        <div class="ven">Neurocomputing Â· doi.org/10.1016/j.neucom.2024.128657</div>
+        <div class="ven">Neurocomputing · doi.org/10.1016/j.neucom.2024.128657</div>
       </div>
-      <div class="arr">â–¸ open</div>
+      <div class="arr">▸ open</div>
     </div>
     <div class="archive-row">
       <div class="yr">2025</div>
       <div>
         <div class="pap">Single-photon event-driven 3D imaging</div>
-        <div class="ven">Communications Engineering Â· doi.org/10.1038/s44172-025-00555-7</div>
+        <div class="ven">Communications Engineering · doi.org/10.1038/s44172-025-00555-7</div>
       </div>
-      <div class="arr">â–¸ open</div>
+      <div class="arr">▸ open</div>
     </div>
     <div class="archive-row">
       <div class="yr">2022</div>
       <div>
         <div class="pap">Ultrafast neuromorphic photonic image processing with a VCSEL neuron</div>
-        <div class="ven">Scientific Reports Â· doi.org/10.1038/s41598-022-08703-1</div>
+        <div class="ven">Scientific Reports · doi.org/10.1038/s41598-022-08703-1</div>
       </div>
-      <div class="arr">â–¸ open</div>
+      <div class="arr">▸ open</div>
     </div>
     <div class="archive-row">
       <div class="yr">2022</div>
       <div>
         <div class="pap">Unsupervised Spiking Instance Segmentation on Event Data</div>
-        <div class="ven">IEEE Trans. Computers Â· doi.org/10.1109/tc.2022.3191968</div>
+        <div class="ven">IEEE Trans. Computers · doi.org/10.1109/tc.2022.3191968</div>
       </div>
-      <div class="arr">â–¸ open</div>
+      <div class="arr">▸ open</div>
     </div>
     <div class="text-right mt-6 font-mono text-[10px] tracking-[.2em] text-white/40">+ full Google Scholar archive</div>
   </div>
 </section>
 
-<!-- 05 Â· NOW -->
+<!-- 05 · NOW -->
 <section id="r-now" class="region" data-region="05">
-  <div class="region-kicker"><span class="num">Â§05</span> NOW Â· LATEST FROM THE LAB</div>
+  <div class="region-kicker"><span class="num">§05</span> NOW · LATEST FROM THE LAB</div>
   <div class="grid md:grid-cols-3 gap-6 mt-12">
     <div class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors">
-      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2025 Â· PUB</div>
+      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2025 · PUB</div>
       <h4 class="text-lg font-bold mt-2">SNNs for event-based action recognition</h4>
-      <p class="text-sm text-slate-400 mt-2">Neurocomputing Â· doi.org/10.1016/j.neucom.2024.128657</p>
+      <p class="text-sm text-slate-400 mt-2">Neurocomputing · doi.org/10.1016/j.neucom.2024.128657</p>
     </div>
     <div class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors">
-      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2025 Â· PUB</div>
+      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">2025 · PUB</div>
       <h4 class="text-lg font-bold mt-2">Single-photon event-driven 3D imaging</h4>
-      <p class="text-sm text-slate-400 mt-2">Communications Engineering Â· doi.org/10.1038/s44172-025-00555-7</p>
+      <p class="text-sm text-slate-400 mt-2">Communications Engineering · doi.org/10.1038/s44172-025-00555-7</p>
     </div>
     <div class="border border-white/8 rounded-xl p-6 hover:border-white/20 transition-colors">
-      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">LIVE Â· DEMO</div>
-      <h4 class="text-lg font-bold mt-2">Log-polar retina Â· interactive demo</h4>
-      <p class="text-sm text-slate-400 mt-2">Foveated event sampling, live in the browser Â· <a href="demos/log-polar/index.html" class="pop-cyan">open â†’</a></p>
+      <div class="font-mono text-[9px] tracking-[.2em] text-white/85">LIVE · DEMO</div>
+      <h4 class="text-lg font-bold mt-2">Log-polar retina · interactive demo</h4>
+      <p class="text-sm text-slate-400 mt-2">Foveated event sampling, live in the browser · <a href="demos/log-polar/index.html" class="pop-cyan">open →</a></p>
     </div>
   </div>
 </section>
 
-<!-- 06 Â· LAB -->
+<!-- 06 · LAB -->
 <section id="r-lab" class="region" data-region="06">
-  <div class="region-kicker"><span class="num">Â§06</span> LAB Â· PEOPLE & PLACES</div>
+  <div class="region-kicker"><span class="num">§06</span> LAB · PEOPLE & PLACES</div>
   <div class="grid md:grid-cols-2 gap-12 items-center">
     <div>
-      <h3 class="text-3xl font-black tracking-tight mb-4">ICNS Â· Western Sydney</h3>
+      <h3 class="text-3xl font-black tracking-tight mb-4">ICNS · Western Sydney</h3>
       <p class="font-serif text-lg text-slate-300 leading-relaxed">The International Centre for Neuromorphic Systems is one of the few labs on Earth where event sensors, spiking silicon, and embodied robots live under one roof. The work on this page was made there.</p>
       <div class="mt-8 flex gap-3 flex-wrap">
         <span class="font-mono text-[10px] tracking-[.18em] px-3 py-1.5 border border-white/15 rounded-full text-white/85">ICNS</span>
         <span class="font-mono text-[10px] tracking-[.18em] px-3 py-1.5 border border-white/15 rounded-full text-white/85">MARCS</span>
         <span class="font-mono text-[10px] tracking-[.18em] px-3 py-1.5 border border-white/15 rounded-full text-white/85">WSU</span>
-        <span class="font-mono text-[10px] tracking-[.18em] px-3 py-1.5 border border-white/15 rounded-full text-white/85">DSTG Â· Strathclyde Â· Intel Labs</span>
+        <span class="font-mono text-[10px] tracking-[.18em] px-3 py-1.5 border border-white/15 rounded-full text-white/85">DSTG · Strathclyde · Intel Labs</span>
       </div>
     </div>
     <div class="demo-ph" style="min-height:300px">
       <div class="label">PHOTO PLATE</div>
       <div class="title">Lab + Field</div>
-      <div>placeholder Â· drop in field-trial photography here</div>
+      <div>placeholder · drop in field-trial photography here</div>
     </div>
   </div>
 </section>
 
-<!-- 07 Â· COLLAB -->
+<!-- 07 · COLLAB -->
 <section id="r-collab" class="region cta-block" data-region="07" style="max-width:none">
-  <div class="region-kicker justify-center"><span class="num">Â§07</span> COLLAB Â· GET IN TOUCH</div>
+  <div class="region-kicker justify-center"><span class="num">§07</span> COLLAB · GET IN TOUCH</div>
   <h2 class="font-serif font-light leading-[1.05] tracking-tight max-w-4xl mx-auto" style="font-size:clamp(40px,6vw,84px)">
-    If your problem moves through space â€”<br/>
+    If your problem moves through space —<br/>
     <span class="text-white/85">I want to hear about it.</span>
   </h2>
   <a href="mailto:p.kirkland@westernsydney.edu.au"
      class="inline-flex items-center gap-3 mt-12 px-10 py-5 bg-cyan-400 text-slate-950 font-bold uppercase tracking-[.2em] text-sm rounded-full hover:bg-white transition-colors">
-    p.kirkland@westernsydney.edu.au â†’
+    p.kirkland@westernsydney.edu.au →
   </a>
   <div class="mt-10 flex justify-center gap-6 font-mono text-[10px] tracking-[.18em] text-white/50">
     <a href="https://au.linkedin.com/in/paul-kirkland-618ab096" class="hover:text-white/85">LINKEDIN</a>
-    <span>Â·</span>
+    <span>·</span>
     <a href="https://scholar.google.com/citations?user=TDvZslYAAAAJ" class="hover:text-white/85">SCHOLAR</a>
-    <span>Â·</span>
+    <span>·</span>
     <a href="https://github.com/SynapticScotsman" class="hover:text-white/85">GITHUB</a>
   </div>
 </section>
 
 <footer class="py-12 text-center font-mono text-[10px] tracking-[.25em] text-white/30 border-t border-white/5">
-  Â© 2026 PAUL KIRKLAND Â· ICNS / WSU Â· COGNITIVE MAP v1
+  <a href="index.html" class="hover:text-white/70">← HOME</a> · <a href="how-you-see/index.html" class="hover:text-white/70">HOW YOU SEE →</a><br><br>
+  © 2026 PAUL KIRKLAND · ICNS / WSU · COGNITIVE MAP v1
 </footer>
 
 </main>
@@ -834,7 +835,7 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
 }/*EDITMODE-END*/;
 </script>
 
-<!-- Three.js â€” original event-camera hero from index.html -->
+<!-- Three.js — original event-camera hero from index.html -->
 <script>
 let scrollProgress = 0;
 
@@ -1014,7 +1015,7 @@ let scrollProgress = 0;
         blend += (tb - blend) * 5 * delta;
         vsaRings.children.forEach(r => { r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, blend * .6, 5 * delta); });
 
-        // â”€â”€ Scroll-driven camera ascent into top-down map view â”€â”€
+        // ── Scroll-driven camera ascent into top-down map view ──
         // Tied to first 80% of viewport height of scroll, gated by tweak
         const scrollAnimOn = window.__tweaks?.animateCamera !== false;
         const heroH = window.innerHeight;
@@ -1025,7 +1026,7 @@ let scrollProgress = 0;
         // base look-around from mouse, then add scroll-driven downward tilt
         const baseRX = tgtRX;
         camera.rotation.x += (baseRX - camera.rotation.x) * 5 * delta;
-        // base shake from ego-motion noise â€” disabled when ascending
+        // base shake from ego-motion noise — disabled when ascending
         const sh = vel * .001 * (1 - blend) * (1 - eased);
         camera.position.x = (Math.random() - .5) * sh;
         camera.position.y = 3 + (Math.random() - .5) * sh + eased * 42;
@@ -1056,7 +1057,7 @@ let scrollProgress = 0;
     });
 })();
 
-// â”€â”€ Frame vs Event demo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Frame vs Event demo ───────────────────────────────────────────────
 (function () {
     const frameC = document.getElementById('fve-frame');
     const eventC = document.getElementById('fve-event');
@@ -1071,12 +1072,12 @@ let scrollProgress = 0;
     const ectx = eventC.getContext('2d');
     const W = frameC.width, H = frameC.height;
 
-    // SLOW frame rate â€” exposes the choppiness of conventional cameras
+    // SLOW frame rate — exposes the choppiness of conventional cameras
     const FRAME_RATE = 8;
-    const EXPOSURE_MS = 1000 / FRAME_RATE * 0.85; // long exposure â†’ motion blur
+    const EXPOSURE_MS = 1000 / FRAME_RATE * 0.85; // long exposure → motion blur
     let lastFrameAt = 0;
 
-    // persistent event "spikes" â€” fade out gradually
+    // persistent event "spikes" — fade out gradually
     const spikes = []; // { x, y, polarity:1|-1, life }
 
     let evWindow = []; // event timestamps (ms) within last second
@@ -1153,7 +1154,7 @@ let scrollProgress = 0;
     }
 
     function tick(t) {
-        // â”€â”€ FRAME side: refresh ONLY at FRAME_RATE Hz, with motion blur (exposure) â”€â”€
+        // ── FRAME side: refresh ONLY at FRAME_RATE Hz, with motion blur (exposure) ──
         if (t - lastFrameAt >= 1000 / FRAME_RATE) {
             drawSceneAt(fctx, t, true);
             frameFlash = 1;
@@ -1161,7 +1162,7 @@ let scrollProgress = 0;
         }
         drawFrameOverlay(fctx, t);
 
-        // â”€â”€ EVENT side: continuous, only on actual brightness change â”€â”€
+        // ── EVENT side: continuous, only on actual brightness change ──
         const cur = scenePos(t);
         if (prevPos) {
             const dx = cur.px - prevPos.px;
@@ -1171,12 +1172,12 @@ let scrollProgress = 0;
             if (speed > 0.02) {
                 const ndx = dx / speed, ndy = dy / speed;
                 const r = 22;
-                // SPARSER events â€” only along leading & trailing edges
+                // SPARSER events — only along leading & trailing edges
                 const n = Math.min(20, Math.floor(2 + speed * 12));
                 for (let i = 0; i < n; i++) {
                     // distribute mostly along edges perpendicular to motion (where pixel changes happen)
                     const front = Math.random() < 0.5;
-                    // narrower spread â€” concentrated on leading/trailing arc
+                    // narrower spread — concentrated on leading/trailing arc
                     const ang = (Math.random() - 0.5) * (Math.PI * 0.7);
                     const px_dir = -ndy, py_dir = ndx;
                     const cosA = Math.cos(ang), sinA = Math.sin(ang);
@@ -1196,7 +1197,7 @@ let scrollProgress = 0;
                     evWindow.push(t);
                 }
 
-                // orbiter â€” only its leading/trailing arc
+                // orbiter — only its leading/trailing arc
                 const ox = cur.px + Math.cos(t * 0.003) * 40;
                 const oy = cur.py + Math.sin(t * 0.003) * 18;
                 const oxp = prevPos.px + Math.cos((t-16) * 0.003) * 40;
@@ -1223,7 +1224,7 @@ let scrollProgress = 0;
         }
         prevPos = cur;
 
-        // â”€â”€ render event canvas: stronger fade so trail dies faster â”€â”€
+        // ── render event canvas: stronger fade so trail dies faster ──
         ectx.fillStyle = 'rgba(2,6,23,0.32)';
         ectx.fillRect(0, 0, W, H);
         // very faint grid
@@ -1259,7 +1260,7 @@ let scrollProgress = 0;
             const evps = evWindow.length;
             elEv.textContent = evps.toLocaleString();
             elFr.textContent = FRAME_RATE;
-            // bandwidth: event payload â‰ˆ 4 bytes/event; frame payload â‰ˆ W*H*3 bytes/frame
+            // bandwidth: event payload ≈ 4 bytes/event; frame payload ≈ W*H*3 bytes/frame
             const evBytes = evps * 4;
             const frBytes = W * H * 3 * FRAME_RATE;
             const bw = Math.max(0.01, (evBytes / frBytes) * 100);
@@ -1302,7 +1303,7 @@ let scrollProgress = 0;
 })();
 </script>
 
-<!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Walk-the-robot VSA sandbox â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- ─────────────── Walk-the-robot VSA sandbox ─────────────── -->
 <script>
 (function(){
   const cv = document.getElementById('vw-stage');
@@ -1312,12 +1313,12 @@ let scrollProgress = 0;
 
   // landmarks scattered on terrain
   const LM = [
-    {id:'tower_a', type:'tower', x:160, y:120, color:'#22d3ee', label:'tower Î±'},
-    {id:'tower_b', type:'tower', x:620, y:90,  color:'#22d3ee', label:'tower Î²'},
-    {id:'tree_a',  type:'tree',  x:300, y:300, color:'#34d399', label:'tree Î±'},
-    {id:'tree_b',  type:'tree',  x:540, y:380, color:'#34d399', label:'tree Î²'},
-    {id:'rock_a',  type:'rock',  x:100, y:380, color:'#f87171', label:'rock Î±'},
-    {id:'rock_b',  type:'rock',  x:700, y:240, color:'#f87171', label:'rock Î²'},
+    {id:'tower_a', type:'tower', x:160, y:120, color:'#22d3ee', label:'tower α'},
+    {id:'tower_b', type:'tower', x:620, y:90,  color:'#22d3ee', label:'tower β'},
+    {id:'tree_a',  type:'tree',  x:300, y:300, color:'#34d399', label:'tree α'},
+    {id:'tree_b',  type:'tree',  x:540, y:380, color:'#34d399', label:'tree β'},
+    {id:'rock_a',  type:'rock',  x:100, y:380, color:'#f87171', label:'rock α'},
+    {id:'rock_b',  type:'rock',  x:700, y:240, color:'#f87171', label:'rock β'},
   ];
   // robot
   const bot = { x: 380, y: 240, dragging:false, theta:0 };
@@ -1348,7 +1349,7 @@ let scrollProgress = 0;
     list.innerHTML = '';
     trace.forEach(t => {
       const li = document.createElement('li');
-      li.innerHTML = `<span class="swatch" style="background:${t.color}"></span> ${t.label} <span class="coords">x=${Math.round(t.x)} y=${Math.round(t.y)}</span><button data-fr="${t.id}">unbind âŠ˜</button>`;
+      li.innerHTML = `<span class="swatch" style="background:${t.color}"></span> ${t.label} <span class="coords">x=${Math.round(t.x)} y=${Math.round(t.y)}</span><button data-fr="${t.id}">unbind ⊘</button>`;
       list.appendChild(li);
     });
     list.querySelectorAll('button[data-fr]').forEach(b => {
@@ -1375,12 +1376,12 @@ let scrollProgress = 0;
 
   function setMode(m){
     mode = m;
-    modeTag.textContent = 'MODE Â· ' + m.toUpperCase();
+    modeTag.textContent = 'MODE · ' + m.toUpperCase();
     document.querySelectorAll('.vw-mode-toggle button').forEach(b => b.classList.toggle('active', b.dataset.vwMode === m));
     if (m === 'encode'){ recalled = null; }
-    if (m === 'recall' && !trace.length){ hint.innerHTML = 'memory is empty â€” switch to <b>encode</b> and walk the bot near a landmark first'; }
-    else if (m === 'encode'){ hint.innerHTML = 'drag the <b>â—‹</b> to walk Â· drop near a landmark to bind it into memory'; }
-    else { hint.innerHTML = 'pick a landmark on the right â€” we\'ll <b>unbind</b> it from the trace and show the recalled place'; }
+    if (m === 'recall' && !trace.length){ hint.innerHTML = 'memory is empty — switch to <b>encode</b> and walk the bot near a landmark first'; }
+    else if (m === 'encode'){ hint.innerHTML = 'drag the <b>○</b> to walk · drop near a landmark to bind it into memory'; }
+    else { hint.innerHTML = 'pick a landmark on the right — we\'ll <b>unbind</b> it from the trace and show the recalled place'; }
     buildRecallList();
   }
 
@@ -1391,7 +1392,7 @@ let scrollProgress = 0;
   document.getElementById('vw-auto').addEventListener('click', (e) => {
     auto = !auto;
     e.target.classList.toggle('active', auto);
-    e.target.textContent = auto ? 'autopilot â–¶' : 'autopilot';
+    e.target.textContent = auto ? 'autopilot ▶' : 'autopilot';
   });
   document.getElementById('vw-reset').addEventListener('click', () => {
     trace.length = 0; trail.length = 0; bot.x = 380; bot.y = 240; recalled = null;
@@ -1529,7 +1530,7 @@ let scrollProgress = 0;
       if (isBound){
         ctx.fillStyle = hexA(l.color, .9);
         ctx.font = "700 7px 'JetBrains Mono', monospace";
-        ctx.fillText('â–¸ BOUND', l.x, l.y + 38);
+        ctx.fillText('▸ BOUND', l.x, l.y + 38);
       }
     });
 
@@ -1547,7 +1548,7 @@ let scrollProgress = 0;
       // label
       ctx.font = "10px 'JetBrains Mono', monospace";
       ctx.fillStyle = r.color;
-      ctx.fillText('recalled Â· ' + r.label, r.x, r.y - 50);
+      ctx.fillText('recalled · ' + r.label, r.x, r.y - 50);
     }
 
     // robot
@@ -1586,14 +1587,14 @@ let scrollProgress = 0;
 })();
 </script>
 
-<!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Drone-thru-maze viz â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- ─────────────── Drone-thru-maze viz ─────────────── -->
 <script>
 (function(){
   const svg = document.getElementById('maze-svg');
   if (!svg) return;
   const NS = 'http://www.w3.org/2000/svg';
 
-  // Maze geometry â€” corridor with branches
+  // Maze geometry — corridor with branches
   const walls = [
     [40,40,860,40],[40,40,40,380],[40,380,860,380],[860,40,860,380],
     [40,140,260,140],[260,140,260,200],
@@ -1613,7 +1614,7 @@ let scrollProgress = 0;
     svg.appendChild(l);
   });
 
-  // Path the drone flies â€” 1-indexed waypoints
+  // Path the drone flies — 1-indexed waypoints
   const PATH = [
     [80,80],[300,80],[300,180],[460,180],[460,100],[660,100],[660,160],
     [780,160],[780,330],[460,330],[460,330],[460,330],[200,330],[200,300],[80,300]
@@ -1720,7 +1721,7 @@ let scrollProgress = 0;
 })();
 </script>
 
-<!-- â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ Active-perception thermostat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ -->
+<!-- ─────────────── Active-perception thermostat ─────────────── -->
 <script>
 (function(){
   const bar = document.getElementById('ap-bar');
@@ -1776,7 +1777,7 @@ let scrollProgress = 0;
     const spadLevel = active ? Math.min(95, 70 + Math.random()*25) : Math.max(0, spadHist[spadHist.length-1] - 6);
     spadHist.push(spadLevel); spadHist.shift();
 
-    pill.textContent = active ? 'SPAD Â· PROBING' : 'SNN Â· PASSIVE';
+    pill.textContent = active ? 'SPAD · PROBING' : 'SNN · PASSIVE';
     pill.classList.toggle('alert', active);
 
     bar.style.height = cur.toFixed(1) + '%';
@@ -1888,7 +1889,7 @@ let scrollProgress = 0;
       currentIdx = active;
       const r = regions[active];
       pin.setAttribute('transform', `translate(${r.x}, ${r.y})`);
-      currentLabel.textContent = 'â€” ' + r.label;
+      currentLabel.textContent = '— ' + r.label;
       // recolour regions
       document.querySelectorAll('.mm-region').forEach((c,i) => {
         if (i === active){
@@ -1905,7 +1906,7 @@ let scrollProgress = 0;
       // top nav active state
       navLinks.forEach(a => a.classList.toggle('active', a.dataset.region === r.n));
     } else if (active === -1 && sy < h*0.5){
-      currentLabel.textContent = 'â€” APPROACH';
+      currentLabel.textContent = '— APPROACH';
       pin.setAttribute('transform', `translate(${regions[0].x}, ${regions[0].y - 30})`);
       navLinks.forEach(a => a.classList.remove('active'));
     }
@@ -1918,11 +1919,11 @@ let scrollProgress = 0;
   update();
 
   // event-strip: a scrolling oscilloscope tape that ingests events
-  // from the Â§01 demo (or generates a coherent waveform if it isn't running)
+  // from the §01 demo (or generates a coherent waveform if it isn't running)
   const stripSvg = document.getElementById('events-strip');
   const eg = document.getElementById('events-g');
   const STRIP_W = 1400, STRIP_H = 240;
-  const SCROLL_SPEED = 110; // svg units per second, rightâ†’left
+  const SCROLL_SPEED = 110; // svg units per second, right→left
   const stripDots = []; // {el, x, y, born, polarity}
   let lastT = performance.now();
 
@@ -1944,12 +1945,12 @@ let scrollProgress = 0;
   nowLn.setAttribute('stroke-dasharray','2 4');
   eg.appendChild(nowLn);
 
-  // ingest from Â§01 canvas if available
+  // ingest from §01 canvas if available
   const liveEventC = document.getElementById('fve-event');
   let lastSampleT = 0;
   function sampleLive(now){
     if (!liveEventC) return false;
-    // sample once per 30ms â€” pull random "events" from the live canvas's spike rate
+    // sample once per 30ms — pull random "events" from the live canvas's spike rate
     if (now - lastSampleT < 30) return true;
     lastSampleT = now;
     // we don't have direct access to the spike pool, so use the events/sec stat
@@ -1957,13 +1958,13 @@ let scrollProgress = 0;
     const evps = evpsEl ? parseInt(evpsEl.textContent.replace(/,/g,''), 10) || 0 : 0;
     if (evps <= 0) return true; // alive but idle
     // emit ~ proportional dots this tick
-    const expected = (evps / 1000) * 30 * 0.4; // scale down â€” strip is denser visually than the small canvas
+    const expected = (evps / 1000) * 30 * 0.4; // scale down — strip is denser visually than the small canvas
     let n = Math.floor(expected) + (Math.random() < (expected % 1) ? 1 : 0);
     for (let i=0;i<n;i++) emitDot(now);
     return true;
   }
 
-  // procedural fallback â€” coherent "moving edge" pattern so it never looks like noise
+  // procedural fallback — coherent "moving edge" pattern so it never looks like noise
   let pT = 0;
   function procEmit(now, dt){
     pT += dt;

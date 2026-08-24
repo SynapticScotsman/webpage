@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ============================================================
-     Paul Kirkland — Neuromorphic Systems Researcher
+     Paul Kirkland — Neuromorphic Perception &amp; Cognition
      Base: v7 Interactive Research Hub (full Three.js city scene,
            HUD tracking, SWaP benchmark, phase sandbox, active fallback)
      Added in v8:
@@ -16,15 +16,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paul Kirkland — Neuromorphic Systems Researcher</title>
+    <title>Paul Kirkland — Neuromorphic Perception &amp; Cognition</title>
 
     <!-- SEO / Social meta -->
     <meta name="description" content="Paul Kirkland researches neuromorphic sensing, Vector Symbolic Architectures, and edge AI at Western Sydney University ICNS.">
-    <meta property="og:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
+    <meta property="og:title" content="Paul Kirkland — Neuromorphic Perception &amp; Cognition">
     <meta property="og:description" content="Spiking neural networks and event cameras for real-time autonomous perception at the edge.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
+    <meta name="twitter:title" content="Paul Kirkland — Neuromorphic Perception &amp; Cognition">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -153,6 +153,7 @@
             <a href="#exhibits"     class="hover:text-cyan-400 transition-colors">Research Hub</a>
             <a href="#publications" class="hover:text-cyan-400 transition-colors">Outputs</a>
             <a href="cognitive_map.html" class="hover:text-cyan-400 transition-colors">Cognitive Map</a>
+            <a href="how-you-see/" class="hover:text-cyan-400 transition-colors">How You See</a>
             <a href="#contact" class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Let's Talk</a>
         </div>
         <!-- Mobile hamburger -->
@@ -171,6 +172,7 @@
     <a href="#exhibits"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Research Hub</a>
     <a href="#publications" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Outputs</a>
     <a href="cognitive_map.html" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Cognitive Map</a>
+    <a href="how-you-see/" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">How You See</a>
     <a href="#contact"      class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Contact</a>
 </nav>
 
@@ -187,11 +189,12 @@
         </div>
     </div>
     <div class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center mt-12 pointer-events-none">
-        <h1 id="hero-heading" class="hover-glitch text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tighter mb-4 text-white leading-none uppercase select-none drop-shadow-2xl">
-            Embodied<br/>Intelligence
+        <div class="text-xs md:text-sm font-bold uppercase tracking-[0.35em] text-cyan-400 mb-6 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
+        <h1 id="hero-heading" class="hover-glitch text-5xl md:text-7xl lg:text-[6rem] font-black tracking-tighter mb-4 text-white leading-none uppercase select-none drop-shadow-2xl">
+            Neuromorphic<br/>Perception <span class="text-cyan-400">&amp;</span> Cognition
         </h1>
         <div class="text-xl md:text-3xl text-cyan-400 font-light tracking-wide mb-12 italic drop-shadow-md bg-slate-950/20 px-6 py-2 rounded-2xl backdrop-blur-sm">
-            Continuous neuro-symbolic architectures.
+            How do you see the world?
         </div>
     </div>
     <div class="absolute bottom-6 flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 z-20">
@@ -213,6 +216,25 @@
         Explore Interactive Exhibits
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
     </a>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" class="py-16 px-6 max-w-5xl mx-auto" aria-labelledby="explore-heading">
+    <h2 id="explore-heading" class="sr-only">Explore</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="how-you-see/" class="project-card hover:no-underline" aria-label="How do you see the world — cognitive maps explainer">
+            <span class="project-tag">Explainer · Start Here</span>
+            <h3 class="text-lg font-bold tracking-tight text-white">How do <span class="italic text-cyan-400">you</span> see the world?</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">You already run a cognitive map. A short, plain-language walk through how one works — and how a robot borrows the trick with what + where vectors.</p>
+            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Read the explainer →</span>
+        </a>
+        <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
+            <span class="project-tag">Interactive · Deep Dive</span>
+            <h3 class="text-lg font-bold tracking-tight text-white">The cognitive map, live</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">An interactive atlas of the research programme — event vision, VSA memory, and active perception, each with a demo you can drive.</p>
+            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Open the atlas →</span>
+        </a>
+    </div>
 </section>
 
 <!-- FEATURED PROJECTS -->
