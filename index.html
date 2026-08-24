@@ -28,7 +28,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,6 +49,7 @@
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
+        ::selection { background:#E0445E; color:#141412; }
         ::-webkit-scrollbar { width:4px; }
         ::-webkit-scrollbar-track { background:#141412; }
         ::-webkit-scrollbar-thumb { background:#E0445E; }
@@ -205,12 +206,28 @@
             How do you see the world?
         </div>
     </div>
-    <div class="absolute bottom-6 flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 z-20">
-        <button class="animate-pulse" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">Scroll</button>
+    <div class="absolute bottom-6 flex flex-col items-center gap-3 z-20">
         <div class="w-px h-12 bg-gradient-to-b from-cyan-500 to-transparent" aria-hidden="true"></div>
-        <span class="opacity-50 tracking-[0.4em] pointer-events-none text-center">[ Move mouse rapidly for ego-motion noise ]</span>
+        <button class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-cyan-400 transition-colors" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">scroll ↓ · move mouse for ego-motion noise</button>
     </div>
 </section>
+
+<script>
+/* Hero variant B — question-first. View with ?hero=b ; default stays variant A. */
+if (new URLSearchParams(location.search).get('hero') === 'b') {
+    const kicker = document.querySelector('#hero-heading').previousElementSibling;
+    const h1 = document.getElementById('hero-heading');
+    const sub = h1.nextElementSibling;
+    kicker.className = 'font-mono text-[11px] md:text-xs font-bold uppercase tracking-[0.3em] text-cyan-400 mb-8 drop-shadow-md';
+    kicker.textContent = 'Neuromorphic Perception & Cognition';
+    h1.className = 'text-5xl md:text-7xl lg:text-[6.5rem] font-light tracking-tight mb-8 text-white leading-[1.05] select-none drop-shadow-2xl';
+    h1.style.fontFamily = "'Newsreader', Georgia, serif";
+    h1.style.fontStyle = 'italic';
+    h1.innerHTML = 'How do <span class="text-cyan-400">you</span><br/>see the world?';
+    sub.className = 'font-mono text-xs md:text-sm uppercase tracking-[0.25em] text-slate-400 mb-12 drop-shadow-md';
+    sub.textContent = 'Paul Kirkland · ICNS · Western Sydney';
+}
+</script>
 
 <main id="main-content">
 
@@ -771,8 +788,8 @@ let scrollProgress = 0;
                     v1.y + (v2.y - v1.y) * t + perp.y * side + (Math.random() - .5) * .06,
                     v1.z + (v2.z - v1.z) * t + perp.z * side + (Math.random() - .5) * .06
                 );
-                if (isOn) edgeColors.push(1.0, .1, .1);
-                else      edgeColors.push(.05, .2, 1.0);
+                if (isOn) edgeColors.push(1.0, .55, .26);
+                else      edgeColors.push(.23, .61, 1.0);
                 const r = Math.random() * 8 + 2;
                 phasorPoints.push(Math.cos(phase) * r, Math.sin(phase) * r + 5, -20);
             }
@@ -810,8 +827,8 @@ let scrollProgress = 0;
     const TOTAL = Math.max(edgePoints.length / 3, 20000);
     for (let i = edgePoints.length / 3; i < TOTAL; i++) {
         edgePoints.push((Math.random() - .5) * 60, Math.random() * 20, -Math.random() * WORLD_DEPTH);
-        if (Math.random() > .5) edgeColors.push(.05, .2, 1.0);
-        else edgeColors.push(1.0, .1, .1);
+        if (Math.random() > .5) edgeColors.push(.23, .61, 1.0);
+        else edgeColors.push(1.0, .55, .26);
         phasorPoints.push((Math.random() - .5) * .5, (Math.random() - .5) * .5 + 5, -20);
     }
 
@@ -865,6 +882,7 @@ let scrollProgress = 0;
                 const rawDist = Math.abs(projVec.z - camera.position.z);
                 projVec.project(camera);
                 if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
+                if (Math.abs(projVec.x) < .38 && Math.abs(projVec.y) < .55) continue;
                 const sx = (projVec.x * .5 + .5) * rect.width;
                 const sy = (-projVec.y * .5 + .5) * rect.height;
                 const slot = hudSlots[visible];
