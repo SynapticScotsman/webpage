@@ -9,12 +9,12 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg:        #181816;
+      --bg:        #141412;
       --bg-2:      #232220;
       --card:      #1f1e1c;
       --ink:       #ededeb;
@@ -25,8 +25,8 @@
       --rule-2:    rgba(237,237,235,0.06);
       --accent:    #E0445E;
       --accent-soft: rgba(224,68,94,0.14);
-      --sans:  "Geist", system-ui, -apple-system, sans-serif;
-      --mono:  "Geist Mono", ui-monospace, "SF Mono", monospace;
+      --sans:  "Inter", system-ui, -apple-system, sans-serif;
+      --mono:  "JetBrains Mono", ui-monospace, "SF Mono", monospace;
       --serif: "Newsreader", Georgia, serif;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -199,7 +199,7 @@
               <line x1="50" y1="50" x2="74.4" y2="20.9" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
               <circle cx="74.4" cy="20.9" r="4" fill="var(--ink)"/>
               <path d="M50,22 A28,28 0 0,1 67.8,27.4" fill="none" stroke="var(--ink-lo)" stroke-width="1.2"/>
-              <text x="60" y="20" font-family="Geist Mono" font-size="14" fill="var(--ink-lo)">φ</text>
+              <text x="60" y="20" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--ink-lo)">φ</text>
             </svg>
             <span>mug_v</span>
           </div>
@@ -211,7 +211,7 @@
               <line x1="50" y1="50" x2="85.7" y2="63.0" stroke="var(--ink-med)" stroke-width="3" stroke-linecap="round"/>
               <circle cx="85.7" cy="63.0" r="4" fill="var(--ink-med)"/>
               <path d="M50,22 A28,28 0 0,1 76.3,40.6" fill="none" stroke="var(--ink-lo)" stroke-width="1.2"/>
-              <text x="56" y="24" font-family="Geist Mono" font-size="14" fill="var(--ink-lo)">ψ</text>
+              <text x="56" y="24" font-family="JetBrains Mono, monospace" font-size="14" fill="var(--ink-lo)">ψ</text>
             </svg>
             <span>S(x,y)</span>
           </div>
@@ -223,7 +223,7 @@
               <line x1="50" y1="50" x2="69.0" y2="82.9" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
               <circle cx="69.0" cy="82.9" r="4" fill="var(--accent)"/>
               <path d="M50,22 A28,28 0 0,1 64.0,72.8" fill="none" stroke="var(--accent)" stroke-width="1.2" opacity="0.7"/>
-              <text x="52" y="38" font-family="Geist Mono" font-size="13" fill="var(--accent)">φ+ψ</text>
+              <text x="52" y="38" font-family="JetBrains Mono, monospace" font-size="13" fill="var(--accent)">φ+ψ</text>
             </svg>
             <span class="acc">bound</span>
           </div>
@@ -240,7 +240,7 @@
         </div>
         <h3>Superposition.</h3>
         <svg viewBox="0 0 420 220" style="width:100%;height:auto;" aria-hidden="true">
-          <g font-family="Geist Mono" font-size="14">
+          <g font-family="JetBrains Mono, monospace" font-size="14">
             <text x="4" y="26" fill="var(--accent)" opacity="0.85">mug ⊗ S₁</text>
             <text x="4" y="86" fill="var(--accent)" opacity="0.65">book ⊗ S₂</text>
             <text x="4" y="146" fill="var(--accent)" opacity="0.45">chair ⊗ S₃</text>
@@ -251,14 +251,14 @@
               <rect x="5" y="3" width="12" height="18"/><rect x="35" y="7" width="12" height="13"/><rect x="75" y="2" width="12" height="20"/><rect x="120" y="9" width="12" height="12"/><rect x="170" y="4" width="12" height="17"/><rect x="225" y="11" width="12" height="10"/><rect x="268" y="3" width="12" height="18"/>
             </g>
           </g>
-          <text x="252" y="60" font-family="Geist Mono" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
+          <text x="252" y="60" font-family="JetBrains Mono, monospace" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
           <g transform="translate(108,70)">
             <rect x="0" y="0" width="300" height="24" fill="none" stroke="var(--rule)" stroke-width="1"/>
             <g fill="var(--accent)" opacity="0.6">
               <rect x="18" y="4" width="12" height="16"/><rect x="56" y="2" width="12" height="20"/><rect x="100" y="10" width="12" height="11"/><rect x="148" y="5" width="12" height="15"/><rect x="200" y="2" width="12" height="20"/><rect x="252" y="8" width="12" height="13"/>
             </g>
           </g>
-          <text x="252" y="120" font-family="Geist Mono" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
+          <text x="252" y="120" font-family="JetBrains Mono, monospace" font-size="22" fill="var(--ink-lo)" text-anchor="middle">+</text>
           <g transform="translate(108,130)">
             <rect x="0" y="0" width="300" height="24" fill="none" stroke="var(--rule)" stroke-width="1"/>
             <g fill="var(--accent)" opacity="0.4">
@@ -266,7 +266,7 @@
             </g>
           </g>
           <line x1="108" y1="175" x2="408" y2="175" stroke="var(--rule)" stroke-width="1"/>
-          <text x="76" y="204" font-family="Geist Mono" font-size="20" fill="var(--ink)" text-anchor="end">M =</text>
+          <text x="76" y="204" font-family="JetBrains Mono, monospace" font-size="20" fill="var(--ink)" text-anchor="end">M =</text>
           <g transform="translate(108,183)">
             <rect x="-2" y="-2" width="304" height="38" fill="none" stroke="var(--accent)" stroke-width="1.4"/>
             <g fill="var(--ink)">
@@ -292,7 +292,7 @@
               <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
               <line x1="50" y1="50" x2="69.0" y2="82.9" stroke="var(--ink-med)" stroke-width="2.8" stroke-linecap="round"/>
               <circle cx="69.0" cy="82.9" r="3.5" fill="var(--ink-med)"/>
-              <text x="56" y="42" font-family="Geist Mono" font-size="13" fill="var(--ink-lo)">φ+ψ</text>
+              <text x="56" y="42" font-family="JetBrains Mono, monospace" font-size="13" fill="var(--ink-lo)">φ+ψ</text>
             </svg>
             <span>M item</span>
           </div>
@@ -304,8 +304,8 @@
               <line x1="50" y1="50" x2="74.4" y2="20.9" stroke="var(--ink-xlo)" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.5"/>
               <line x1="50" y1="50" x2="25.6" y2="20.9" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round" stroke-dasharray="5 3"/>
               <circle cx="25.6" cy="20.9" r="3.5" fill="var(--accent)"/>
-              <text x="10" y="22" font-family="Geist Mono" font-size="13" fill="var(--accent)">−φ</text>
-              <text x="62" y="22" font-family="Geist Mono" font-size="12" fill="var(--ink-xlo)" opacity="0.5">+φ</text>
+              <text x="10" y="22" font-family="JetBrains Mono, monospace" font-size="13" fill="var(--accent)">−φ</text>
+              <text x="62" y="22" font-family="JetBrains Mono, monospace" font-size="12" fill="var(--ink-xlo)" opacity="0.5">+φ</text>
             </svg>
             <span class="acc">mug_v*</span>
           </div>
@@ -316,7 +316,7 @@
               <line x1="50" y1="12" x2="50" y2="50" stroke="var(--rule-2)" stroke-width="1" stroke-dasharray="2 3"/>
               <line x1="50" y1="50" x2="85.7" y2="63.0" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round"/>
               <circle cx="85.7" cy="63.0" r="4.5" fill="var(--accent)"/>
-              <text x="52" y="26" font-family="Geist Mono" font-size="13" fill="var(--accent)">ψ</text>
+              <text x="52" y="26" font-family="JetBrains Mono, monospace" font-size="13" fill="var(--accent)">ψ</text>
             </svg>
             <span class="acc">≈ S(x,y)</span>
           </div>
