@@ -17,3 +17,12 @@ built on the WSU 2026 brand guidelines and the ICNS design system.
 All pages are self-contained static HTML (Open Sans from Google Fonts; canvases
 respect prefers-reduced-motion). Production lockups must use supplied WSU logo
 files, never redrawn type.
+
+## Claude Design
+
+- Working project: [ICNS webpage redesign](https://claude.ai/design/p/fc953e61-de46-4eb6-9d27-c71b744e422f?file=ICNS+Website.dc.html) —
+  full multi-page comp (`ICNS-Website.dc.html`, saved here for versioning; it is a
+  Claude Design template, not standalone HTML).
+- Kit project: "ICNS Design System" (id 019848d2-2b02-4f73-a8cd-d9c6cd77aeac) —
+  tokens, components, guidelines, plus this session's additions: shield device
+  tokens/assets and both mockups under `mockups/`.

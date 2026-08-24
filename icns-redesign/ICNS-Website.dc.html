@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/tokens/colors.css">
+<link rel="stylesheet" href="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/tokens/typography.css">
+<link rel="stylesheet" href="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/tokens/video.css">
+<link rel="stylesheet" href="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/styles.css">
+<script src="_ds/icns-design-system-019848d2-2b02-4f73-a8cd-d9c6cd77aeac/_ds_bundle.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--paper); }
+  a { color: var(--brand); text-decoration: none; }
+  a:hover { color: var(--crimson-deep); text-decoration: underline; }
+  ::selection { background: var(--rose); color: #fff; }
+</style>
+</helmet>
+
+<div data-colourway="{{ cw }}" style="background: var(--bg); color: var(--text-body); font-family: var(--font-body); min-height: 100vh; transition: background .14s ease-out">
+
+  <header style="position: sticky; top: 0; z-index: 40; background: var(--bg); border-bottom: 1px solid var(--border)">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 12px 40px; display: flex; align-items: center; gap: 20px">
+      <a href="#" onClick="{{ goHome }}" style="display: flex; align-items: center; gap: 16px; text-decoration: none; color: inherit; flex-shrink: 0">
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+          <img src="assets/WSU_Logo_RGB_cropped.png" alt="Western Sydney University" style="height: 44px; display: block">
+        </sc-if>
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}">
+          <img src="assets/WSU_Logo_White_cropped.png" alt="Western Sydney University" style="height: 44px; display: block">
+        </sc-if>
+        <span style="width: 1px; height: 36px; background: var(--border); display: block; flex-shrink: 0"></span>
+        <span style="display: block; flex-shrink: 0">
+          <span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: .92rem; letter-spacing: var(--track-heading); color: var(--brand); line-height: 1.25; white-space: nowrap">International Centre for<br>Neuromorphic Systems</span>
+          <span style="display: block; font-family: var(--font-mono); font-weight: 500; font-size: .58rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); margin-top: 3px; white-space: nowrap">Brain-inspired sensing &amp; computation</span>
+        </span>
+      </a>
+      <nav style="display: flex; gap: 18px; margin-left: auto; align-items: center; flex-wrap: wrap; justify-content: flex-end">
+        <a href="#" onClick="{{ goHome }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cHome }}; border-bottom: 2px solid {{ bHome }}" style-hover="color: var(--brand)">Home</a>
+        <a href="#" onClick="{{ goResearch }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cResearch }}; border-bottom: 2px solid {{ bResearch }}" style-hover="color: var(--brand)">Research</a>
+        <a href="#" onClick="{{ goProjects }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cProjects }}; border-bottom: 2px solid {{ bProjects }}" style-hover="color: var(--brand)">Projects</a>
+        <a href="#" onClick="{{ goPeople }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cPeople }}; border-bottom: 2px solid {{ bPeople }}" style-hover="color: var(--brand)">People</a>
+        <a href="#" onClick="{{ goPubs }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cPubs }}; border-bottom: 2px solid {{ bPubs }}" style-hover="color: var(--brand)">Publications</a>
+        <a href="#" onClick="{{ goContact }}" style="font-family: var(--font-display); font-weight: 600; font-size: .89rem; text-decoration: none; padding-bottom: 3px; color: {{ cContact }}; border-bottom: 2px solid {{ bContact }}" style-hover="color: var(--brand)">Contact</a>
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Switch" label="{{ cwLabel }}" checked="{{ isDark }}" onChange="{{ toggleDark }}" hint-size="90px,24px"></x-import>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================ HOME ============================ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main data-screen-label="Home">
+
+    <div style="max-width: 1180px; margin: 0 auto; padding: 10px 40px 0; display: flex; justify-content: flex-end">
+      <div style="display: flex; align-items: center; gap: 10px; border: 1px dashed var(--border); border-radius: var(--radius-1); padding: 5px 10px; font-family: var(--font-mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted)">
+        <span>Review · hero direction</span>
+        <a href="#" onClick="{{ setHeroA }}" style="text-decoration: none; padding: 2px 7px; border-radius: 2px; color: {{ heroAFg }}; background: {{ heroABg }}">A statement</a>
+        <a href="#" onClick="{{ setHeroB }}" style="text-decoration: none; padding: 2px 7px; border-radius: 2px; color: {{ heroBFg }}; background: {{ heroBBg }}">B plate</a>
+      </div>
+    </div>
+
+    <!-- Hero A · statement -->
+    <sc-if value="{{ heroIsA }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Hero A" style="max-width: 1180px; margin: 0 auto; padding: 44px 40px 72px; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 56px; align-items: start">
+      <div>
+        <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Sensing · Computation · Deployed systems</div>
+        <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(2.5rem, 1.7rem + 3.3vw, 4rem); letter-spacing: -0.023em; line-height: 1.02; margin: 18px 0 0; max-width: 21ch; text-wrap: pretty">Sensors and processors built on the principles of biological brains.</h1>
+        <p style="font-size: 1.06rem; line-height: 1.6; color: var(--text-muted); max-width: 58ch; margin: 22px 0 0; text-wrap: pretty">ICNS builds event-based sensors, spiking processors and the algorithms between them, then proves them in the field — in orbit, in bushland and on the bench at Western Sydney University. Partners come to us for hardware that works where conventional cameras and conventional computers do not.</p>
+        <div style="display: flex; gap: 12px; margin-top: 30px">
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" onClick="{{ goContact }}" hint-size="auto,40px">Partner with ICNS</x-import>
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" variant="secondary" onClick="{{ goResearch }}" hint-size="auto,40px">Research themes</x-import>
+        </div>
+        <div style="display: flex; gap: 44px; margin-top: 44px; padding-top: 26px; border-top: 1px solid var(--border); flex-wrap: wrap">
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Stat" value="1 µs" label="event timestamp resolution" hint-size="auto,52px"></x-import>
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Stat" value="120 dB" label="sensor dynamic range" hint-size="auto,52px"></x-import>
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Stat" value="228T" label="Deep South synaptic ops / second" hint-size="auto,52px"></x-import>
+        </div>
+      </div>
+      <div style="background: var(--plate-deep); border-radius: var(--radius-2); overflow: hidden; align-self: stretch; display: flex; flex-direction: column">
+        <canvas ref="{{ heroRef }}" style="display: block; width: 100%; flex: 1 1 auto; min-height: 176px"></canvas>
+        <div style="padding: 20px 26px 22px; border-top: 1px solid #1C242C">
+        <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--rose)">The pipeline · photon to decision</div>
+        <a href="#" onClick="{{ jump0 }}" style="display: grid; grid-template-columns: 22px 1fr auto; gap: 3px 14px; align-items: baseline; padding: 14px 0; margin-top: 6px; border-bottom: 1px solid #1C242C; text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+          <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">01</span>
+          <span style="font-family: var(--font-display); font-weight: 650; font-size: 1rem; color: #fff">Sensor</span>
+          <span style="font-family: var(--font-mono); font-size: .74rem; color: var(--rose); font-variant-numeric: tabular-nums">photon → event</span>
+          <span style="font-size: .8rem; line-height: 1.45; color: #8A97A0; grid-column: 2 / -1">Event-based vision, neuromorphic audio, tactile arrays. 1 µs, 120 dB.</span>
+        </a>
+        <a href="#" onClick="{{ jump1 }}" style="display: grid; grid-template-columns: 22px 1fr auto; gap: 3px 14px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid #1C242C; text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+          <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">02</span>
+          <span style="font-family: var(--font-display); font-weight: 650; font-size: 1rem; color: #fff">Algorithm</span>
+          <span style="font-family: var(--font-mono); font-size: .74rem; color: var(--rose); font-variant-numeric: tabular-nums">event → decision</span>
+          <span style="font-size: .8rem; line-height: 1.45; color: #8A97A0; grid-column: 2 / -1">Spiking networks in dedicated hardware, up to Deep South. 228T ops/s.</span>
+        </a>
+        <a href="#" onClick="{{ jump2 }}" style="display: grid; grid-template-columns: 22px 1fr auto; gap: 3px 14px; align-items: baseline; padding: 14px 0 0; text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+          <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">03</span>
+          <span style="font-family: var(--font-display); font-weight: 650; font-size: 1rem; color: #fff">Instrument</span>
+          <span style="font-family: var(--font-mono); font-size: .74rem; color: var(--rose); font-variant-numeric: tabular-nums">decision → field</span>
+          <span style="font-size: .8rem; line-height: 1.45; color: #8A97A0; grid-column: 2 / -1">Astrosite and insect-EVS, running unattended and off-grid. 24 h.</span>
+        </a>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- Hero B · plate -->
+    <sc-if value="{{ heroIsB }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Hero B" data-colourway="plate" style="background: var(--plate-deep); color: var(--plate-text); margin-top: 12px; border-top: 1px solid var(--plate-line); border-bottom: 1px solid var(--plate-line); position: relative; overflow: hidden">
+      <canvas ref="{{ heroRef }}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block"></canvas>
+      <div style="position: absolute; inset: 0; background: rgba(5, 7, 10, .58)"></div>
+      <div style="position: relative; max-width: 1180px; margin: 0 auto; padding: 104px 40px 92px; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, .85fr); gap: 60px; align-items: center; min-height: 62vh; box-sizing: border-box">
+        <div>
+          <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--rose)">International Centre for Neuromorphic Systems</div>
+          <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(2.6rem, 1.7rem + 3.6vw, 4.3rem); letter-spacing: -0.024em; line-height: 1.04; margin: 20px 0 0; max-width: 24ch; text-wrap: pretty">We build the sensors and the silicon, then take them into the field.</h1>
+          <p style="font-size: 1.06rem; line-height: 1.6; color: #B7BCC3; max-width: 56ch; margin: 22px 0 0; text-wrap: pretty">Event-based vision, neuromorphic audio and spiking computation, engineered for the places conventional systems fail: full daylight and deep shadow in one frame, milliwatt power budgets, no network.</p>
+          <div style="display: flex; gap: 12px; margin-top: 32px">
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" onClick="{{ goContact }}" hint-size="auto,40px">Partner with ICNS</x-import>
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" variant="secondary" onClick="{{ goProjects }}" hint-size="auto,40px">See the projects</x-import>
+          </div>
+        </div>
+        <div style="border-left: 1px solid var(--plate-line); padding-left: 30px">
+          <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: #8A97A0">Capability index</div>
+          <a href="#" onClick="{{ goResearch }}" style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--plate-line); text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">01</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.02rem">Perception</span><span style="display: block; font-size: .82rem; color: #8A97A0; margin-top: 3px">Vision, audio, tactile</span></span>
+          </a>
+          <a href="#" onClick="{{ goResearch }}" style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--plate-line); text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">02</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.02rem">Processing</span><span style="display: block; font-size: .82rem; color: #8A97A0; margin-top: 3px">Spiking hardware, algorithms</span></span>
+          </a>
+          <a href="#" onClick="{{ goResearch }}" style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--plate-line); text-decoration: none; color: inherit" style-hover="color: var(--rose)">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--rose)">03</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.02rem">Sensing</span><span style="display: block; font-size: .82rem; color: #8A97A0; margin-top: 3px">Instruments in the field</span></span>
+          </a>
+          <div style="display: flex; gap: 28px; margin-top: 26px; font-family: var(--font-mono); font-size: .74rem; color: #8A97A0; font-variant-numeric: tabular-nums; flex-wrap: wrap">
+            <span>1 µs</span><span>120 dB</span><span>228T ops/s</span>
+          </div>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- Audience router -->
+    <sc-if value="{{ showRouter }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Router" style="border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface-panel)">
+      <div style="max-width: 1180px; margin: 0 auto; padding: 30px 40px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border)">
+        <div style="background: var(--surface-panel); padding-right: 28px">
+          <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand)">Industry &amp; defence</div>
+          <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 12px">
+            <a href="#" onClick="{{ goContact }}" style="font-size: .92rem">Commission a capability study</a>
+            <a href="#" onClick="{{ goProjects }}" style="font-size: .92rem">Deployed instruments</a>
+            <a href="#" onClick="{{ goContact }}" style="font-size: .92rem">Licensing and IP</a>
+          </div>
+        </div>
+        <div style="background: var(--surface-panel); padding: 0 28px">
+          <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand)">Prospective students</div>
+          <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 12px">
+            <a href="#" onClick="{{ goPeople }}" style="font-size: .92rem">Master of Neuromorphic Engineering</a>
+            <a href="#" onClick="{{ goResearch }}" style="font-size: .92rem">Open PhD projects</a>
+            <a href="#" onClick="{{ goPeople }}" style="font-size: .92rem">Supervisors and research leads</a>
+          </div>
+        </div>
+        <div style="background: var(--surface-panel); padding-left: 28px">
+          <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand)">Researchers</div>
+          <div style="display: flex; flex-direction: column; gap: 7px; margin-top: 12px">
+            <a href="#" onClick="{{ goPubs }}" style="font-size: .92rem">Publications and datasets</a>
+            <a href="#" onClick="{{ goResearch }}" style="font-size: .92rem">Facilities and instruments</a>
+            <a href="#" onClick="{{ goContact }}" style="font-size: .92rem">Visiting and collaboration</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    </sc-if>
+
+    <!-- Signature: research theme explorer -->
+    <section data-screen-label="Explorer" ref="{{ explorerRef }}" style="max-width: 1180px; margin: 0 auto; padding: 78px 40px 20px">
+      <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">The pipeline · sensor, algorithm, instrument</div>
+      <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.62rem; letter-spacing: -0.018em; line-height: 1.2; margin: 14px 0 0; max-width: 30ch">Capture, compute, deploy. Select a stage to see what it produces.</h2>
+      <div style="display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 44px; margin-top: 34px; align-items: start">
+        <div>
+          <a href="#" onClick="{{ pick0 }}" style="display: flex; gap: 18px; align-items: baseline; padding: 18px 16px 18px 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; border-left: 3px solid {{ t0bar }}; padding-left: 16px; background: {{ t0bg }}">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">01</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.08rem; letter-spacing: var(--track-heading)">Perception</span><span style="display: block; font-size: .85rem; color: var(--text-muted); margin-top: 4px">Event-based vision, neuromorphic audio, tactile sensing</span></span>
+          </a>
+          <a href="#" onClick="{{ pick1 }}" style="display: flex; gap: 18px; align-items: baseline; padding: 18px 16px 18px 0; border-top: 1px solid var(--border); text-decoration: none; color: inherit; border-left: 3px solid {{ t1bar }}; padding-left: 16px; background: {{ t1bg }}">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">02</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.08rem; letter-spacing: var(--track-heading)">Processing</span><span style="display: block; font-size: .85rem; color: var(--text-muted); margin-top: 4px">Spiking networks, dedicated hardware, brain-scale simulation</span></span>
+          </a>
+          <a href="#" onClick="{{ pick2 }}" style="display: flex; gap: 18px; align-items: baseline; padding: 18px 16px 18px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; border-left: 3px solid {{ t2bar }}; padding-left: 16px; background: {{ t2bg }}">
+            <span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">03</span>
+            <span><span style="display: block; font-family: var(--font-display); font-weight: 650; font-size: 1.08rem; letter-spacing: var(--track-heading)">Sensing in the field</span><span style="display: block; font-size: .85rem; color: var(--text-muted); margin-top: 4px">Instruments for orbit, ecology and remote deployment</span></span>
+          </a>
+          <div style="margin-top: 26px">
+            <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted)">Capabilities</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px">
+              <sc-for list="{{ caps }}" as="c" hint-placeholder-count="4">
+                <x-import component-from-global-scope="ICNSDesignSystem_019848.Tag" hint-size="auto,24px">{{ c }}</x-import>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="background: var(--plate-deep); border-radius: var(--radius-2); overflow: hidden">
+            <canvas ref="{{ canvasRef }}" style="display: block; width: 100%; height: 300px"></canvas>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 18px; border-top: 1px solid #1C242C; font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: #8A97A0">
+              <span>{{ figLabel }}</span>
+              <span style="color: {{ figKeyColor }}">{{ figKey }}</span>
+            </div>
+          </div>
+          <div style="margin-top: 24px">
+            <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand)">{{ themeEyebrow }}</div>
+            <p style="font-size: 1rem; line-height: 1.6; color: var(--text-body); max-width: 62ch; margin: 12px 0 0; text-wrap: pretty">{{ themeBody }}</p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border)">
+              <sc-for list="{{ themeStats }}" as="s" hint-placeholder-count="3">
+                <x-import component-from-global-scope="ICNSDesignSystem_019848.Stat" value="{{ s.value }}" label="{{ s.label }}" hint-size="auto,52px"></x-import>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flagship projects -->
+    <section data-screen-label="Flagships" style="max-width: 1180px; margin: 0 auto; padding: 78px 40px 0">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 20px; flex-wrap: wrap">
+        <div>
+          <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Flagship projects</div>
+          <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.62rem; letter-spacing: -0.018em; margin: 14px 0 0">Work that left the lab</h2>
+        </div>
+        <a href="#" onClick="{{ goProjects }}" style="font-family: var(--font-display); font-weight: 600; font-size: .9rem">All projects →</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 26px">
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Card" eyebrow="Computation" title="Deep South" footer="With WSU · brain-scale simulation" hint-size="100%,300px">
+          <span>The first supercomputer designed to simulate spiking networks at the scale of the human brain, at 228 trillion synaptic operations per second.</span>
+        </x-import>
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Card" eyebrow="Space" title="Astrosite" footer="Mobile observatory · day and night tracking" hint-size="100%,300px">
+          <span>Event-based telescopes in a shipping container, tracking resident space objects in full daylight where conventional optical systems are blind.</span>
+        </x-import>
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Card" eyebrow="Ecology" title="Insect-EVS" footer="Field entomology · moving vegetation" hint-size="100%,300px">
+          <span>Event cameras counting and classifying insects in bushland. What separates an insect from a leaf is not brightness but kinematics.</span>
+        </x-import>
+      </div>
+    </section>
+
+    <!-- Video feature -->
+    <section data-screen-label="Video" data-colourway="plate" style="background: var(--plate); color: var(--plate-text); margin-top: 78px">
+      <div style="max-width: 1180px; margin: 0 auto; padding: 64px 40px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 48px; align-items: center">
+        <div>
+          <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--rose)">Welcome</div>
+          <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.62rem; letter-spacing: -0.018em; line-height: 1.22; margin: 14px 0 0; max-width: 24ch">We study biological brains, then engineer their advantages into hardware.</h2>
+          <p style="font-size: .98rem; line-height: 1.62; color: #B7BCC3; max-width: 46ch; margin: 18px 0 0; text-wrap: pretty">Four minutes on what the centre does: the sensors, the processors, the field deployments, and the people who build them.</p>
+          <div style="display: flex; gap: 30px; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--plate-line); font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: #8A97A0; flex-wrap: wrap">
+            <span>Sensors</span><span>Processors</span><span>Field systems</span><span>Training</span>
+          </div>
+        </div>
+        <div style="background: var(--plate-deep); border-radius: var(--radius-2); overflow: hidden; aspect-ratio: 16 / 9">
+          <iframe src="https://www.youtube.com/embed/UAnSuj0zZ3Y" title="We are the International Centre for Neuromorphic Systems" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" style="width: 100%; height: 100%; border: 0; display: block"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners -->
+    <section data-screen-label="Partners" style="max-width: 1180px; margin: 0 auto; padding: 72px 40px 0">
+      <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Partners &amp; funders</div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-2); margin-top: 20px; overflow: hidden">
+        <div style="background: var(--surface-card); padding: 26px 22px">
+          <div style="font-family: var(--font-display); font-weight: 650; font-size: .98rem">MARCS Institute</div>
+          <div style="font-size: .82rem; color: var(--text-muted); margin-top: 5px">Brain, Behaviour and Development</div>
+        </div>
+        <div style="background: var(--surface-card); padding: 26px 22px">
+          <div style="font-family: var(--font-display); font-weight: 650; font-size: .98rem">Western Sydney University</div>
+          <div style="font-size: .82rem; color: var(--text-muted); margin-top: 5px">Host institution</div>
+        </div>
+        <div style="background: var(--surface-card); padding: 26px 22px">
+          <div style="font-family: var(--font-display); font-weight: 650; font-size: .98rem">Deep South</div>
+          <div style="font-size: .82rem; color: var(--text-muted); margin-top: 5px">Brain-scale computing programme</div>
+        </div>
+        <div style="background: var(--surface-card); padding: 26px 22px">
+          <div style="font-family: var(--font-display); font-weight: 650; font-size: .98rem">Catalyst Accelerator</div>
+          <div style="font-size: .82rem; color: var(--text-muted); margin-top: 5px">Allied industry programme</div>
+        </div>
+      </div>
+      <p style="font-size: .78rem; color: var(--text-muted); margin: 12px 0 0">Partner logos to be supplied. Set as text until the lockups arrive from the Brand Portal.</p>
+    </section>
+
+    <!-- Engage band -->
+    <section data-screen-label="Engage" style="max-width: 1180px; margin: 0 auto; padding: 72px 40px 88px">
+      <div style="border: 1px solid var(--border); border-radius: var(--radius-2); background: var(--surface-panel); padding: 40px; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 48px; align-items: center">
+        <div>
+          <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Engage with ICNS</div>
+          <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.018em; line-height: 1.22; margin: 12px 0 0; max-width: 28ch">Three ways to work with the centre</h2>
+          <p style="font-size: .96rem; line-height: 1.6; color: var(--text-muted); max-width: 52ch; margin: 14px 0 0">Contract research, joint grant applications, and licensing of centre-developed sensors and processing IP. Most engagements begin with a short scoping conversation.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; gap: 14px; align-items: baseline"><span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">01</span><span style="font-size: .94rem">Contract research and capability studies</span></div>
+          <div style="display: flex; gap: 14px; align-items: baseline"><span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">02</span><span style="font-size: .94rem">Joint bids and co-funded programmes</span></div>
+          <div style="display: flex; gap: 14px; align-items: baseline"><span style="font-family: var(--font-mono); font-size: .72rem; color: var(--brand)">03</span><span style="font-size: .94rem">Licensing, prototypes and hardware supply</span></div>
+          <div style="margin-top: 10px">
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" onClick="{{ goContact }}" hint-size="auto,40px">Start a conversation</x-import>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  </sc-if>
+
+  <!-- ============================ RESEARCH ============================ -->
+  <sc-if value="{{ isResearch }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Research" style="max-width: 1180px; margin: 0 auto; padding: 60px 40px 88px">
+    <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Research</div>
+    <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 16px 0 0; max-width: 24ch">Three themes, one continuous pipeline from photon to decision.</h1>
+    <p style="font-family: var(--font-prose); font-size: var(--size-prose); line-height: var(--leading-prose); color: var(--text-body); max-width: 70ch; margin: 20px 0 0; text-wrap: pretty">The centre is organised around what happens to information: how it is captured, how it is computed on, and how the resulting instrument survives contact with the world. Each theme runs its own hardware and its own field programme, and every project crosses at least two.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px">
+      <div style="border-top: 3px solid var(--brand); padding-top: 20px">
+        <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted)">01 · Capture</div>
+        <h2 style="font-family: var(--font-display); font-weight: 650; font-size: var(--size-heading); letter-spacing: var(--track-heading); margin: 10px 0 0">Perception</h2>
+        <p style="font-size: .94rem; line-height: 1.6; color: var(--text-muted); margin: 10px 0 0">Event sensors report per-pixel brightness changes at microsecond resolution with over 120 dB of dynamic range. Alongside vision, the centre works in neuromorphic audio and tactile sensing.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; font-size: .88rem">
+          <span>Event-based vision sensors</span>
+          <span>Cochlear and auditory models</span>
+          <span>Tactile and proprioceptive arrays</span>
+        </div>
+      </div>
+      <div style="border-top: 3px solid var(--brand); padding-top: 20px">
+        <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted)">02 · Compute</div>
+        <h2 style="font-family: var(--font-display); font-weight: 650; font-size: var(--size-heading); letter-spacing: var(--track-heading); margin: 10px 0 0">Processing</h2>
+        <p style="font-size: .94rem; line-height: 1.6; color: var(--text-muted); margin: 10px 0 0">Spiking networks in dedicated hardware, and the algorithms that make sparse asynchronous data tractable. Deep South extends the same principles to brain-scale simulation.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; font-size: .88rem">
+          <span>Spiking neural network hardware</span>
+          <span>Event-driven algorithms</span>
+          <span>Brain-scale simulation</span>
+        </div>
+      </div>
+      <div style="border-top: 3px solid var(--brand); padding-top: 20px">
+        <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted)">03 · Deploy</div>
+        <h2 style="font-family: var(--font-display); font-weight: 650; font-size: var(--size-heading); letter-spacing: var(--track-heading); margin: 10px 0 0">Sensing in the field</h2>
+        <p style="font-size: .94rem; line-height: 1.6; color: var(--text-muted); margin: 10px 0 0">Instruments built to run unattended: mobile observatories tracking objects in orbit, cameras counting insects in moving vegetation, systems with no network and a milliwatt power budget.</p>
+        <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 14px; font-size: .88rem">
+          <span>Space situational awareness</span>
+          <span>Environmental and ecological monitoring</span>
+          <span>Autonomous and remote platforms</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--border)">
+      <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Capability sheet</div>
+      <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.018em; margin: 12px 0 0">Device-class figures</h2>
+      <div style="background: var(--plate-deep); border-radius: var(--radius-2); padding: 24px 28px; margin-top: 20px">
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 24px; font-family: var(--font-mono); font-variant-numeric: tabular-nums">
+          <div><div style="font-size: 1.24rem; font-weight: 600; color: #fff">1 µs</div><div style="font-family: var(--font-body); font-size: .8rem; color: #8A97A0; margin-top: 6px">Temporal resolution</div></div>
+          <div><div style="font-size: 1.24rem; font-weight: 600; color: #fff">120 dB</div><div style="font-family: var(--font-body); font-size: .8rem; color: #8A97A0; margin-top: 6px">Dynamic range</div></div>
+          <div><div style="font-size: 1.24rem; font-weight: 600; color: #fff">&lt; 1 ms</div><div style="font-family: var(--font-body); font-size: .8rem; color: #8A97A0; margin-top: 6px">Motion latency</div></div>
+          <div><div style="font-size: 1.24rem; font-weight: 600; color: #fff">10–100 mW</div><div style="font-family: var(--font-body); font-size: .8rem; color: #8A97A0; margin-top: 6px">Sensor power draw</div></div>
+          <div><div style="font-size: 1.24rem; font-weight: 600; color: #fff">10–1000×</div><div style="font-family: var(--font-body); font-size: .8rem; color: #8A97A0; margin-top: 6px">Data reduction vs frames</div></div>
+        </div>
+        <p style="font-family: var(--font-body); font-size: .76rem; line-height: 1.55; color: #8A97A0; margin: 22px 0 0; max-width: 70ch">Indicative device-class figures. Per-project specifications are issued on request under NDA.</p>
+      </div>
+    </div>
+
+    <div style="margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--border)">
+      <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Facilities</div>
+      <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.018em; margin: 12px 0 0">What partners get access to</h2>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 48px; margin-top: 22px">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 0 20px; font-size: .94rem">
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Event-camera characterisation bench</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">Werrington South</div>
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Astrosite mobile observatory</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">Deployable</div>
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Neuromorphic audio lab</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">Werrington South</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 0 20px; font-size: .94rem">
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Deep South compute allocation</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">By agreement</div>
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Field entomology sites</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">NSW</div>
+          <div style="padding: 12px 0; border-bottom: 1px solid var(--border)">Event datasets and tooling</div><div style="padding: 12px 0; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); text-align: right">Open / on request</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px; margin-top: 32px">
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" onClick="{{ goContact }}" hint-size="auto,40px">Enquire about access</x-import>
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" variant="secondary" onClick="{{ goPubs }}" hint-size="auto,40px">Publications</x-import>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============================ PROJECTS ============================ -->
+  <sc-if value="{{ isProjects }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Projects" style="max-width: 1180px; margin: 0 auto; padding: 60px 40px 88px">
+    <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Projects</div>
+    <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 16px 0 0; max-width: 26ch">Instruments and programmes currently running.</h1>
+    <div style="display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; align-items: center">
+      <span style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-right: 6px">Filter</span>
+      <sc-for list="{{ projFilters }}" as="f" hint-placeholder-count="5">
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Tag" active="{{ f.active }}" onClick="{{ f.pick }}" hint-size="auto,24px">{{ f.label }}</x-import>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 26px">
+      <sc-for list="{{ projects }}" as="p" hint-placeholder-count="6">
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Card" eyebrow="{{ p.eyebrow }}" title="{{ p.title }}" footer="{{ p.footer }}" hint-size="100%,180px">{{ p.body }}</x-import>
+      </sc-for>
+    </div>
+    <p style="font-size: .78rem; color: var(--text-muted); margin: 20px 0 0">Project imagery to be supplied — cards run text-only until photography and figures are available.</p>
+  </main>
+  </sc-if>
+
+  <!-- ============================ PEOPLE ============================ -->
+  <sc-if value="{{ isPeople }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="People" style="max-width: 1180px; margin: 0 auto; padding: 60px 40px 88px">
+    <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">People</div>
+    <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 16px 0 0; max-width: 24ch">Engineers, neuroscientists and the students they train.</h1>
+    <p style="font-size: 1rem; line-height: 1.6; color: var(--text-muted); max-width: 62ch; margin: 18px 0 0">Research leads are listed by theme. Names, portraits and profile links need to be supplied from the current staff list — the layout below holds the structure.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 40px">
+      <sc-for list="{{ people }}" as="pn" hint-placeholder-count="8">
+        <div style="border: 1px solid var(--border); border-radius: var(--radius-2); background: var(--surface-card); box-shadow: var(--shadow-card); overflow: hidden">
+          <div style="background: var(--plate-deep); aspect-ratio: 4 / 5; display: flex; align-items: flex-end; padding: 12px">
+            <span style="font-family: var(--font-mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: #4A555E">Portrait</span>
+          </div>
+          <div style="padding: 14px 16px 16px">
+            <div style="font-family: var(--font-display); font-weight: 650; font-size: .98rem">{{ pn.name }}</div>
+            <div style="font-size: .84rem; color: var(--text-muted); margin-top: 4px">{{ pn.role }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin-top: 64px; padding-top: 40px; border-top: 1px solid var(--border); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px">
+      <div>
+        <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Opportunities</div>
+        <h2 style="font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; letter-spacing: -0.018em; margin: 12px 0 0">Join the centre</h2>
+        <p style="font-size: .96rem; line-height: 1.6; color: var(--text-muted); max-width: 52ch; margin: 12px 0 0">The centre runs a world-first coursework program in neuromorphic engineering and supervises PhD candidates across all three themes.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 0">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--border)">
+          <div><div style="font-family: var(--font-display); font-weight: 650; font-size: 1rem">Master of Neuromorphic Engineering</div><div style="font-size: .86rem; color: var(--text-muted); margin-top: 3px">Coursework with a research pathway · 2 years full-time</div></div>
+          <a href="#" onClick="{{ goContact }}" style="font-size: .88rem; white-space: nowrap">Enquire →</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--border)">
+          <div><div style="font-family: var(--font-display); font-weight: 650; font-size: 1rem">Open PhD projects</div><div style="font-size: .86rem; color: var(--text-muted); margin-top: 3px">Scholarship-supported, across sensing, processing and field systems</div></div>
+          <a href="#" onClick="{{ goResearch }}" style="font-size: .88rem; white-space: nowrap">Projects →</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border)">
+          <div><div style="font-family: var(--font-display); font-weight: 650; font-size: 1rem">Postdoctoral and engineering roles</div><div style="font-size: .86rem; color: var(--text-muted); margin-top: 3px">Posted as they open</div></div>
+          <a href="#" onClick="{{ goContact }}" style="font-size: .88rem; white-space: nowrap">Contact →</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============================ PUBLICATIONS ============================ -->
+  <sc-if value="{{ isPubs }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Publications" style="max-width: 1180px; margin: 0 auto; padding: 60px 40px 88px">
+    <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Publications</div>
+    <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 16px 0 0; max-width: 26ch">Papers, datasets and technical reports.</h1>
+    <p style="font-size: 1rem; line-height: 1.6; color: var(--text-muted); max-width: 62ch; margin: 18px 0 0">This list is designed to render from the WSU ResearchDirect feed. The rows below are structural placeholders showing subject areas, not citations.</p>
+    <div style="display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; align-items: center">
+      <span style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted); margin-right: 6px">Theme</span>
+      <sc-for list="{{ pubFilters }}" as="f" hint-placeholder-count="4">
+        <x-import component-from-global-scope="ICNSDesignSystem_019848.Tag" active="{{ f.active }}" onClick="{{ f.pick }}" hint-size="auto,24px">{{ f.label }}</x-import>
+      </sc-for>
+    </div>
+    <div style="margin-top: 24px">
+      <sc-for list="{{ pubs }}" as="pb" hint-placeholder-count="6">
+        <div style="display: grid; grid-template-columns: 74px minmax(0, 1fr) 130px; gap: 24px; align-items: baseline; padding: 18px 0; border-top: 1px solid var(--border)">
+          <div style="font-family: var(--font-mono); font-size: .8rem; color: var(--text-muted); font-variant-numeric: tabular-nums">{{ pb.year }}</div>
+          <div>
+            <div style="font-family: var(--font-prose); font-size: 1.02rem; line-height: 1.45">{{ pb.title }}</div>
+            <div style="font-size: .82rem; color: var(--text-muted); margin-top: 5px">{{ pb.venue }}</div>
+          </div>
+          <div style="text-align: right"><x-import component-from-global-scope="ICNSDesignSystem_019848.Badge" tone="{{ pb.tone }}" hint-size="auto,22px">{{ pb.theme }}</x-import></div>
+        </div>
+      </sc-for>
+      <div style="border-top: 1px solid var(--border)"></div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ============================ CONTACT ============================ -->
+  <sc-if value="{{ isContact }}" hint-placeholder-val="{{ false }}">
+  <main data-screen-label="Contact" style="max-width: 1180px; margin: 0 auto; padding: 60px 40px 88px">
+    <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: 64px; align-items: start">
+      <div>
+        <div style="font-family: var(--font-mono); font-weight: 500; font-size: var(--size-eyebrow); letter-spacing: var(--track-eyebrow); text-transform: uppercase; color: var(--brand)">Contact</div>
+        <h1 style="font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.5rem); letter-spacing: -0.02em; line-height: 1.1; margin: 16px 0 0; max-width: 22ch">Tell us what you are trying to measure.</h1>
+        <p style="font-size: 1rem; line-height: 1.6; color: var(--text-muted); max-width: 54ch; margin: 18px 0 0">Partnership and research enquiries are triaged weekly. Include the environment, the timescale and the power budget if you know them.</p>
+        <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 30px; max-width: 480px">
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Select" label="Enquiry type" options="{{ enquiryTypes }}" hint-size="100%,58px"></x-import>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Input" label="Name" placeholder="Full name" hint-size="100%,58px"></x-import>
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Input" label="Organisation" placeholder="Company or institution" hint-size="100%,58px"></x-import>
+          </div>
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Input" label="Email" placeholder="name@organisation.com" hint-size="100%,58px"></x-import>
+          <x-import component-from-global-scope="ICNSDesignSystem_019848.Input" label="What are you working on?" placeholder="A sentence or two is enough" hint-size="100%,58px"></x-import>
+          <div style="margin-top: 4px">
+            <x-import component-from-global-scope="ICNSDesignSystem_019848.Button" onClick="{{ submit }}" hint-size="auto,40px">{{ submitLabel }}</x-import>
+          </div>
+        </div>
+      </div>
+      <div style="border: 1px solid var(--border); border-radius: var(--radius-2); background: var(--surface-panel); padding: 28px">
+        <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand)">Direct</div>
+        <div style="margin-top: 16px; font-size: .94rem; line-height: 1.7">
+          International Centre for Neuromorphic Systems<br>
+          The MARCS Institute<br>
+          Western Sydney University<br>
+          Werrington South, NSW 2747, Australia
+        </div>
+        <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: .78rem; letter-spacing: .04em; color: var(--text-body)">ICNS@WESTERNSYDNEY.EDU.AU</div>
+        <div style="margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border)">
+          <div style="font-family: var(--font-mono); font-size: .64rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text-muted)">Routing</div>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 12px; font-size: .88rem; color: var(--text-muted)">
+            <span>Partnerships · centre director's office</span>
+            <span>Study · postgraduate coordinator</span>
+            <span>Media · WSU media unit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <footer data-colourway="plate" style="background: var(--plate); color: var(--plate-text); border-top: 1px solid var(--plate-line)">
+    <div style="max-width: 1180px; margin: 0 auto; padding: 44px 40px; display: grid; grid-template-columns: auto 1fr auto; gap: 40px; align-items: start">
+      <img src="assets/WSU_Logo_ICNS_White.png" alt="ICNS" style="height: 88px; display: block">
+      <div style="display: flex; gap: 48px; flex-wrap: wrap">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: #8A97A0">Centre</span>
+          <a href="#" onClick="{{ goResearch }}" style="font-size: .88rem; color: var(--rose)">Research</a>
+          <a href="#" onClick="{{ goProjects }}" style="font-size: .88rem; color: var(--rose)">Projects</a>
+          <a href="#" onClick="{{ goPeople }}" style="font-size: .88rem; color: var(--rose)">People</a>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-family: var(--font-mono); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: #8A97A0">Outputs</span>
+          <a href="#" onClick="{{ goPubs }}" style="font-size: .88rem; color: var(--rose)">Publications</a>
+          <a href="https://www.deepsouth.org.au/" style="font-size: .88rem; color: var(--rose)">Deep South</a>
+          <a href="https://www.westernsydney.edu.au/marcs" style="font-size: .88rem; color: var(--rose)">MARCS Institute</a>
+        </div>
+      </div>
+      <div style="font-size: var(--size-caption); color: #8A97A0; line-height: 1.7; text-align: right">
+        Western Sydney University · Werrington South, NSW<br>
+        <span style="font-family: var(--font-mono); font-size: .68rem; letter-spacing: .08em">ICNS@WESTERNSYDNEY.EDU.AU</span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroDirection&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;statement&quot;,&quot;plate&quot;],&quot;default&quot;:&quot;statement&quot;,&quot;tsType&quot;:&quot;'statement' | 'plate'&quot;,&quot;section&quot;:&quot;Home&quot;},&quot;colourway&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;paper&quot;,&quot;plate&quot;],&quot;default&quot;:&quot;paper&quot;,&quot;tsType&quot;:&quot;'paper' | 'plate'&quot;,&quot;section&quot;:&quot;Global&quot;},&quot;showAudienceRouter&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Home&quot;}}">
+const THEMES = [
+  {
+    eyebrow: 'Perception · capture',
+    body: 'Event sensors report per-pixel brightness changes at microsecond resolution with over 120 dB of dynamic range. Nothing is recorded where nothing changes, so a scene in full sun beside deep shade resolves in one pass and the output is sparse by construction.',
+    caps: ['Event-based vision', 'Neuromorphic audio', 'Tactile arrays', 'Cochlear models', 'Sensor characterisation'],
+    stats: [{value: '1 µs', label: 'timestamp resolution'}, {value: '120 dB', label: 'dynamic range'}, {value: '10–100 mW', label: 'sensor power'}],
+    figLabel: 'Figure · event stream, contrast edge',
+    figKey: 'ON  ·  OFF',
+    figKeyColor: '#3B9BFF'
+  },
+  {
+    eyebrow: 'Processing · compute',
+    body: 'Sparse asynchronous data needs computation shaped like it. The centre builds spiking networks in dedicated hardware and the event-driven algorithms that run on them, up to Deep South — the first machine designed to simulate networks at the scale of the human brain.',
+    caps: ['Spiking hardware', 'Event-driven algorithms', 'Brain-scale simulation', 'FPGA and ASIC', 'Learning rules'],
+    stats: [{value: '228T', label: 'synaptic ops / second'}, {value: '< 1 ms', label: 'decision latency'}, {value: '3', label: 'hardware generations'}],
+    figLabel: 'Figure · spike raster, 22 channels',
+    figKey: 'SPIKE  ·  BURST',
+    figKeyColor: '#9A7BFF'
+  },
+  {
+    eyebrow: 'Sensing in the field · deploy',
+    body: 'An instrument is only as good as its worst night. Astrosite tracks resident space objects in daylight from a shipping container; insect-EVS separates a bee from moving vegetation on kinematics rather than brightness. Both run unattended, off-grid.',
+    caps: ['Space situational awareness', 'Field entomology', 'Remote deployment', 'Mobile observatories', 'Edge autonomy'],
+    stats: [{value: '24 h', label: 'day and night tracking'}, {value: '100–250 Hz', label: 'insect wingbeat band'}, {value: '0', label: 'network required'}],
+    figLabel: 'Figure · target track over clutter',
+    figKey: 'TARGET  ·  CLUTTER',
+    figKeyColor: '#FF3DA6'
+  }
+];
+
+const PROJECTS = [
+  {theme: 'Computation', eyebrow: 'Computation', title: 'Deep South', footer: 'Brain-scale simulation · with WSU', body: 'The first supercomputer designed to simulate spiking networks at the scale of the human brain, at 228 trillion synaptic operations per second.'},
+  {theme: 'Space', eyebrow: 'Space', title: 'Astrosite', footer: 'Mobile observatory · day and night', body: 'Event-based telescopes in a shipping container, tracking resident space objects in full daylight where conventional optical systems are blind.'},
+  {theme: 'Ecology', eyebrow: 'Ecology', title: 'Insect-EVS', footer: 'Field entomology · moving vegetation', body: 'Event cameras counting and classifying insects in bushland. What separates an insect is not brightness but kinematics.'},
+  {theme: 'Perception', eyebrow: 'Perception', title: 'Neuromorphic audio', footer: 'Cochlear models · spatial hearing', body: 'Auditory pathways implemented in dedicated hardware, from cochlear filterbanks to sound-source localisation on a milliwatt budget.'},
+  {theme: 'Space', eyebrow: 'Space', title: 'Event-based space imaging', footer: 'Orbit · first images from space', body: 'Neuromorphic sensors flown as payloads, returning the first event-camera imagery captured in orbit.'},
+  {theme: 'Perception', eyebrow: 'Perception', title: 'Tactile and proprioceptive sensing', footer: 'Robotics · closed loop', body: 'Skin-like sensor arrays reporting change rather than state, for grasping and locomotion under tight latency budgets.'}
+];
+
+const PUBS = [
+  {year: 2026, title: 'Event-based detection and tracking of resident space objects in daylight', venue: 'Subject area · space situational awareness', theme: 'Space', tone: 'brand'},
+  {year: 2026, title: 'Kinematic separation of insects from moving vegetation in event streams', venue: 'Subject area · field entomology', theme: 'Ecology', tone: 'neutral'},
+  {year: 2025, title: 'Brain-scale simulation of spiking networks on dedicated hardware', venue: 'Subject area · neuromorphic computation', theme: 'Computation', tone: 'brand'},
+  {year: 2025, title: 'Cochlear filterbank implementations for low-power spatial hearing', venue: 'Subject area · neuromorphic audio', theme: 'Perception', tone: 'neutral'},
+  {year: 2024, title: 'Characterisation methods for event-based vision sensors', venue: 'Subject area · sensor metrology', theme: 'Perception', tone: 'neutral'},
+  {year: 2024, title: 'Event-driven learning rules for sparse asynchronous data', venue: 'Subject area · algorithms', theme: 'Computation', tone: 'brand'}
+];
+
+const PEOPLE = [
+  {name: 'Centre director', role: 'Name to supply'},
+  {name: 'Deputy director', role: 'Name to supply'},
+  {name: 'Theme lead · Perception', role: 'Name to supply'},
+  {name: 'Theme lead · Processing', role: 'Name to supply'},
+  {name: 'Theme lead · Field systems', role: 'Name to supply'},
+  {name: 'Senior research engineer', role: 'Name to supply'},
+  {name: 'Postgraduate coordinator', role: 'Name to supply'},
+  {name: 'Partnerships manager', role: 'Name to supply'}
+];
+
+const hash = (a, b) => {
+  const s = Math.sin(a * 127.1 + b * 311.7) * 43758.5453;
+  return s - Math.floor(s);
+};
+
+class Component extends DCLogic {
+  state = {screen: 'Home', theme: 0, hero: null, dark: null, projFilter: 'All', pubFilter: 'All', sent: false};
+
+  constructor(p) {
+    super(p);
+    this.canvasRef = React.createRef();
+    this.heroRef = React.createRef();
+    this.explorerRef = React.createRef();
+    this.tick = this.tick.bind(this);
+  }
+
+  componentDidMount() { this._raf = requestAnimationFrame(this.tick); }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); }
+
+  fit(c) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = c.clientWidth, h = c.clientHeight;
+    if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
+      c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    }
+    const g = c.getContext('2d');
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = '#05070A';
+    g.fillRect(0, 0, w, h);
+    return {g, w, h};
+  }
+
+  drawHeroField(g, w, h, t) {
+    for (let i = 0; i < 460; i++) {
+      const x = (hash(i, 1) * w + t * 0.011 * (0.2 + hash(i, 4))) % w;
+      const y = (hash(i, 2) * h + t * 0.004 * (0.3 + hash(i, 6))) % h;
+      const a = 0.05 + 0.17 * hash(i, 3);
+      g.fillStyle = hash(i, 7) > 0.5 ? `rgba(59,155,255,${a})` : `rgba(255,140,66,${a})`;
+      g.fillRect(x, y, 1.4, 1.4);
+    }
+    for (let c = 0; c < 3; c++) {
+      const speed = 0.000048 + c * 0.000019;
+      const sweep = (t * speed + c * 0.34) % 1;
+      const cx = w * (-0.05 + 1.1 * sweep);
+      for (let y = 0; y < h; y += 2) {
+        const ph = y * 0.0072 + t * 0.00085 + c * 2.1;
+        const x = cx + Math.min(w * 0.09, 130) * Math.sin(ph) + 38 * Math.sin(y * 0.021 - t * 0.0009);
+        if (x < -6 || x > w + 6) continue;
+        const slope = Math.cos(ph);
+        for (let k = 0; k < 2; k++) {
+          const jx = x + (hash(y, k + c * 13) - 0.5) * 20;
+          const jy = y + (hash(y + 3, k) - 0.5) * 2;
+          const a = (0.2 + 0.52 * hash(y, k + 5)) * (1 - c * 0.24);
+          g.fillStyle = slope > 0 ? `rgba(59,155,255,${a})` : `rgba(255,140,66,${a})`;
+          g.fillRect(jx, jy, 1.7, 1.7);
+        }
+      }
+    }
+  }
+
+  tick(t) {
+    const hc = this.heroRef.current;
+    if (hc && hc.clientWidth) {
+      const {g, w, h} = this.fit(hc);
+      this.drawHeroField(g, w, h, t);
+    }
+    const c = this.canvasRef.current;
+    if (c) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = c.clientWidth, h = c.clientHeight;
+      if (c.width !== Math.round(w * dpr) || c.height !== Math.round(h * dpr)) {
+        c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+      }
+      const g = c.getContext('2d');
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      g.clearRect(0, 0, w, h);
+      g.fillStyle = '#05070A';
+      g.fillRect(0, 0, w, h);
+      const mode = this.state.theme;
+      if (mode === 0) this.drawEvents(g, w, h, t);
+      else if (mode === 1) this.drawRaster(g, w, h, t);
+      else this.drawTrack(g, w, h, t);
+    }
+    this._raf = requestAnimationFrame(this.tick);
+  }
+
+  drawEvents(g, w, h, t) {
+    const cx = w * 0.5;
+    for (let y = 4; y < h; y += 3) {
+      const phase = y * 0.014 + t * 0.0011;
+      const x = cx + 88 * Math.sin(phase) + 26 * Math.sin(y * 0.036 - t * 0.0019);
+      const slope = Math.cos(phase);
+      for (let k = 0; k < 3; k++) {
+        const jx = x + (hash(y, k + t * 0.002 | 0) - 0.5) * 22;
+        const jy = y + (hash(y + 7, k) - 0.5) * 3;
+        const a = 0.25 + 0.6 * hash(y, k + 3);
+        g.fillStyle = slope > 0 ? `rgba(59,155,255,${a})` : `rgba(255,140,66,${a})`;
+        g.fillRect(jx, jy, 1.6, 1.6);
+      }
+    }
+    g.fillStyle = 'rgba(138,151,160,.5)';
+    g.font = '9px ui-monospace, Menlo, monospace';
+    g.fillText('1.2 ms integration', 14, h - 14);
+  }
+
+  drawRaster(g, w, h, t) {
+    const rows = 22, rh = h / rows;
+    g.strokeStyle = '#1C242C';
+    g.lineWidth = 1;
+    for (let r = 0; r < rows; r++) {
+      const y = Math.round(r * rh + rh / 2) + 0.5;
+      g.beginPath(); g.moveTo(0, y); g.lineTo(w, y); g.stroke();
+    }
+    const span = w + 80;
+    for (let r = 0; r < rows; r++) {
+      const y = r * rh + rh / 2;
+      for (let k = 0; k < 46; k++) {
+        const x = span - ((t * 0.055 + k * 34 + hash(r, k) * 30) % span);
+        if (x < -4 || x > w) continue;
+        const v = hash(r + 11, k);
+        if (v > 0.62) {
+          g.fillStyle = 'rgba(154,123,255,.9)';
+          g.fillRect(x, y - rh * 0.32, 1.7, rh * 0.64);
+        }
+      }
+    }
+    for (let b = 0; b < 3; b++) {
+      const x = span - ((t * 0.055 + b * 420) % span);
+      if (x < 0 || x > w) continue;
+      g.fillStyle = 'rgba(124,224,192,.85)';
+      for (let r = 0; r < rows; r++) {
+        if (hash(r, b + 31) > 0.45) g.fillRect(x, r * rh + rh * 0.18, 1.7, rh * 0.64);
+      }
+    }
+    g.fillStyle = 'rgba(138,151,160,.5)';
+    g.font = '9px ui-monospace, Menlo, monospace';
+    g.fillText('22 channels · 500 ms window', 14, h - 12);
+  }
+
+  drawTrack(g, w, h, t) {
+    g.strokeStyle = '#1C242C';
+    g.lineWidth = 1;
+    for (let x = 0; x <= w; x += Math.max(40, w / 10)) { g.beginPath(); g.moveTo(x + 0.5, 0); g.lineTo(x + 0.5, h); g.stroke(); }
+    for (let y = 0; y <= h; y += h / 6) { g.beginPath(); g.moveTo(0, y + 0.5); g.lineTo(w, y + 0.5); g.stroke(); }
+    for (let i = 0; i < 120; i++) {
+      const x = hash(i, 1) * w, y = (hash(i, 2) * h + t * 0.004 * (0.3 + hash(i, 5))) % h;
+      g.fillStyle = `rgba(255,176,0,${0.12 + 0.3 * hash(i, 3)})`;
+      g.fillRect(x, y, 1.4, 1.4);
+    }
+    for (let i = 0; i < 26; i++) {
+      const p = (t * 0.00016 + 0.6) % 1;
+      const q = p - i * 0.012;
+      if (q < 0) continue;
+      const x = w * (0.08 + q * 0.84), y = h * (0.78 - q * 0.56) + 14 * Math.sin(q * 7);
+      const a = 1 - i / 26;
+      g.fillStyle = `rgba(255,61,166,${a * 0.9})`;
+      g.beginPath(); g.arc(x, y, i === 0 ? 3.2 : 1.6, 0, 6.2832); g.fill();
+      if (i === 0) {
+        g.strokeStyle = 'rgba(124,224,192,.85)';
+        g.lineWidth = 1;
+        g.strokeRect(x - 11, y - 11, 22, 22);
+      }
+    }
+    g.fillStyle = 'rgba(138,151,160,.5)';
+    g.font = '9px ui-monospace, Menlo, monospace';
+    g.fillText('RSO track · daylight', 14, h - 14);
+  }
+
+  go(s) { return (e) => { e && e.preventDefault(); this.setState({screen: s}); window.scrollTo(0, 0); }; }
+
+  renderVals() {
+    const {screen, theme, projFilter, pubFilter, sent} = this.state;
+    const dark = this.state.dark !== null ? this.state.dark : (this.props.colourway || 'paper') === 'plate';
+    const hero = this.state.hero || this.props.heroDirection || 'statement';
+    const th = THEMES[theme];
+    const on = (s) => screen === s ? 'var(--brand)' : 'var(--text-body)';
+    const bar = (s) => screen === s ? 'var(--brand)' : 'transparent';
+    const projThemes = ['All', 'Perception', 'Computation', 'Space', 'Ecology'];
+    const pubThemes = ['All', 'Perception', 'Computation', 'Space', 'Ecology'];
+
+    return {
+      cw: dark ? 'plate' : 'paper',
+      isDark: dark,
+      isLight: !dark,
+      cwLabel: dark ? 'Plate' : 'Paper',
+      toggleDark: () => this.setState({dark: !dark}),
+
+      goHome: this.go('Home'), goResearch: this.go('Research'), goProjects: this.go('Projects'),
+      goPeople: this.go('People'), goPubs: this.go('Publications'), goContact: this.go('Contact'),
+      cHome: on('Home'), cResearch: on('Research'), cProjects: on('Projects'),
+      cPeople: on('People'), cPubs: on('Publications'), cContact: on('Contact'),
+      bHome: bar('Home'), bResearch: bar('Research'), bProjects: bar('Projects'),
+      bPeople: bar('People'), bPubs: bar('Publications'), bContact: bar('Contact'),
+
+      isHome: screen === 'Home', isResearch: screen === 'Research', isProjects: screen === 'Projects',
+      isPeople: screen === 'People', isPubs: screen === 'Publications', isContact: screen === 'Contact',
+
+      heroIsA: hero === 'statement', heroIsB: hero === 'plate',
+      setHeroA: (e) => { e.preventDefault(); this.setState({hero: 'statement'}); },
+      setHeroB: (e) => { e.preventDefault(); this.setState({hero: 'plate'}); },
+      heroABg: hero === 'statement' ? 'var(--brand)' : 'transparent',
+      heroAFg: hero === 'statement' ? '#fff' : 'var(--text-muted)',
+      heroBBg: hero === 'plate' ? 'var(--brand)' : 'transparent',
+      heroBFg: hero === 'plate' ? '#fff' : 'var(--text-muted)',
+      showRouter: this.props.showAudienceRouter !== false,
+
+      canvasRef: this.canvasRef,
+      heroRef: this.heroRef,
+      pick0: (e) => { e.preventDefault(); this.setState({theme: 0}); },
+      pick1: (e) => { e.preventDefault(); this.setState({theme: 1}); },
+      pick2: (e) => { e.preventDefault(); this.setState({theme: 2}); },
+      t0bar: theme === 0 ? 'var(--brand)' : 'transparent',
+      t1bar: theme === 1 ? 'var(--brand)' : 'transparent',
+      t2bar: theme === 2 ? 'var(--brand)' : 'transparent',
+      t0bg: theme === 0 ? 'var(--surface-panel)' : 'transparent',
+      t1bg: theme === 1 ? 'var(--surface-panel)' : 'transparent',
+      t2bg: theme === 2 ? 'var(--surface-panel)' : 'transparent',
+      caps: th.caps,
+      themeEyebrow: th.eyebrow,
+      themeBody: th.body,
+      themeStats: th.stats,
+      figLabel: th.figLabel,
+      figKey: th.figKey,
+      figKeyColor: th.figKeyColor,
+
+      projFilters: projThemes.map(f => ({label: f, active: projFilter === f, pick: () => this.setState({projFilter: f})})),
+      projects: PROJECTS.filter(p => projFilter === 'All' || p.theme === projFilter),
+      pubFilters: pubThemes.map(f => ({label: f, active: pubFilter === f, pick: () => this.setState({pubFilter: f})})),
+      pubs: PUBS.filter(p => pubFilter === 'All' || p.theme === pubFilter),
+      people: PEOPLE,
+
+      enquiryTypes: ['Partnership or contract research', 'Licensing and IP', 'Postgraduate study', 'PhD supervision', 'Media', 'Other'],
+      submit: (e) => { e.preventDefault(); this.setState({sent: true}); },
+      submitLabel: sent ? 'Enquiry sent' : 'Send enquiry'
+    };
+  }
+}
+
+</script>
+</body>
+</html>
