@@ -847,18 +847,18 @@ function smooth01(v, a, b) {
         geo.dispose(); edges.dispose();
     }
 
-    const nameSeq = { tower: 0, vehicle: 0, sign: 0, mast: 0 };
+    const nameSeq = { house: 0, vehicle: 0, sign: 0, tower: 0 };
     const pad = n => (n < 10 ? '0' : '') + n;
     for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
         if (Math.random() > .2) {
             addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, 30);
-            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE', name: 'tower_' + pad(++nameSeq.tower) });
+            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .2) {
             addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, 30);
-            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE', name: 'tower_' + pad(++nameSeq.tower) });
+            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .4) {
             const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5;
@@ -876,7 +876,7 @@ function smooth01(v, a, b) {
         if (Math.random() > .45) {
             const ox = (Math.random() > .5 ? -1 : 1) * (16 + Math.random() * 6), oz = z + 3;
             addShapeEdges(new THREE.BoxGeometry(3, 5, 3), ox, 2.5, oz, 0, 16);
-            targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'LANDMARK', name: 'mast_' + pad(++nameSeq.mast) });
+            targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'TOWER', name: 'tower_' + pad(++nameSeq.tower) });
         }
     }
 
@@ -948,13 +948,13 @@ function smooth01(v, a, b) {
         for (let i = 0; i < a.length; i++) d += a[i] * b[i];
         return d;
     }
-    const CLASS_SEED = { STRUCTURE: 11, VEHICLE: 27, SIGNAGE: 43, LANDMARK: 59 };
+    const CLASS_SEED = { HOUSE: 11, VEHICLE: 27, SIGNAGE: 43, TOWER: 59 };
     const classHV = {};
     Object.keys(CLASS_SEED).forEach(k => { classHV[k] = unit(lcgVec(CLASS_SEED[k])); });
 
     const landmarks = targetCenters.map((t, idx) => {
         /* a landmark seen from further off is pinned down less precisely */
-        const sigma = t.type === 'LANDMARK' ? 2.6 : t.type === 'VEHICLE' ? 1.3 : 1.8;
+        const sigma = t.type === 'TOWER' ? 2.6 : t.type === 'VEHICLE' ? 1.3 : 1.8;
 
         const ring = new THREE.Mesh(
             new THREE.RingGeometry(sigma - .07, sigma + .07, 40),
@@ -963,7 +963,7 @@ function smooth01(v, a, b) {
         ring.rotation.x = -Math.PI / 2;
         mapGroup.add(ring);
 
-        const cls = classHV[t.type] || classHV.STRUCTURE;
+        const cls = classHV[t.type] || classHV.HOUSE;
         const inst = unit(lcgVec(idx * 7 + 101));
         const hv = new Float32Array(HV_D);
         for (let i = 0; i < HV_D; i++) hv[i] = cls[i] * .62 + inst[i] * .38;
