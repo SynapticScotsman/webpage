@@ -201,7 +201,7 @@
 </nav>
 
 <!-- HERO -->
-<section id="hero-scroll" class="relative h-[165vh] md:h-[240vh]" aria-labelledby="hero-heading">
+<section id="hero-scroll" class="relative h-[200vh] md:h-[300vh]" aria-labelledby="hero-heading">
 <div id="hero-sticky" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
     <div class="absolute inset-0 z-0" style="opacity:.8">
         <div id="three-canvas" aria-hidden="true"></div>
@@ -722,10 +722,10 @@ function smooth01(v, a, b) {
                     const copy = document.getElementById('hero-copy');
                     const ident = document.getElementById('hero-identity');
                     const cap = document.getElementById('map-caption');
-                    const out = 1 - smooth01(heroProgress, 0, .28);
+                    const out = 1 - smooth01(heroProgress, 0, .22);
                     if (copy) copy.style.opacity = out;
                     if (ident) ident.style.opacity = out;
-                    if (cap) cap.style.opacity = smooth01(heroProgress, .62, .88);
+                    if (cap) cap.style.opacity = smooth01(heroProgress, .84, .98);
                 }
                 rectCacheDirty = true;
                 ticking = false;
@@ -783,22 +783,14 @@ function smooth01(v, a, b) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
-    /* WHERE YOU ARE — self-location with an uncertainty envelope. Flat on
-       the ground, so it only reads once the camera has risen into plan view. */
-    const selfRings = new THREE.Group();
-    for (let i = 1; i <= 3; i++) {
-        const g = new THREE.RingGeometry(i * 3.4 - .05, i * 3.4 + .05, 96);
-        const m = new THREE.MeshBasicMaterial({ color: 0x7CE0C0, side: THREE.DoubleSide, transparent: true, opacity: 0 });
-        selfRings.add(new THREE.Mesh(g, m));
-    }
+    /* WHERE YOU ARE — one quiet marker, no rings around it. */
     const selfDot = new THREE.Mesh(
-        new THREE.CircleGeometry(.85, 24),
+        new THREE.CircleGeometry(.6, 24),
         new THREE.MeshBasicMaterial({ color: 0x7CE0C0, transparent: true, opacity: 0 })
     );
-    selfRings.add(selfDot);
-    selfRings.rotation.x = -Math.PI / 2;
-    selfRings.position.set(0, .02, -22);
-    scene.add(selfRings);
+    selfDot.rotation.x = -Math.PI / 2;
+    selfDot.position.set(0, .02, -22);
+    scene.add(selfDot);
 
     const edgePoints = [], edgeColors = [];
     const targetCenters = [];
@@ -1035,16 +1027,13 @@ function smooth01(v, a, b) {
         /* Stage 1 flatten the world to its footprint, stage 2 rise above it.
            Flatten-then-rise reads as a camera climbing; the reverse reads as
            a shuffle. The flight decays to nothing as the map resolves. */
-        flatten = smooth01(blend, .10, .58);
-        rise    = smooth01(blend, .42, .95);
-        updateInk(smooth01(blend, .22, .72));
+        flatten = smooth01(blend, .08, .46);
+        rise    = smooth01(blend, .34, .68);
+        updateInk(smooth01(blend, .18, .58));
 
         wz += 15 * delta * (1 - flatten); if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
 
-        selfRings.children.forEach((r, i) => {
-            const want = rise * (i === 3 ? .9 : .42 - i * .1);   // last child is the dot
-            r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, want, 5 * delta);
-        });
+        selfDot.material.opacity = THREE.MathUtils.lerp(selfDot.material.opacity, rise * .9, 5 * delta);
 
         /* mouse-look hands over to the plan view as the camera climbs */
         const look = 1 - rise;
