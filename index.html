@@ -773,15 +773,21 @@ let scrollProgress = 0;
             const SEP = 0.12;
             for (let k = 0; k < n; k++) {
                 const t = Math.random();
-                const isOn = (k % 3) === 0; // 1/3 orange leading, 2/3 blue trailing wake
+                const isOn = (k % 2) === 0; // half tight blue leading edge, half orange tail
                 const side = isOn ? SEP : -SEP;
+                /* Apparent motion is +z (world streams past the camera).
+                   ON  = blue,   brightness rising at the leading edge — tight band.
+                   OFF = orange, brightness falling behind it — a longer decaying tail. */
+                const decay = Math.pow(Math.random(), .6);
+                const tail = isOn ? .12 : -decay * 2.2;
+                const fade = isOn ? 1 : 1 - decay * .55;   // tail dims as it ages
                 edgePoints.push(
-                    v1.x + (v2.x - v1.x) * t + perp.x * side + (Math.random() - .5) * .06,
-                    v1.y + (v2.y - v1.y) * t + perp.y * side + (Math.random() - .5) * .06,
-                    v1.z + (v2.z - v1.z) * t + perp.z * side + (Math.random() - .5) * .06
+                    v1.x + (v2.x - v1.x) * t + perp.x * side * .35 + (Math.random() - .5) * .06,
+                    v1.y + (v2.y - v1.y) * t + perp.y * side * .35 + (Math.random() - .5) * .06,
+                    v1.z + (v2.z - v1.z) * t + perp.z * side * .35 + tail + (Math.random() - .5) * .06
                 );
-                if (isOn) edgeColors.push(1.0, .55, .26);
-                else      edgeColors.push(.23, .61, 1.0);
+                if (isOn) edgeColors.push(.23, .61, 1.0);
+                else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
                 const r = Math.random() * 8 + 2;
                 phasorPoints.push(Math.cos(phase) * r, Math.sin(phase) * r + 5, -20);
             }
