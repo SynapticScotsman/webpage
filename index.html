@@ -194,7 +194,8 @@
 </nav>
 
 <!-- HERO -->
-<section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black" aria-labelledby="hero-heading">
+<section id="hero-scroll" class="relative h-[165vh] md:h-[240vh]" aria-labelledby="hero-heading">
+<div id="hero-sticky" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
     <div class="absolute inset-0 z-0" style="opacity:.8">
         <div id="three-canvas" aria-hidden="true"></div>
         <div id="hud-overlay" aria-hidden="true">
@@ -208,16 +209,23 @@
     <!-- legibility vignette: sits over the feed + HUD, under the text -->
     <div class="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" style="background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
 
-    <div class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none" style="transform:translateY(7vh)">
+    <div id="hero-copy" class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none" style="transform:translateY(7vh)">
         <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
             How do <span class="text-cyan-400">you</span><br/>see the world?
         </h1>
     </div>
-    <div class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
+    <div id="hero-identity" class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
         <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
         <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
-        <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">scroll ↓ · move mouse for ego-motion noise</button>
+        <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
     </div>
+
+    <div id="map-caption" class="absolute z-10 inset-x-0 bottom-20 flex flex-col items-center gap-3 text-center px-6 pointer-events-none" style="opacity:0">
+        <div class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-cyan-400">Bound · plan view</div>
+        <p class="text-lg md:text-2xl text-white font-light max-w-xl leading-snug">The same events — now bound to where they happened.</p>
+        <a href="cognitive_map.html" class="pointer-events-auto font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-cyan-400 border-b border-white/10 hover:border-cyan-400 pb-1 mt-1">open the cognitive map →</a>
+    </div>
+</div>
 </section>
 
 
@@ -678,7 +686,12 @@
 
 <script>
 // ── SCROLL PROGRESS ───────────────────────────────────────────────────
-let scrollProgress = 0;
+let scrollProgress = 0, heroProgress = 0, rectCacheDirty = false;
+/* eased 0..1 ramp between two thresholds */
+function smooth01(v, a, b) {
+    const t = Math.max(0, Math.min(1, (v - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+}
 (function () {
     const bar = document.getElementById('progress-bar');
     let ticking = false;
@@ -689,6 +702,22 @@ let scrollProgress = 0;
                 const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
                 scrollProgress = h > 0 ? (t / h) * 100 : 0;
                 bar.style.width = scrollProgress + '%';
+
+                /* hero stage progress: 0 = flying through events, 1 = plan view */
+                const stage = document.getElementById('hero-scroll');
+                if (stage) {
+                    const r = stage.getBoundingClientRect();
+                    const span = r.height - window.innerHeight;
+                    heroProgress = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
+                    const copy = document.getElementById('hero-copy');
+                    const ident = document.getElementById('hero-identity');
+                    const cap = document.getElementById('map-caption');
+                    const out = 1 - smooth01(heroProgress, 0, .28);
+                    if (copy) copy.style.opacity = out;
+                    if (ident) ident.style.opacity = out;
+                    if (cap) cap.style.opacity = smooth01(heroProgress, .62, .88);
+                }
+                rectCacheDirty = true;
                 ticking = false;
             });
             ticking = true;
@@ -744,13 +773,16 @@ let scrollProgress = 0;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
+    /* Range rings: flat on the ground, they read as map furniture once the
+       camera rises. Hidden entirely while the feed is streaming. */
     const vsaRings = new THREE.Group();
     for (let i = 1; i <= 5; i++) {
-        const g = new THREE.RingGeometry(i * 2 - .05, i * 2 + .05, 64);
-        const m = new THREE.MeshBasicMaterial({ color: 0xa855f7, side: THREE.DoubleSide, transparent: true, opacity: 0 });
+        const g = new THREE.RingGeometry(i * 4 - .05, i * 4 + .05, 96);
+        const m = new THREE.MeshBasicMaterial({ color: 0xE0445E, side: THREE.DoubleSide, transparent: true, opacity: 0 });
         vsaRings.add(new THREE.Mesh(g, m));
     }
-    vsaRings.position.set(0, 5, -20);
+    vsaRings.rotation.x = -Math.PI / 2;
+    vsaRings.position.set(0, .02, -22);
     scene.add(vsaRings);
 
     const edgePoints = [], phasorPoints = [], edgeColors = [];
@@ -838,10 +870,33 @@ let scrollProgress = 0;
     const mat = new THREE.PointsMaterial({ size: 2.6, sizeAttenuation: false, vertexColors: true, transparent: true, opacity: .95, blending: THREE.NormalBlending, depthWrite: false });
     scene.add(new THREE.Points(geo, mat));
 
+    /* Polarity is a property of change. Once events are bound into a map
+       there is nothing changing, so the two colours collapse to one ink. */
+    const colAttr = geo.attributes.color;
+    const origColors = Float32Array.from(colAttr.array);
+    const INK = [.86, .85, .83];
+    let lastInk = -1;
+    function updateInk(k) {
+        if (Math.abs(k - lastInk) < .004) return;
+        lastInk = k;
+        const a = colAttr.array;
+        for (let i = 0; i < a.length; i++) a[i] = origColors[i] + (INK[i % 3] - origColors[i]) * k;
+        colAttr.needsUpdate = true;
+    }
+
+    /* Each point starts its collapse at a slightly different moment, so the
+       map accumulates instead of snapping into place. */
+    const stagger = new Float32Array(FC);
+    for (let i = 0; i < FC; i++) stagger[i] = Math.random() * .3;
+    const noiseStart = FC - 6000;   // background speckle: transient, never bound
+
     let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0, evFrame = 0;
     let lastTouchX = null, lastTouchY = null;
     let rectCache = null;
-    function getRect() { return rectCache || (rectCache = container.getBoundingClientRect()); }
+    function getRect() {
+        if (rectCacheDirty) { rectCache = null; rectCacheDirty = false; }
+        return rectCache || (rectCache = container.getBoundingClientRect());
+    }
 
     window.addEventListener('mousemove', e => {
         tgtVel = Math.min(Math.sqrt(e.movementX * e.movementX + e.movementY * e.movementY), 100);
@@ -871,60 +926,87 @@ let scrollProgress = 0;
         lastHUD = now;
         const rect = renderer.domElement.getBoundingClientRect();
         let visible = 0;
-        if (blend < 0.5) {
-            for (let i = 0; i < targetCenters.length && visible < 5; i++) {
-                projVec.copy(targetCenters[i].pos);
-                projVec.z += wz;
-                if (projVec.z > 5) projVec.z -= WORLD_DEPTH;
-                if (projVec.z > -5 || projVec.z < -40) continue;
-                const rawDist = Math.abs(projVec.z - camera.position.z);
-                projVec.project(camera);
-                if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
+        const mapMode = blend > .5;
+        for (let i = 0; i < targetCenters.length && visible < 5; i++) {
+            projVec.copy(targetCenters[i].pos);
+            projVec.z += wz;
+            if (projVec.z > 5) projVec.z -= WORLD_DEPTH;
+            /* in plan view the label belongs on the footprint, not the roof */
+            if (mapMode) projVec.y *= 1 - flatten;
+            const rawDist = mapMode
+                ? camera.position.distanceTo(projVec)
+                : Math.abs(projVec.z - camera.position.z);
+            if (mapMode) { if (rawDist > 62) continue; }
+            else if (projVec.z > -5 || projVec.z < -40) continue;
+            projVec.project(camera);
+            if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
+            if (blend < .25) {
                 if (Math.abs(projVec.x) < .45 && Math.abs(projVec.y) < .5) continue; // centre question zone
                 if (projVec.y < -.6) continue; // bottom identity band
-                const sx = (projVec.x * .5 + .5) * rect.width;
-                const sy = (-projVec.y * .5 + .5) * rect.height;
-                const slot = hudSlots[visible];
-                slot.style.left = sx + 'px'; slot.style.top = sy + 'px'; slot.style.opacity = '1';
-                slot.querySelector('.hud-type').textContent = targetCenters[i].type;
-                slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
-                const bs = slot.querySelector('.target-bind');
-                if (bs) {
-                    if (vel > 30) { bs.textContent = 'UNSTABLE'; bs.className = 'target-bind text-red-400'; }
-                    else          { bs.textContent = 'STABLE';   bs.className = 'target-bind text-emerald-400'; }
-                }
-                visible++;
             }
+            const sx = (projVec.x * .5 + .5) * rect.width;
+            const sy = (-projVec.y * .5 + .5) * rect.height;
+            const slot = hudSlots[visible];
+            slot.style.left = sx + 'px'; slot.style.top = sy + 'px'; slot.style.opacity = '1';
+            slot.querySelector('.hud-type').textContent = targetCenters[i].type;
+            slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
+            const bs = slot.querySelector('.target-bind');
+            if (bs) {
+                if (mapMode)        { bs.textContent = 'BOUND';    bs.className = 'target-bind text-emerald-400'; }
+                else if (vel > 30)  { bs.textContent = 'UNSTABLE'; bs.className = 'target-bind text-red-400'; }
+                else                { bs.textContent = 'STABLE';   bs.className = 'target-bind text-emerald-400'; }
+            }
+            visible++;
         }
         for (let i = visible; i < 5; i++) hudSlots[i].style.opacity = '0';
     }
 
     const clock = new THREE.Clock();
-    let wz = 0, blend = 0;
+    let wz = 0, blend = 0, flatten = 0, rise = 0;
     (function animate() {
         requestAnimationFrame(animate);
         const delta = clock.getDelta();
         vel += (tgtVel - vel) * 10 * delta; tgtVel = 0;
-        wz += 15 * delta; if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
-        const tb = Math.max(0, Math.min(1, (scrollProgress - 5) / 20));
-        blend += (tb - blend) * 5 * delta;
-        vsaRings.children.forEach(r => { r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, blend * .6, 5 * delta); });
-        camera.rotation.y += (tgtRY - camera.rotation.y) * 5 * delta;
-        camera.rotation.x += (tgtRX - camera.rotation.x) * 5 * delta;
+
+        blend += (heroProgress - blend) * 5 * delta;
+        /* Stage 1 flatten the world to its footprint, stage 2 rise above it.
+           Flatten-then-rise reads as a camera climbing; the reverse reads as
+           a shuffle. The flight decays to nothing as the map resolves. */
+        flatten = smooth01(blend, .10, .58);
+        rise    = smooth01(blend, .42, .95);
+        updateInk(smooth01(blend, .22, .72));
+
+        wz += 15 * delta * (1 - flatten); if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
+
+        vsaRings.children.forEach((r, i) => {
+            const want = rise * .5 * (1 - i * .12);
+            r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, want, 5 * delta);
+        });
+
+        /* mouse-look hands over to the plan view as the camera climbs */
+        const look = 1 - rise;
+        camera.position.z = -22 * rise;
+        const wantFov = 70 - 34 * rise;
+        if (Math.abs(camera.fov - wantFov) > .2) { camera.fov = wantFov; camera.updateProjectionMatrix(); }
+        camera.rotation.y += ((tgtRY * look) - camera.rotation.y) * 5 * delta;
+        const pitch = tgtRX * look + (-Math.PI / 2) * rise;
+        camera.rotation.x += (pitch - camera.rotation.x) * 5 * delta;
         const sh = vel * .001 * (1 - blend);
         camera.position.x = (Math.random() - .5) * sh;
-        camera.position.y = 3 + (Math.random() - .5) * sh;
+        camera.position.y = 3 + rise * 31 + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
         evFrame++;
         for (let i = 0; i < FC; i++) {
             const i3 = i * 3;
-            let sx = edgePoints[i3], sy = edgePoints[i3+1], sz = edgePoints[i3+2] + wz;
-            if (sz > 5) sz -= WORLD_DEPTH;
-            let cx = sx + (phasorPoints[i3] - sx) * blend;
-            let cy = sy + (phasorPoints[i3+1] - sy) * blend;
-            let cz = sz + (phasorPoints[i3+2] - sz) * blend;
+            let cx = edgePoints[i3], sy = edgePoints[i3+1], cz = edgePoints[i3+2] + wz;
+            if (cz > 5) cz -= WORLD_DEPTH;
+            /* height collapses to the footprint, each point on its own beat */
+            const f = Math.max(0, Math.min(1, (flatten - stagger[i]) / (1 - stagger[i])));
+            let cy = sy * (1 - f);
             if (scatter) { cx += (Math.random() - .5) * sa; cy += (Math.random() - .5) * sa; cz += (Math.random() - .5) * sa; }
-            if (blend < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60; // ~22% of pixels off per frame, churning subset
+            /* events flicker only while they are events; a bound map is stable */
+            if (flatten < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60;
+            if (i >= noiseStart && stagger[i] * 3.34 < flatten) cz = 60;
             posArray[i3] = cx; posArray[i3+1] = cy; posArray[i3+2] = cz;
         }
         geo.attributes.position.needsUpdate = true;
