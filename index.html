@@ -51,6 +51,23 @@
         body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
         ::selection { background:#E0445E; color:#141412; }
 
+        /* The Socratic beats. Each section asks a question the reader thinks
+           they can answer, lets them answer it, then turns it back on them.
+           Spacing does the pacing — the gaps are the pauses. */
+        .ask { font-family:'Playfair Display','Newsreader',Georgia,serif; font-weight:400;
+               font-size:clamp(30px,5vw,52px); line-height:1.1; letter-spacing:-.02em;
+               color:#fff; margin-bottom:2.5rem; }
+        .beat-obvious { font-size:clamp(19px,2.6vw,24px); font-weight:300; line-height:1.5;
+                        color:#d3d1c7; margin-bottom:2.25rem; }
+        .beat { font-size:clamp(16px,2vw,19px); line-height:1.75; color:#b4b2a9;
+                margin-bottom:2.25rem; max-width:62ch; }
+        .beat-turn { font-family:'Playfair Display','Newsreader',Georgia,serif; font-style:italic;
+                     font-weight:400; font-size:clamp(20px,3vw,30px); line-height:1.35;
+                     color:#ededeb; margin-bottom:2.75rem; max-width:34ch; }
+        .landing { font-family:'JetBrains Mono',monospace; font-size:clamp(12px,1.4vw,14px);
+                   font-weight:700; text-transform:uppercase; letter-spacing:.22em;
+                   color:#E0445E; }
+
         /* Scroll rails: the hero stage catches you at its start and at the
            fully-formed map, so the transform is hard to skip past by accident.
            `proximity` (not `mandatory`) keeps it a nudge, never a trap. */
@@ -248,16 +265,39 @@
 
 <main id="main-content">
 
-<!-- ABOUT -->
-<section id="about" class="py-32 px-6 max-w-4xl mx-auto text-center" aria-labelledby="about-heading">
-    <h2 id="about-heading" class="text-3xl md:text-5xl font-black mb-10 tracking-tight">Embodied intelligence — machines that see the way you do</h2>
-    <p class="text-lg md:text-2xl text-slate-400 font-light leading-relaxed mb-12">
-        My research portfolio focuses on translating chaotic event streams into resilient robotic spatial awareness. By bridging biologically-inspired neuromorphic perception with discrete symbolic reasoning, I am building the foundational architectures for autonomous systems that <strong class="text-white">sense less to understand more</strong>.
+<!-- 01 · SEEING → PERCEPTION -->
+<section id="about" class="py-28 md:py-36 px-6 max-w-3xl mx-auto" aria-labelledby="about-heading">
+    <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400 mb-6">Perception</p>
+    <h2 id="about-heading" class="ask">How do you see the world?</h2>
+
+    <p class="beat-obvious">You might say: with your eyes.</p>
+    <p class="beat">But your eyes don't record the world. You respond to <em class="text-white not-italic font-medium">change</em>. You move your attention. You discard almost everything you are given — and from those incomplete signals your brain builds a model good enough to act on.</p>
+    <p class="beat-turn">So what happens if we build machines that meet the same problem the same way?</p>
+
+    <p class="landing">→ Neuromorphic perception</p>
+</section>
+
+<!-- 02 · MAPPING → COGNITION -->
+<section id="cognition" class="py-28 md:py-36 px-6 max-w-3xl mx-auto border-t border-white/5" aria-labelledby="cognition-heading">
+    <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400 mb-6">Cognition</p>
+    <h2 id="cognition-heading" class="ask">How do you map the world?</h2>
+
+    <p class="beat-obvious">Probably not by keeping a perfect reconstruction of everything you have ever seen.</p>
+    <p class="beat">You remember what was there, where it was, what it was near, and roughly when you saw it. You know where the door is without looking at it. That is a <em class="text-white not-italic font-medium">cognitive map</em> — and it is the thing a robot with a perfect point cloud still does not have.</p>
+    <p class="beat-turn">So we build the memory the same way: bind what to where, and query it later.</p>
+
+    <p class="landing">→ Cognitive maps · VSA memory</p>
+</section>
+
+<!-- THE HINGE -->
+<section class="pb-24 px-6 max-w-3xl mx-auto text-center" aria-label="What this research is">
+    <p class="text-xl md:text-3xl font-light text-slate-300 leading-snug">
+        Perception <span class="text-cyan-400 font-normal">&amp;</span> Cognition — the work is the part in between:
+        <span class="text-white">turning what changed into what you know.</span>
     </p>
-    <a href="#exhibits" class="inline-flex items-center gap-2 text-cyan-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors pb-1 border-b border-cyan-400/30 hover:border-white">
-        Explore Interactive Exhibits
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </a>
+    <p class="text-sm md:text-base text-slate-500 font-light leading-relaxed mt-8">
+        In practice that means translating chaotic event streams into resilient spatial awareness — bridging neuromorphic perception with symbolic reasoning, for autonomous systems that <strong class="text-slate-300 font-medium">sense less to understand more</strong>.
+    </p>
 </section>
 
 <!-- EXPLORE -->
