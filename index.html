@@ -28,7 +28,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -51,12 +51,13 @@
         body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
         ::selection { background:#E0445E; color:#141412; }
 
-        /* Hero reveal: beat 1 = the feed alone, beat 2 = identity, beat 3 = the question */
-        .hero-beat-2, .hero-beat-3 { opacity:0; animation:heroFade .9s ease-out forwards; }
-        .hero-beat-2 { animation-delay:1.4s; }
-        .hero-beat-3 { animation-delay:2.6s; }
+        /* Hero reveal: feed -> question pops -> identity settles at the bottom */
+        .hero-beat-1, .hero-beat-2 { opacity:0; animation:heroFade .8s ease-out forwards; }
+        .hero-beat-1 { animation-delay:.5s; animation-name:heroPop; }
+        .hero-beat-2 { animation-delay:1.8s; }
         @keyframes heroFade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-        @media (prefers-reduced-motion: reduce) { .hero-beat-2, .hero-beat-3 { animation:none; opacity:1; } }
+        @keyframes heroPop { 0% { opacity:0; transform:scale(.96); } 60% { opacity:1; transform:scale(1.015); } 100% { opacity:1; transform:scale(1); } }
+        @media (prefers-reduced-motion: reduce) { .hero-beat-1, .hero-beat-2 { animation:none; opacity:1; } }
         ::-webkit-scrollbar { width:4px; }
         ::-webkit-scrollbar-track { background:#141412; }
         ::-webkit-scrollbar-thumb { background:#E0445E; }
@@ -205,17 +206,17 @@
         </div>
     </div>
     <!-- legibility vignette: sits over the feed + HUD, under the text -->
-    <div class="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" style="background:radial-gradient(ellipse 70% 60% at 22% 78%, rgba(0,0,0,.82) 0%, rgba(0,0,0,.45) 45%, transparent 75%)"></div>
+    <div class="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" style="background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
 
-    <div class="absolute z-10 left-6 md:left-16 lg:left-24 bottom-24 md:bottom-28 max-w-4xl text-left pointer-events-none">
-        <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 mb-4 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
-        <div class="hero-beat-2 text-xl md:text-3xl font-black uppercase tracking-tight text-white mb-6 drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
-        <h1 id="hero-heading" class="hero-beat-3 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif;font-style:italic">
-            How do <span class="text-cyan-400">you</span> see the world?
+    <div class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none">
+        <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
+            How do <span class="text-cyan-400">you</span><br/>see the world?
         </h1>
     </div>
-    <div class="hero-beat-3 absolute bottom-6 left-6 md:left-16 lg:left-24 flex items-center gap-3 z-20">
-        <button class="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-cyan-400 transition-colors" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">scroll ↓ · move mouse for ego-motion noise</button>
+    <div class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
+        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
+        <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
+        <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">scroll ↓ · move mouse for ego-motion noise</button>
     </div>
 </section>
 
@@ -791,20 +792,20 @@ let scrollProgress = 0;
     for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
         if (Math.random() > .2) {
             const ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           ph, 12);
-            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, ph, 12);
+            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           ph, 30);
+            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, ph, 30);
             targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE' });
         }
         if (Math.random() > .2) {
             const ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           ph, 12);
-            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, ph, 12);
+            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           ph, 30);
+            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, ph, 30);
             targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE' });
         }
         if (Math.random() > .4) {
             const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5, ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, ph, 15);
-            addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, ph, 15);
+            addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, ph, 36);
+            addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, ph, 36);
             targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE' });
         }
         if (Math.random() > .5) {
@@ -828,10 +829,10 @@ let scrollProgress = 0;
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeColors, 3));
-    const mat = new THREE.PointsMaterial({ size: .1, vertexColors: true, transparent: true, opacity: .95, blending: THREE.NormalBlending, depthWrite: false });
+    const mat = new THREE.PointsMaterial({ size: 2.6, sizeAttenuation: false, vertexColors: true, transparent: true, opacity: .95, blending: THREE.NormalBlending, depthWrite: false });
     scene.add(new THREE.Points(geo, mat));
 
-    let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0;
+    let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0, evFrame = 0;
     let lastTouchX = null, lastTouchY = null;
     let rectCache = null;
     function getRect() { return rectCache || (rectCache = container.getBoundingClientRect()); }
@@ -873,7 +874,8 @@ let scrollProgress = 0;
                 const rawDist = Math.abs(projVec.z - camera.position.z);
                 projVec.project(camera);
                 if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
-                if (projVec.x < .15 && projVec.y < .2) continue; // keep the lower-left text frame clear
+                if (Math.abs(projVec.x) < .45 && Math.abs(projVec.y) < .5) continue; // centre question zone
+                if (projVec.y < -.6) continue; // bottom identity band
                 const sx = (projVec.x * .5 + .5) * rect.width;
                 const sy = (-projVec.y * .5 + .5) * rect.height;
                 const slot = hudSlots[visible];
@@ -907,6 +909,7 @@ let scrollProgress = 0;
         camera.position.x = (Math.random() - .5) * sh;
         camera.position.y = 3 + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
+        evFrame++;
         for (let i = 0; i < FC; i++) {
             const i3 = i * 3;
             let sx = edgePoints[i3], sy = edgePoints[i3+1], sz = edgePoints[i3+2] + wz;
@@ -915,6 +918,7 @@ let scrollProgress = 0;
             let cy = sy + (phasorPoints[i3+1] - sy) * blend;
             let cz = sz + (phasorPoints[i3+2] - sz) * blend;
             if (scatter) { cx += (Math.random() - .5) * sa; cy += (Math.random() - .5) * sa; cz += (Math.random() - .5) * sa; }
+            if (blend < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60; // ~22% of pixels off per frame, churning subset
             posArray[i3] = cx; posArray[i3+1] = cy; posArray[i3+2] = cz;
         }
         geo.attributes.position.needsUpdate = true;
