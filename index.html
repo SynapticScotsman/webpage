@@ -204,18 +204,12 @@
 </nav>
 
 <!-- HERO -->
-<section id="hero-scroll" class="relative h-[200vh] md:h-[300vh]" aria-labelledby="hero-heading">
+<section id="hero-scroll" class="relative h-[240vh] md:h-[340vh]" aria-labelledby="hero-heading">
 <div id="hero-sticky" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
     <div class="absolute inset-0 z-0" style="opacity:.8">
         <div id="three-canvas" aria-hidden="true"></div>
-        <div id="hud-overlay" aria-hidden="true">
-            <div class="hud-slot" id="hud-0"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-1"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-2"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-3"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-4"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-        </div>
-    </div>
+        <div id="hud-overlay" aria-hidden="true"></div>
+            </div>
     <!-- legibility vignette: sits over the feed + HUD, under the text -->
     <div id="hero-vignette" class="absolute inset-0 z-[5] pointer-events-none" style="transition:opacity .3s;background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
 
@@ -237,6 +231,9 @@
         <div class="flex justify-between w-28 md:w-36 mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500"><span>−</span><span>similarity</span><span>+</span></div>
         <div class="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-600 max-w-[9rem] leading-relaxed">Hover a landmark to unbind by it — its kind answers too</div>
     </div>
+
+    <div id="map-scrim" class="absolute inset-x-0 bottom-0 z-[6] pointer-events-none" aria-hidden="true"
+         style="opacity:0;height:56%;transition:opacity .3s;background:linear-gradient(to top,rgba(8,8,7,.97) 0%,rgba(8,8,7,.9) 30%,rgba(8,8,7,.55) 60%,transparent 100%)"></div>
 
     <div id="map-caption" class="absolute z-10 inset-x-0 bottom-10 md:bottom-14 flex flex-col items-center gap-4 text-center px-6 pointer-events-none" style="opacity:0">
         <h2 class="text-4xl md:text-6xl lg:text-[4.25rem] font-normal tracking-tight text-white leading-[1.06] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
@@ -733,12 +730,17 @@ function smooth01(v, a, b) {
                     const copy = document.getElementById('hero-copy');
                     const ident = document.getElementById('hero-identity');
                     const cap = document.getElementById('map-caption');
-                    const out = 1 - smooth01(heroProgress, 0, .22);
+                    /* 0-.20 hero copy leaves · .28-.60 the map resolves ·
+                       .60-.74 it holds alone · .68-.86 scrim then text arrive ·
+                       .86-1 the text simply sits there before the stage lets go */
+                    const out = 1 - smooth01(heroProgress, 0, .20);
                     if (copy) copy.style.opacity = out;
                     if (ident) ident.style.opacity = out;
-                    if (cap) cap.style.opacity = smooth01(heroProgress, .84, .98);
+                    if (cap) cap.style.opacity = smooth01(heroProgress, .74, .86);
+                    const scrim = document.getElementById('map-scrim');
+                    if (scrim) scrim.style.opacity = smooth01(heroProgress, .68, .84);
                     const vig = document.getElementById('hero-vignette');
-                    if (vig) vig.style.opacity = 1 - smooth01(heroProgress, .3, .62) * .68;
+                    if (vig) vig.style.opacity = 1 - smooth01(heroProgress, .26, .56) * .68;
                 }
                 rectCacheDirty = true;
                 ticking = false;
@@ -1064,22 +1066,55 @@ function smooth01(v, a, b) {
     }, { passive: true });
     window.addEventListener('touchend', () => { lastTouchX = null; lastTouchY = null; }, { passive: true });
 
-    const hudSlots = Array.from({ length: 5 }, (_, i) => document.getElementById('hud-' + i));
+    /* ── HUD LABEL TEXT ───────────────────────────────────────────────────
+       Every word that appears in a tracked-object label. Edit here only —
+       the five HUD boxes are built from this. */
+    const HUD_LABELS = {
+        name:         'OBJ_SEM',    // the object's token
+        dist:         'DIST',       // range to the observer
+        distUnit:     'm',
+        bind:         'VSA_BIND',   // binding state
+        bindStable:   'STABLE',     // tracked, holding
+        bindUnstable: 'UNSTABLE',   // tracked, ego-motion too fast
+        bindBound:    'BOUND',      // written into the map
+        sim:          'SIM'         // similarity to the current query
+    };
+
+    const hudOverlay = document.getElementById('hud-overlay');
+    const hudSlots = [], hudVecs = [];
+    for (let i = 0; i < 5; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'hud-slot';
+        const frame = document.createElement('div');
+        frame.className = 'hud-frame';
+        ['tl', 'tr', 'bl', 'br'].forEach(c => {
+            const d = document.createElement('div');
+            d.className = 'hud-corner ' + c;
+            frame.appendChild(d);
+        });
+        const info = document.createElement('div');
+        info.className = 'hud-info';
+        info.innerHTML =
+            HUD_LABELS.name + ': <span class="hud-type font-bold text-white"></span><br>' +
+            HUD_LABELS.dist + ': <span class="hud-dist font-bold text-white"></span>' + HUD_LABELS.distUnit + '<br>' +
+            HUD_LABELS.bind + ': <span class="target-bind text-emerald-400">' + HUD_LABELS.bindStable + '</span>';
+        const sim = document.createElement('div');
+        sim.className = 'hud-sim';
+        const strip = document.createElement('div');   // one cell per vector component
+        strip.className = 'hud-vec';
+        for (let c = 0; c < 16; c++) strip.appendChild(document.createElement('i'));
+        info.appendChild(sim);
+        info.appendChild(strip);
+        slot.appendChild(frame);
+        slot.appendChild(info);
+        hudOverlay.appendChild(slot);
+        hudSlots.push(slot);
+        hudVecs.push({ strip, sim });
+    }
+
     const mapLegend = document.getElementById('map-legend');
     const qToken = document.getElementById('q-token');
     const qMode = document.getElementById('q-mode');
-    /* one cell per hypervector component, filled in when a label is shown */
-    const hudVecs = hudSlots.map(slot => {
-        const info = slot.querySelector('.hud-info');
-        const sim = document.createElement('div');
-        sim.className = 'hud-sim';
-        info.appendChild(sim);
-        const strip = document.createElement('div');
-        strip.className = 'hud-vec';
-        for (let i = 0; i < 16; i++) strip.appendChild(document.createElement('i'));
-        info.appendChild(strip);
-        return { strip, sim };
-    });
     const projVec = new THREE.Vector3();
     let lastHUD = 0;
 
@@ -1099,7 +1134,9 @@ function smooth01(v, a, b) {
             const rawDist = mapMode
                 ? camera.position.distanceTo(projVec)
                 : Math.abs(projVec.z - camera.position.z);
-            if (mapMode) { if (rawDist > 62) continue; }
+            /* cull relative to how high the camera has climbed, not a fixed
+               distance - a pulled-back plan view is legitimately far away */
+            if (mapMode) { if (rawDist > camera.position.y + 55) continue; }
             else if (projVec.z > -5 || projVec.z < -40) continue;
             projVec.project(camera);
             if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
@@ -1107,6 +1144,7 @@ function smooth01(v, a, b) {
                 if (Math.abs(projVec.x) < .45 && Math.abs(projVec.y) < .5) continue; // centre question zone
                 if (projVec.y < -.6) continue; // bottom identity band
             }
+            if (blend > .64 && projVec.y < -.3) continue; // clear for the closing text
             const sx = (projVec.x * .5 + .5) * rect.width;
             const sy = (-projVec.y * .5 + .5) * rect.height;
             const slot = hudSlots[visible];
@@ -1123,15 +1161,15 @@ function smooth01(v, a, b) {
                 }
                 const L = landmarks[i];
                 const v = L && L.sim !== undefined ? L.sim : 0;
-                sim.textContent = 'SIM ' + (v >= 0 ? ' ' : '') + v.toFixed(2);
+                sim.textContent = HUD_LABELS.sim + ' ' + (v >= 0 ? ' ' : '') + v.toFixed(2);
                 sim.style.color = v > .55 ? '#FFB000' : v > .2 ? '#E0445E' : 'rgba(237,237,235,.35)';
             }
             slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
             const bs = slot.querySelector('.target-bind');
             if (bs) {
-                if (mapMode)        { bs.textContent = 'BOUND';    bs.className = 'target-bind text-emerald-400'; }
-                else if (vel > 30)  { bs.textContent = 'UNSTABLE'; bs.className = 'target-bind text-red-400'; }
-                else                { bs.textContent = 'STABLE';   bs.className = 'target-bind text-emerald-400'; }
+                if (mapMode)        { bs.textContent = HUD_LABELS.bindBound;    bs.className = 'target-bind text-emerald-400'; }
+                else if (vel > 30)  { bs.textContent = HUD_LABELS.bindUnstable; bs.className = 'target-bind text-red-400'; }
+                else                { bs.textContent = HUD_LABELS.bindStable;   bs.className = 'target-bind text-emerald-400'; }
             }
             visible++;
         }
@@ -1149,9 +1187,9 @@ function smooth01(v, a, b) {
         /* Stage 1 flatten the world to its footprint, stage 2 rise above it.
            Flatten-then-rise reads as a camera climbing; the reverse reads as
            a shuffle. The flight decays to nothing as the map resolves. */
-        flatten = smooth01(blend, .08, .46);
-        rise    = smooth01(blend, .34, .68);
-        updateInk(smooth01(blend, .18, .58));
+        flatten = smooth01(blend, .06, .40);
+        rise    = smooth01(blend, .28, .60);
+        updateInk(smooth01(blend, .15, .52));
 
         wz += 15 * delta * (1 - flatten); if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
 
