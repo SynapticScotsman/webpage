@@ -93,6 +93,8 @@
         /* HUD */
         #hud-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
         .hud-slot { position:absolute; opacity:0; transform:translate(-50%,-50%); transition:opacity .075s; will-change:left,top,opacity; }
+        .hud-vec { display:none; gap:1px; margin-top:5px; }
+        .hud-vec i { display:block; width:4px; height:10px; }
         .hud-frame { width:80px; height:80px; border:1px solid rgba(224,68,94,.2); position:relative; }
         .hud-corner { position:absolute; width:12px; height:12px; border-color:#E0445E; border-style:solid; }
         .hud-corner.tl { top:-2px; left:-2px; border-width:2px 0 0 2px; }
@@ -214,7 +216,7 @@
         </div>
     </div>
     <!-- legibility vignette: sits over the feed + HUD, under the text -->
-    <div class="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" style="background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
+    <div id="hero-vignette" class="absolute inset-0 z-[5] pointer-events-none" style="transition:opacity .3s;background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
 
     <div id="hero-copy" class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none" style="transform:translateY(7vh)">
         <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
@@ -227,11 +229,18 @@
         <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
     </div>
 
+    <div id="map-legend" class="absolute z-10 left-6 md:left-10 top-24 pointer-events-none font-mono" style="opacity:0;transition:opacity .3s">
+        <div class="text-[9px] font-bold uppercase tracking-[0.28em] text-slate-500">Query · unbind by</div>
+        <div id="q-token" class="text-sm md:text-base font-bold text-white mt-1">—</div>
+        <div class="mt-3 h-1.5 w-28 md:w-36" style="background:linear-gradient(to right,#1a3a85,#141412,#E0445E,#FFB000)"></div>
+        <div class="flex justify-between w-28 md:w-36 mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500"><span>−</span><span>similarity</span><span>+</span></div>
+    </div>
+
     <div id="map-caption" class="absolute z-10 inset-x-0 bottom-10 md:bottom-14 flex flex-col items-center gap-4 text-center px-6 pointer-events-none" style="opacity:0">
         <h2 class="text-4xl md:text-6xl lg:text-[4.25rem] font-normal tracking-tight text-white leading-[1.06] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
             How do you <span class="text-cyan-400">map</span> the world?
         </h2>
-        <p class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Landmarks · your place among them · a belief about where each one is</p>
+        <p class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Landmarks bound to places · query the vector · read where it peaks</p>
         <a href="cognitive_map.html" class="pointer-events-auto font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 hover:text-cyan-400 border-b border-white/10 hover:border-cyan-400 pb-1 mt-1">open the cognitive map →</a>
     </div>
 </div>
@@ -726,6 +735,8 @@ function smooth01(v, a, b) {
                     if (copy) copy.style.opacity = out;
                     if (ident) ident.style.opacity = out;
                     if (cap) cap.style.opacity = smooth01(heroProgress, .84, .98);
+                    const vig = document.getElementById('hero-vignette');
+                    if (vig) vig.style.opacity = 1 - smooth01(heroProgress, .3, .62) * .68;
                 }
                 rectCacheDirty = true;
                 ticking = false;
@@ -832,34 +843,36 @@ function smooth01(v, a, b) {
         geo.dispose(); edges.dispose();
     }
 
+    const nameSeq = { tower: 0, vehicle: 0, sign: 0, mast: 0 };
+    const pad = n => (n < 10 ? '0' : '') + n;
     for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
         if (Math.random() > .2) {
             addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, 30);
-            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE' });
+            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE', name: 'tower_' + pad(++nameSeq.tower) });
         }
         if (Math.random() > .2) {
             addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, 30);
-            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE' });
+            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE', name: 'tower_' + pad(++nameSeq.tower) });
         }
         if (Math.random() > .4) {
             const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5;
             addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, 36);
             addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, 36);
-            targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE' });
+            targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE', name: 'vehicle_' + pad(++nameSeq.vehicle) });
         }
         if (Math.random() > .5) {
             const sx = (Math.random() > .5 ? -5.5 : 5.5), sz = z + 7;
             addShapeEdges(new THREE.CylinderGeometry(.05, .05, 4, 6), sx, 2,   sz, 0, 20);
             addShapeEdges(new THREE.BoxGeometry(1.5, 1, .1),          sx, 4.5, sz, 0, 20);
-            targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE' });
+            targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE', name: 'sign_' + pad(++nameSeq.sign) });
         }
         /* outer landmarks: sparse, and they give the plan view its width */
         if (Math.random() > .45) {
             const ox = (Math.random() > .5 ? -1 : 1) * (16 + Math.random() * 6), oz = z + 3;
             addShapeEdges(new THREE.BoxGeometry(3, 5, 3), ox, 2.5, oz, 0, 16);
-            targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'LANDMARK' });
+            targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'LANDMARK', name: 'mast_' + pad(++nameSeq.mast) });
         }
     }
 
@@ -904,20 +917,23 @@ function smooth01(v, a, b) {
        landmark and you get back a distribution with a peak, not a
        coordinate — so each landmark carries a cloud whose density IS its
        positional certainty, tightest at the estimate and fraying outward. */
-    const BELIEF_N = 150;
     const mapGroup = new THREE.Group();
     mapGroup.visible = false;
     scene.add(mapGroup);
 
-    function gauss() {   // Box-Muller
-        let u = 0, v = 0;
-        while (u === 0) u = Math.random();
-        while (v === 0) v = Math.random();
-        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+    /* Every landmark carries a hypervector: a fixed random code that names
+       the thing itself, independent of where it happens to be. Deterministic
+       per landmark so the strip in its label never flickers. */
+    const HV_D = 16;
+    function hypervector(seed) {
+        const v = new Float32Array(HV_D);
+        let x = seed * 9301 + 49297;
+        for (let i = 0; i < HV_D; i++) { x = (x * 9301 + 49297) % 233280; v[i] = x / 233280; }
+        return v;
     }
 
-    const landmarks = targetCenters.map(t => {
-        /* a landmark seen from further away is pinned down less precisely */
+    const landmarks = targetCenters.map((t, idx) => {
+        /* a landmark seen from further off is pinned down less precisely */
         const sigma = t.type === 'LANDMARK' ? 2.6 : t.type === 'VEHICLE' ? 1.3 : 1.8;
 
         const ring = new THREE.Mesh(
@@ -927,23 +943,73 @@ function smooth01(v, a, b) {
         ring.rotation.x = -Math.PI / 2;
         mapGroup.add(ring);
 
-        const bp = new Float32Array(BELIEF_N * 3), bc = new Float32Array(BELIEF_N * 3);
-        for (let i = 0; i < BELIEF_N; i++) {
-            const dx = gauss() * sigma * .62, dz = gauss() * sigma * .62;
-            bp[i * 3] = dx; bp[i * 3 + 1] = 0; bp[i * 3 + 2] = dz;
-            const falloff = Math.max(0, 1 - Math.sqrt(dx * dx + dz * dz) / (sigma * 2.1));
-            bc[i * 3] = .88 * falloff; bc[i * 3 + 1] = .27 * falloff; bc[i * 3 + 2] = .37 * falloff;
-        }
-        const bg = new THREE.BufferGeometry();
-        bg.setAttribute('position', new THREE.BufferAttribute(bp, 3));
-        bg.setAttribute('color', new THREE.BufferAttribute(bc, 3));
-        const bmat = new THREE.PointsMaterial({ size: 3.2, sizeAttenuation: false, vertexColors: true, transparent: true, opacity: 0, depthWrite: false });
-        const cloud = new THREE.Points(bg, bmat);
-        cloud.position.y = .01;
-        mapGroup.add(cloud);
-
-        return { baseX: t.pos.x, baseZ: t.pos.z, ring, cloud, bmat };
+        /* cross-talk: unqueried landmarks never cancel to exactly zero */
+        const hv = hypervector(idx + 1);
+        const cross = (hv[0] - .5) * .5;
+        t.hv = hv;
+        return { baseX: t.pos.x, baseZ: t.pos.z, sigma, ring, cross, target: t };
     });
+
+    /* ── THE QUERY FIELD ──────────────────────────────────────────────────
+       Unbind the map by a landmark's hypervector and you do not get a
+       coordinate back — you get a similarity field over the whole plane,
+       peaking where that landmark is and rippling everywhere else with the
+       cross-talk of everything else stored in the same vector. This is that
+       field, drawn underneath the events it was built from. */
+    const FW = 80, FH = 72, FIELD_W = 86, FIELD_D = 78, FIELD_CZ = -22;
+    const fieldData = new Uint8Array(FW * FH * 4);
+    const fieldTex = new THREE.DataTexture(fieldData, FW, FH, THREE.RGBAFormat);
+    fieldTex.minFilter = fieldTex.magFilter = THREE.LinearFilter;
+    fieldTex.needsUpdate = true;
+    const fieldMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(FIELD_W, FIELD_D),
+        new THREE.MeshBasicMaterial({ map: fieldTex, transparent: true, opacity: 0, depthWrite: false })
+    );
+    fieldMesh.rotation.x = -Math.PI / 2;
+    fieldMesh.position.set(0, -.02, FIELD_CZ);
+    scene.add(fieldMesh);
+
+    const raw = new Float32Array(FW * FH);
+    let queried = null, lastQueryAt = -1e9, fieldWz = -1e9;
+
+    function rebuildField(wzNow) {
+        const pts = [];
+        for (let i = 0; i < landmarks.length; i++) {
+            const L = landmarks[i];
+            let z = L.baseZ + wzNow; if (z > 5) z -= WORLD_DEPTH;
+            pts.push({ x: L.baseX, z, s: L.sigma, w: L === queried ? 1 : L.cross });
+        }
+        let peak = 1e-6;
+        for (let j = 0; j < FH; j++) {
+            const wzp = FIELD_CZ - ((j + .5) / FH - .5) * FIELD_D;
+            for (let i = 0; i < FW; i++) {
+                const wx = ((i + .5) / FW - .5) * FIELD_W;
+                let acc = 0;
+                for (let k = 0; k < pts.length; k++) {
+                    const P = pts[k], dx = wx - P.x, dz = wzp - P.z;
+                    const d2 = dx * dx + dz * dz, r2 = P.s * P.s * 2.6;
+                    if (d2 < r2 * 9) acc += P.w * Math.exp(-d2 / r2);
+                }
+                raw[j * FW + i] = acc;
+                const a = Math.abs(acc); if (a > peak) peak = a;
+            }
+        }
+        for (let n = 0; n < FW * FH; n++) {
+            const lin = Math.max(-1, Math.min(1, raw[n] / peak));
+            /* gamma lifts the cross-talk ripples so the field reads across the
+               whole plane instead of one peak on a black background */
+            const v = Math.sign(lin) * Math.pow(Math.abs(lin), .5);
+            let r, g, b;
+            if (v < 0) { const t = -v; r = .10 * t; g = .22 * t; b = .52 * t; }
+            else if (v < .6) { const t = v / .6; r = .88 * t; g = .27 * t; b = .37 * t; }
+            else { const t = (v - .6) / .4; r = .88 + .12 * t; g = .27 + .53 * t; b = .37 - .12 * t; }
+            const o = n * 4;
+            fieldData[o] = r * 255; fieldData[o + 1] = g * 255; fieldData[o + 2] = b * 255;
+            fieldData[o + 3] = 105 + Math.abs(v) * 150;
+        }
+        fieldTex.needsUpdate = true;
+        fieldWz = wzNow;
+    }
 
     let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0, evFrame = 0;
     let lastTouchX = null, lastTouchY = null;
@@ -972,6 +1038,16 @@ function smooth01(v, a, b) {
     window.addEventListener('touchend', () => { lastTouchX = null; lastTouchY = null; }, { passive: true });
 
     const hudSlots = Array.from({ length: 5 }, (_, i) => document.getElementById('hud-' + i));
+    const mapLegend = document.getElementById('map-legend');
+    const qToken = document.getElementById('q-token');
+    /* one cell per hypervector component, filled in when a label is shown */
+    const hudVecs = hudSlots.map(slot => {
+        const strip = document.createElement('div');
+        strip.className = 'hud-vec';
+        for (let i = 0; i < 16; i++) strip.appendChild(document.createElement('i'));
+        slot.querySelector('.hud-info').appendChild(strip);
+        return strip;
+    });
     const projVec = new THREE.Vector3();
     let lastHUD = 0;
 
@@ -1003,7 +1079,17 @@ function smooth01(v, a, b) {
             const sy = (-projVec.y * .5 + .5) * rect.height;
             const slot = hudSlots[visible];
             slot.style.left = sx + 'px'; slot.style.top = sy + 'px'; slot.style.opacity = '1';
-            slot.querySelector('.hud-type').textContent = targetCenters[i].type;
+            slot.querySelector('.hud-type').textContent = mapMode
+                ? (targetCenters[i].name || targetCenters[i].type)
+                : targetCenters[i].type;
+            const strip = hudVecs[visible];
+            strip.style.display = mapMode ? 'flex' : 'none';
+            if (mapMode) {
+                const hv = targetCenters[i].hv;
+                for (let c = 0; c < 16; c++) {
+                    strip.children[c].style.background = 'rgba(224,68,94,' + (.18 + hv[c] * .82).toFixed(2) + ')';
+                }
+            }
             slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
             const bs = slot.querySelector('.target-bind');
             if (bs) {
@@ -1045,7 +1131,9 @@ function smooth01(v, a, b) {
         camera.rotation.x += (pitch - camera.rotation.x) * 5 * delta;
         const sh = vel * .001 * (1 - blend);
         camera.position.x = (Math.random() - .5) * sh;
-        camera.position.y = 3 + rise * 38 + (Math.random() - .5) * sh;
+        const halfTan = Math.tan(wantFov * Math.PI / 360);
+        const planY = Math.min(96, Math.max(36, 23 / (halfTan * camera.aspect)));
+        camera.position.y = 3 + rise * (planY - 3) + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
         evFrame++;
         for (let i = 0; i < FC; i++) {
@@ -1065,16 +1153,36 @@ function smooth01(v, a, b) {
 
         /* landmarks and beliefs ride the same world wrap as the events */
         mapGroup.visible = rise > .01;
+        fieldMesh.visible = mapGroup.visible;
         if (mapGroup.visible) {
             const o = smooth01(rise, .3, 1);
+            const now = performance.now() / 1000;
+
+            /* ask the map about one landmark at a time */
+            if (now - lastQueryAt > 3.8) {
+                lastQueryAt = now;
+                const near = landmarks.filter(L => {
+                    let z = L.baseZ + wz; if (z > 5) z -= WORLD_DEPTH;
+                    return Math.abs(z - FIELD_CZ) < 15 && Math.abs(L.baseX) < 24;
+                });
+                const pool = near.length ? near : landmarks;
+                queried = pool[(pool.indexOf(queried) + 1 + pool.length) % pool.length] || pool[0];
+                rebuildField(wz);
+                if (qToken) qToken.textContent = queried.target.name;
+            } else if (Math.abs(wz - fieldWz) > .6) {
+                rebuildField(wz);
+            }
+
             for (let i = 0; i < landmarks.length; i++) {
                 const L = landmarks[i];
                 let lz = L.baseZ + wz; if (lz > 5) lz -= WORLD_DEPTH;
                 L.ring.position.set(L.baseX, .03, lz);
-                L.cloud.position.set(L.baseX, .01, lz);
-                L.ring.material.opacity = o * .5;
-                L.bmat.opacity = o * .85;
+                L.ring.material.opacity = o * (L === queried ? .95 : .34);
             }
+            fieldMesh.material.opacity = o * .95;
+            if (mapLegend) mapLegend.style.opacity = o;
+        } else if (mapLegend) {
+            mapLegend.style.opacity = 0;
         }
 
         updateHUD(wz, blend);
