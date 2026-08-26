@@ -158,11 +158,14 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 /* trail of waypoints */
 .trail-scroll{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 32px 32px;scrollbar-width:thin}
 .trail-scroll::-webkit-scrollbar{height:6px}
-.waypoint{flex:0 0 280px;scroll-snap-align:start;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;transition:border-color .3s, background .3s, transform .3s}
+.waypoint{display:block;flex:0 0 280px;scroll-snap-align:start;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;transition:border-color .3s, background .3s, transform .3s;text-decoration:none;color:inherit}
 .waypoint:hover{border-color:var(--hi);background:rgba(255,255,255,.03);transform:translateY(-2px)}
 .waypoint .code{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--hi);margin-bottom:10px}
 .waypoint h4{font-size:18px;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
 .waypoint p{font-size:13px;color:rgba(255,255,255,.6);line-height:1.5}
+.waypoint.is-draft{cursor:default}
+.waypoint.is-draft:hover{border-color:rgba(255,255,255,.08);background:rgba(255,255,255,.025);transform:none}
+.waypoint .tag-draft{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.35);margin-top:10px;display:block}
 
 /* serif statement */
 .statement{font-family:'Newsreader',serif;font-weight:300;font-size:clamp(28px,4vw,52px);line-height:1.15;letter-spacing:-.02em}
@@ -641,36 +644,37 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 
 <div class="fullbleed">
   <div class="trail-scroll">
-    <article class="waypoint">
+    <a class="waypoint" href="#r-reflect">
       <div class="code">▸ WAYPOINT 01 · ACTIVE-SENSE</div>
       <h4>Uncertainty-Driven Active Perception</h4>
       <p>An epistemic uncertainty monitor over VSA resonance directs attention — triggering SPAD or LiDAR fallback only when the scene gets ambiguous.</p>
-    </article>
-    <article class="waypoint">
+    </a>
+    <a class="waypoint" href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener">
       <div class="code">▸ WAYPOINT 02 · SNN-SEG</div>
       <h4>Event Camera SNN Segmentation</h4>
       <p>First unsupervised semantic and instance segmentation SNNs operating directly on DVS event data — no frames, no labels.</p>
-    </article>
-    <article class="waypoint">
+    </a>
+    <a class="waypoint" href="demos/log-polar/index.html">
       <div class="code">▸ WAYPOINT 03 · LOG-POLAR</div>
       <h4>Bio-inspired Retinal Sampling</h4>
       <p>Foveated event cameras for fast attentive tracking with a fraction of the bandwidth.</p>
-    </article>
-    <article class="waypoint">
+    </a>
+    <a class="waypoint" href="index.html#vsa-explorer">
       <div class="code">▸ WAYPOINT 04 · VSA-SBX</div>
       <h4>Vector Symbolic Architecture Sandbox</h4>
       <p>Public sandbox demonstrating bind / unbind / superposition over high-D phase codes.</p>
-    </article>
-    <article class="waypoint">
+    </a>
+    <article class="waypoint is-draft">
       <div class="code">▸ WAYPOINT 05 · PHASE-BIND</div>
       <h4>Holographic Ego-motion Compensation</h4>
       <p>Phase-stable spatial memory under heavy noise injection — a working draft.</p>
+      <span class="tag-draft">◦ unpublished — no demo yet</span>
     </article>
-    <article class="waypoint">
+    <a class="waypoint" href="https://doi.org/10.1038/s44172-025-00555-7" target="_blank" rel="noopener">
       <div class="code">▸ WAYPOINT 06 · SPAD-3D</div>
       <h4>Single-Photon Event-driven Imaging</h4>
       <p>First asynchronous 3D imaging pipeline using single-photon avalanche diodes.</p>
-    </article>
+    </a>
   </div>
 </div>
 
@@ -718,39 +722,39 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 
   <div class="mt-24">
     <div class="font-mono text-[10px] tracking-[.25em] text-white/85 mb-6">▸ ARCHIVE · selected outputs</div>
-    <div class="archive-row">
+    <a class="archive-row" href="https://doi.org/10.1016/j.neucom.2024.128657" target="_blank" rel="noopener">
       <div class="yr">2025</div>
       <div>
         <div class="pap">Spiking Neural Networks for event-based action recognition</div>
         <div class="ven">Neurocomputing · doi.org/10.1016/j.neucom.2024.128657</div>
       </div>
       <div class="arr">▸ open</div>
-    </div>
-    <div class="archive-row">
+    </a>
+    <a class="archive-row" href="https://doi.org/10.1038/s44172-025-00555-7" target="_blank" rel="noopener">
       <div class="yr">2025</div>
       <div>
         <div class="pap">Single-photon event-driven 3D imaging</div>
         <div class="ven">Communications Engineering · doi.org/10.1038/s44172-025-00555-7</div>
       </div>
       <div class="arr">▸ open</div>
-    </div>
-    <div class="archive-row">
+    </a>
+    <a class="archive-row" href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener">
       <div class="yr">2022</div>
       <div>
         <div class="pap">Ultrafast neuromorphic photonic image processing with a VCSEL neuron</div>
         <div class="ven">Scientific Reports · doi.org/10.1038/s41598-022-08703-1</div>
       </div>
       <div class="arr">▸ open</div>
-    </div>
-    <div class="archive-row">
+    </a>
+    <a class="archive-row" href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener">
       <div class="yr">2022</div>
       <div>
         <div class="pap">Unsupervised Spiking Instance Segmentation on Event Data</div>
         <div class="ven">IEEE Trans. Computers · doi.org/10.1109/tc.2022.3191968</div>
       </div>
       <div class="arr">▸ open</div>
-    </div>
-    <div class="text-right mt-6 font-mono text-[10px] tracking-[.2em] text-white/40">+ full Google Scholar archive</div>
+    </a>
+    <a class="text-right mt-6 font-mono text-[10px] tracking-[.2em] text-white/40 hover:text-white/70 block" href="https://scholar.google.com/citations?user=TDvZslYAAAAJ" target="_blank" rel="noopener">+ full Google Scholar archive →</a>
   </div>
 </section>
 
