@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- ============================================================
-     Paul Kirkland — Neuromorphic Systems Researcher
+     Paul Kirkland — Neuromorphic Perception &amp; Cognition
      Base: v7 Interactive Research Hub (full Three.js city scene,
            HUD tracking, SWaP benchmark, phase sandbox, active fallback)
      Added in v8:
@@ -16,39 +16,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paul Kirkland — Neuromorphic Systems Researcher</title>
+    <title>Paul Kirkland — Neuromorphic Perception &amp; Cognition</title>
 
     <!-- SEO / Social meta -->
     <meta name="description" content="Paul Kirkland researches neuromorphic sensing, Vector Symbolic Architectures, and edge AI at Western Sydney University ICNS.">
-    <meta property="og:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
+    <meta property="og:title" content="Paul Kirkland — Neuromorphic Perception &amp; Cognition">
     <meta property="og:description" content="Spiking neural networks and event cameras for real-time autonomous perception at the edge.">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Paul Kirkland — Neuromorphic Systems Researcher">
+    <meta name="twitter:title" content="Paul Kirkland — Neuromorphic Perception &amp; Cognition">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            theme: { extend: { fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] } } }
+            theme: { extend: {
+                fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+                colors: {
+                    /* warm-dark / red re-theme: remap the palette the markup already uses */
+                    cyan:  { 300:'#ea6d82', 400:'#E0445E', 500:'#E0445E', 600:'#c22b45' },
+                    emerald: { 400:'#7CE0C0', 500:'#7CE0C0' },
+                    slate: { 300:'#d3d1c7', 400:'#b4b2a9', 500:'#8a8a86', 700:'#3a3937', 800:'#2a2927', 900:'#1f1e1c', 950:'#141412' }
+                }
+            } }
         }
     </script>
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#020617; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
+        body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
+        ::selection { background:#E0445E; color:#141412; }
+
+        /* The hero opens full-screen: no bar, no chrome. The top bar arrives
+           once the hero stage has been scrolled through, and leaves again if
+           you scroll back up into it. Keyboard focus always brings it back. */
+        .site-chrome { transition:transform .35s ease, opacity .35s ease; }
+        .chrome-hidden { transform:translateY(-110%); opacity:0; pointer-events:none; }
+        .chrome-hidden:focus-within { transform:none; opacity:1; pointer-events:auto; }
+        @media (prefers-reduced-motion: reduce) { .site-chrome { transition:none; } }
+
+        /* The Socratic beats. Each section asks a question the reader thinks
+           they can answer, lets them answer it, then turns it back on them.
+           Spacing does the pacing — the gaps are the pauses. */
+        .ask { font-family:'Playfair Display','Newsreader',Georgia,serif; font-weight:400;
+               font-size:clamp(30px,5vw,52px); line-height:1.1; letter-spacing:-.02em;
+               color:#fff; margin-bottom:2.5rem; }
+        .beat-obvious { font-size:clamp(19px,2.6vw,24px); font-weight:300; line-height:1.5;
+                        color:#d3d1c7; margin-bottom:2.25rem; }
+        .beat { font-size:clamp(16px,2vw,19px); line-height:1.75; color:#b4b2a9;
+                margin-bottom:2.25rem; max-width:62ch; }
+        .beat-turn { font-family:'Playfair Display','Newsreader',Georgia,serif; font-style:italic;
+                     font-weight:400; font-size:clamp(20px,3vw,30px); line-height:1.35;
+                     color:#ededeb; margin-bottom:2.75rem; max-width:34ch; }
+        .landing { font-family:'JetBrains Mono',monospace; font-size:clamp(12px,1.4vw,14px);
+                   font-weight:700; text-transform:uppercase; letter-spacing:.22em;
+                   color:#E0445E; }
+
+        /* Scroll rails: the hero stage catches you at its start and at the
+           fully-formed map, so the transform is hard to skip past by accident.
+           `proximity` (not `mandatory`) keeps it a nudge, never a trap. */
+        html { scroll-snap-type: y proximity; }
+        #hero-scroll, .snap-stop { scroll-snap-align: start; scroll-snap-stop: normal; }
+        @media (prefers-reduced-motion: reduce) { html { scroll-snap-type: none; } }
+
+        /* Hero reveal: feed -> question pops -> identity settles at the bottom */
+        .hero-beat-1, .hero-beat-2 { opacity:0; animation:heroFade .8s ease-out forwards; }
+        .hero-beat-1 { animation-delay:.25s; animation-name:heroPop; animation-duration:.6s; }
+        .hero-beat-2 { animation-delay:1.1s; }
+        @keyframes heroFade { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+        @keyframes heroPop { 0% { opacity:0; transform:scale(.96); } 60% { opacity:1; transform:scale(1.015); } 100% { opacity:1; transform:scale(1); } }
+        @media (prefers-reduced-motion: reduce) { .hero-beat-1, .hero-beat-2 { animation:none; opacity:1; } }
         ::-webkit-scrollbar { width:4px; }
-        ::-webkit-scrollbar-track { background:#020617; }
-        ::-webkit-scrollbar-thumb { background:#22d3ee; }
+        ::-webkit-scrollbar-track { background:#141412; }
+        ::-webkit-scrollbar-thumb { background:#E0445E; }
 
         /* Skip link */
         .skip-link {
             position:fixed; top:-100%; left:1rem; z-index:9999;
-            background:#22d3ee; color:#000; font-weight:700;
+            background:#E0445E; color:#000; font-weight:700;
             padding:.5rem 1rem; border-radius:0 0 4px 4px;
             text-decoration:none; transition:top .2s;
         }
@@ -59,62 +108,64 @@
 
         .hover-glitch:hover { animation:glitch .3s steps(2,end) infinite; }
         @keyframes glitch {
-            0%   { text-shadow: 2px 0 #22d3ee,-2px 0 #f87171; }
-            25%  { text-shadow:-2px 0 #22d3ee, 2px 0 #f87171; clip-path:inset(20% 0 30% 0); }
-            50%  { text-shadow: 3px 0 #a78bfa,-3px 0 #22d3ee; clip-path:inset(50% 0 10% 0); }
-            75%  { text-shadow:-3px 0 #f87171, 3px 0 #a78bfa; clip-path:inset(10% 0 70% 0); }
-            100% { text-shadow: 2px 0 #22d3ee,-2px 0 #f87171; clip-path:inset(0); }
+            0%   { text-shadow: 2px 0 #E0445E,-2px 0 #ededeb; }
+            25%  { text-shadow:-2px 0 #E0445E, 2px 0 #ededeb; clip-path:inset(20% 0 30% 0); }
+            50%  { text-shadow: 3px 0 #a78bfa,-3px 0 #E0445E; clip-path:inset(50% 0 10% 0); }
+            75%  { text-shadow:-3px 0 #ededeb, 3px 0 #a78bfa; clip-path:inset(10% 0 70% 0); }
+            100% { text-shadow: 2px 0 #E0445E,-2px 0 #ededeb; clip-path:inset(0); }
         }
 
         /* HUD */
         #hud-overlay { position:absolute; inset:0; pointer-events:none; z-index:5; overflow:hidden; }
         .hud-slot { position:absolute; opacity:0; transform:translate(-50%,-50%); transition:opacity .075s; will-change:left,top,opacity; }
-        .hud-frame { width:80px; height:80px; border:1px solid rgba(34,211,238,.2); position:relative; }
-        .hud-corner { position:absolute; width:12px; height:12px; border-color:#22d3ee; border-style:solid; }
+        .hud-vec { display:none; gap:1px; margin-top:5px; }
+        .hud-vec i { display:block; width:4px; height:10px; }
+        .hud-sim { display:none; margin-top:3px; letter-spacing:.06em; }
+        .hud-frame { width:80px; height:80px; border:1px solid rgba(224,68,94,.2); position:relative; }
+        .hud-corner { position:absolute; width:12px; height:12px; border-color:#E0445E; border-style:solid; }
         .hud-corner.tl { top:-2px; left:-2px; border-width:2px 0 0 2px; }
         .hud-corner.tr { top:-2px; right:-2px; border-width:2px 2px 0 0; }
         .hud-corner.bl { bottom:-2px; left:-2px; border-width:0 0 2px 2px; }
         .hud-corner.br { bottom:-2px; right:-2px; border-width:0 2px 2px 0; }
-        .hud-info { position:absolute; top:calc(100%+8px); left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:9px; color:#22d3ee; background:rgba(2,6,23,.8); padding:4px 8px; white-space:nowrap; border:1px solid rgba(34,211,238,.2); line-height:1.6; }
+        .hud-info { position:absolute; top:calc(100%+8px); left:50%; transform:translateX(-50%); font-family:'JetBrains Mono',monospace; font-size:9px; color:#E0445E; background:rgba(20,20,18,.8); padding:4px 8px; white-space:nowrap; border:1px solid rgba(224,68,94,.2); line-height:1.6; }
 
         /* Cards */
         .pub-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; transition:all .3s ease; display:flex; flex-direction:column; justify-content:space-between; }
-        .pub-card:hover { border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.04); }
-        .pub-kw { font-size:.6rem; padding:.15rem .45rem; border-radius:3px; background:rgba(34,211,238,.08); border:1px solid rgba(34,211,238,.2); color:#22d3ee; font-family:'JetBrains Mono',monospace; }
-        .partner-card { background:#020617; border:1px solid rgba(255,255,255,.05); border-radius:.75rem; transition:border-color .3s ease; text-align:center; }
-        .partner-card:hover { border-color:rgba(34,211,238,.3); }
-        .partner-card:hover .partner-icon { color:#22d3ee; }
+        .pub-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); }
+        .pub-kw { font-size:.6rem; padding:.15rem .45rem; border-radius:3px; background:rgba(224,68,94,.08); border:1px solid rgba(224,68,94,.2); color:#E0445E; font-family:'JetBrains Mono',monospace; }
+        .partner-card { background:#141412; border:1px solid rgba(255,255,255,.05); border-radius:.75rem; transition:border-color .3s ease; text-align:center; }
+        .partner-card:hover { border-color:rgba(224,68,94,.3); }
+        .partner-card:hover .partner-icon { color:#E0445E; }
         .partner-icon { color:#334155; transition:color .3s ease; }
 
         /* Project cards */
         .project-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; padding:1.5rem; transition:all .3s ease; display:flex; flex-direction:column; gap:.75rem; }
-        .project-card:hover { border-color:rgba(34,211,238,.3); background:rgba(34,211,238,.04); transform:translateY(-2px); }
-        .project-tag { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#22d3ee; background:rgba(34,211,238,.1); display:inline-block; padding:.2rem .5rem; border-radius:3px; width:fit-content; }
+        .project-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); transform:translateY(-2px); }
+        .project-tag { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#E0445E; background:rgba(224,68,94,.1); display:inline-block; padding:.2rem .5rem; border-radius:3px; width:fit-content; }
 
         /* Exhibits */
         .exhibit-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; }
         .pipeline-btn { background:none; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:1rem; transition:opacity .3s; outline:none; padding:.5rem; }
         .pipeline-btn.inactive { opacity:.5; }
         .pipeline-btn:hover { opacity:1; }
-        .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#020617; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
+        .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#141412; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
         .metric-bar { height:6px; border-radius:9999px; transition:width .3s ease, background .3s ease; }
 
         /* Video */
-        .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#020617; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
+        .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#141412; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
         .video-iframe-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
-        .video-poster-ui { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; cursor:pointer; background:rgba(2,6,23,.6); transition:background .2s; }
-        .video-poster-ui:hover { background:rgba(2,6,23,.4); }
-        .play-circle { width:72px; height:72px; border-radius:50%; border:2px solid #22d3ee; background:rgba(34,211,238,.1); display:flex; align-items:center; justify-content:center; transition:background .2s; }
-        .play-circle:hover { background:rgba(34,211,238,.25); }
+        .video-poster-ui { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem; cursor:pointer; background:rgba(20,20,18,.6); transition:background .2s; }
+        .video-poster-ui:hover { background:rgba(20,20,18,.4); }
+        .play-circle { width:72px; height:72px; border-radius:50%; border:2px solid #E0445E; background:rgba(224,68,94,.1); display:flex; align-items:center; justify-content:center; transition:background .2s; }
+        .play-circle:hover { background:rgba(224,68,94,.25); }
 
         /* VSA Explorer canvas */
-        #vsa-canvas { width:100%; height:320px; background:#020617; border-radius:.75rem; border:1px solid rgba(255,255,255,.08); cursor:crosshair; display:block; }
-        .vsa-btn { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.1); border-radius:.5rem; color:#94a3b8; padding:.35rem .7rem; font-size:.72rem; cursor:pointer; font-family:'JetBrains Mono',monospace; transition:all .15s; }
-        .vsa-btn.active { background:rgba(34,211,238,.15); border-color:rgba(34,211,238,.5); color:#22d3ee; }
-        .vsa-btn.danger { border-color:rgba(239,68,68,.3); color:#f87171; }
-        .vsa-btn.danger:hover { background:rgba(239,68,68,.1); }
-        .vsa-trace-bar { height:6px; background:rgba(255,255,255,.06); border-radius:9999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
-        .vsa-trace-fill { height:100%; background:#22d3ee; width:0%; transition:width .3s; }
+        /* VSA Explorer canvas */
+        .vsa-map-canvas { display: block; width: 100%; height: 100%; cursor: crosshair; }
+        .vsa-phase-wheel svg { overflow: visible; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.28)); }
+        .vsa-score-row { display: grid; grid-template-columns: 72px 1fr 46px; gap: 0.75rem; align-items: center; font-size: 12px; }
+        .vsa-score-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+        .vsa-score-fill { height: 100%; border-radius: 999px; transition: width .25s ease; }
 
         /* Mobile menu */
         #mobile-menu { display:none; }
@@ -131,13 +182,17 @@
 <!-- Skip link -->
 <a href="#main-content" class="skip-link">Skip to content</a>
 
+<!-- The chrome starts hidden so it never flashes before the hero; without
+     scripting nothing would ever bring it back, so hand it straight over. -->
+<noscript><style>.chrome-hidden{transform:none;opacity:1;pointer-events:auto}</style></noscript>
+
 <!-- Progress Bar -->
-<div class="fixed top-0 left-0 w-full h-1 z-50 bg-slate-900" aria-hidden="true">
+<div id="progress-shell" class="site-chrome chrome-hidden fixed top-0 left-0 w-full h-1 z-50 bg-slate-900" aria-hidden="true">
     <div id="progress-bar" class="h-full bg-cyan-500 transition-all duration-75" style="width:0%"></div>
 </div>
 
 <!-- NAV -->
-<nav class="fixed top-0 w-full z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/5 mt-1" aria-label="Main navigation">
+<nav id="site-nav" class="site-chrome chrome-hidden fixed top-0 w-full z-40 bg-slate-950/90 backdrop-blur-md border-b border-white/5 mt-1" aria-label="Main navigation">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <button class="flex items-center gap-3" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Scroll to top">
             <div class="w-10 h-10 rounded-lg bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
@@ -149,10 +204,13 @@
             </div>
         </button>
         <div class="hidden md:flex items-center gap-8 text-xs font-bold uppercase tracking-widest text-slate-400">
-            <a href="#about"        class="hover:text-cyan-400 transition-colors">Overview</a>
+            <a href="#about"        class="hover:text-cyan-400 transition-colors">Perception</a>
+            <a href="#cognition"    class="hover:text-cyan-400 transition-colors">Cognition</a>
             <a href="#projects"     class="hover:text-cyan-400 transition-colors">Projects</a>
             <a href="#exhibits"     class="hover:text-cyan-400 transition-colors">Research Hub</a>
             <a href="#publications" class="hover:text-cyan-400 transition-colors">Outputs</a>
+            <a href="cognitive_map.html" class="hover:text-cyan-400 transition-colors">Cognitive Map</a>
+            <a href="how-you-see/" class="hover:text-cyan-400 transition-colors">How You See</a>
             <a href="#contact" class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Let's Talk</a>
         </div>
         <!-- Mobile hamburger -->
@@ -166,59 +224,120 @@
 
 <!-- Mobile menu -->
 <nav id="mobile-menu" class="fixed top-[81px] inset-x-0 z-30 flex-col gap-6 bg-slate-950/97 border-b border-white/5 px-8 py-8 backdrop-blur-md" aria-label="Mobile navigation">
-    <a href="#about"        class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Overview</a>
+    <a href="#about"        class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Perception</a>
+    <a href="#cognition"    class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Cognition</a>
     <a href="#projects"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Projects</a>
     <a href="#exhibits"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Research Hub</a>
     <a href="#publications" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Outputs</a>
+    <a href="cognitive_map.html" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Cognitive Map</a>
+    <a href="how-you-see/" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">How You See</a>
     <a href="#contact"      class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Contact</a>
 </nav>
 
 <!-- HERO -->
-<section class="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-slate-950" aria-labelledby="hero-heading">
+<section id="hero-scroll" class="relative h-[240vh] md:h-[340vh]" aria-labelledby="hero-heading">
+<div id="hero-sticky" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-black">
     <div class="absolute inset-0 z-0" style="opacity:.8">
         <div id="three-canvas" aria-hidden="true"></div>
-        <div id="hud-overlay" aria-hidden="true">
-            <div class="hud-slot" id="hud-0"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-1"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-2"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-3"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-            <div class="hud-slot" id="hud-4"><div class="hud-frame"><div class="hud-corner tl"></div><div class="hud-corner tr"></div><div class="hud-corner bl"></div><div class="hud-corner br"></div></div><div class="hud-info">OBJ_SEM: <span class="hud-type font-bold text-white"></span><br>DIST: <span class="hud-dist font-bold text-white"></span>m<br>VSA_BIND: <span class="target-bind text-emerald-400">STABLE</span></div></div>
-        </div>
-    </div>
-    <div class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center mt-12 pointer-events-none">
-        <h1 id="hero-heading" class="hover-glitch text-6xl md:text-8xl lg:text-[7rem] font-black tracking-tighter mb-4 text-white leading-none uppercase select-none drop-shadow-2xl">
-            Embodied<br/>Intelligence
+        <div id="hud-overlay" aria-hidden="true"></div>
+            </div>
+    <!-- legibility vignette: sits over the feed + HUD, under the text -->
+    <div id="hero-vignette" class="absolute inset-0 z-[5] pointer-events-none" style="transition:opacity .3s;background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
+
+    <div id="hero-copy" class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none" style="transform:translateY(7vh)">
+        <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
+            How do <span class="text-cyan-400">you</span><br/>see the world?
         </h1>
-        <div class="text-xl md:text-3xl text-cyan-400 font-light tracking-wide mb-12 italic drop-shadow-md bg-slate-950/20 px-6 py-2 rounded-2xl backdrop-blur-sm">
-            Continuous neuro-symbolic architectures.
-        </div>
     </div>
-    <div class="absolute bottom-6 flex flex-col items-center gap-4 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-400 z-20">
-        <button class="animate-pulse" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})" aria-label="Scroll to overview">Scroll</button>
-        <div class="w-px h-12 bg-gradient-to-b from-cyan-500 to-transparent" aria-hidden="true"></div>
-        <span class="opacity-50 tracking-[0.4em] pointer-events-none text-center">[ Move mouse rapidly for ego-motion noise ]</span>
+    <div id="hero-identity" class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
+        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
+        <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
+        <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
     </div>
+
+    <div id="map-legend" class="absolute z-10 left-6 md:left-10 top-24 pointer-events-none font-mono" style="opacity:0;transition:opacity .3s">
+        <div id="q-mode" class="text-[9px] font-bold uppercase tracking-[0.28em] text-slate-500">Query · unbind by</div>
+        <div id="q-token" class="text-sm md:text-base font-bold text-white mt-1">—</div>
+        <div class="mt-3 h-1.5 w-28 md:w-36" style="background:linear-gradient(to right,#1a3a85,#141412,#E0445E,#FFB000)"></div>
+        <div class="flex justify-between w-28 md:w-36 mt-1 text-[9px] uppercase tracking-[0.14em] text-slate-500"><span>−</span><span>similarity</span><span>+</span></div>
+        <div class="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-600 max-w-[9rem] leading-relaxed">Hover a landmark to unbind by it — its kind answers too</div>
+    </div>
+
+    <div id="map-scrim" class="absolute inset-x-0 bottom-0 z-[6] pointer-events-none" aria-hidden="true"
+         style="opacity:0;height:56%;transition:opacity .3s;background:linear-gradient(to top,rgba(8,8,7,.97) 0%,rgba(8,8,7,.9) 30%,rgba(8,8,7,.55) 60%,transparent 100%)"></div>
+
+    <div id="map-caption" class="absolute z-10 inset-x-0 bottom-10 md:bottom-14 flex flex-col items-center gap-4 text-center px-6 pointer-events-none" style="opacity:0">
+        <h2 class="text-4xl md:text-6xl lg:text-[4.25rem] font-normal tracking-tight text-white leading-[1.06] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
+            How do <span class="text-cyan-400">you</span> map the world?
+        </h2>
+        <p class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Landmarks bound to places · query the vector · read where it peaks</p>
+    </div>
+</div>
+<div class="snap-stop absolute bottom-0 left-0 w-px h-screen pointer-events-none" aria-hidden="true"></div>
 </section>
+
 
 <main id="main-content">
 
-<!-- ABOUT -->
-<section id="about" class="py-32 px-6 max-w-4xl mx-auto text-center" aria-labelledby="about-heading">
-    <h2 id="about-heading" class="text-3xl md:text-5xl font-black mb-10 tracking-tight">Pioneering Embodied Resilience in Extreme Environments</h2>
-    <p class="text-lg md:text-2xl text-slate-400 font-light leading-relaxed mb-12">
-        My research portfolio focuses on translating chaotic event streams into resilient robotic spatial awareness. By bridging biologically-inspired neuromorphic perception with discrete symbolic reasoning, I am building the foundational architectures for autonomous systems that <strong class="text-white">sense less to understand more</strong>.
+<!-- 01 · SEEING → PERCEPTION -->
+<section id="about" class="py-28 md:py-36 px-6 max-w-3xl mx-auto" aria-labelledby="about-heading">
+    <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400 mb-6">Perception</p>
+    <h2 id="about-heading" class="ask">How do <span class="text-cyan-400">you</span> see the world?</h2>
+
+    <p class="beat-obvious">You might say: with your eyes.</p>
+    <p class="beat">But your eyes don't record the world. You respond to <em class="text-white not-italic font-medium">change</em>. You move your attention. You discard almost everything you are given — and from those incomplete signals your brain builds a model good enough to act on.</p>
+    <p class="beat-turn">So what happens if we build machines that meet the same problem the same way?</p>
+
+    <p class="landing">→ Neuromorphic perception</p>
+</section>
+
+<!-- 02 · MAPPING → COGNITION -->
+<section id="cognition" class="py-28 md:py-36 px-6 max-w-3xl mx-auto border-t border-white/5" aria-labelledby="cognition-heading">
+    <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400 mb-6">Cognition</p>
+    <h2 id="cognition-heading" class="ask">How do <span class="text-cyan-400">you</span> map the world?</h2>
+
+    <p class="beat-obvious">Probably not by keeping a perfect reconstruction of everything you have ever seen.</p>
+    <p class="beat">You remember what was there, where it was, what it was near, and roughly when you saw it. You know where the door is without looking at it. That is a <em class="text-white not-italic font-medium">cognitive map</em> — and it is the thing a robot with a perfect point cloud still does not have.</p>
+    <p class="beat-turn">So we build the memory the same way: bind what to where, and query it later.</p>
+
+    <p class="landing">→ Cognitive maps · VSA memory</p>
+</section>
+
+<!-- THE HINGE -->
+<section class="pb-24 px-6 max-w-3xl mx-auto text-center" aria-label="What this research is">
+    <p class="text-xl md:text-3xl font-light text-slate-300 leading-snug">
+        Perception <span class="text-cyan-400 font-normal">&amp;</span> Cognition — the work is the part in between:
+        <span class="text-white">turning what changed into what you know.</span>
     </p>
-    <a href="#exhibits" class="inline-flex items-center gap-2 text-cyan-400 font-bold uppercase tracking-widest text-sm hover:text-white transition-colors pb-1 border-b border-cyan-400/30 hover:border-white">
-        Explore Interactive Exhibits
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-    </a>
+    <p class="text-sm md:text-base text-slate-500 font-light leading-relaxed mt-8">
+        In practice that means translating chaotic event streams into resilient spatial awareness — bridging neuromorphic perception with symbolic reasoning, for autonomous systems that <strong class="text-slate-300 font-medium">sense less to understand more</strong>.
+    </p>
+</section>
+
+<!-- EXPLORE -->
+<section id="explore" class="py-16 px-6 max-w-5xl mx-auto" aria-labelledby="explore-heading">
+    <h2 id="explore-heading" class="sr-only">Explore</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <a href="how-you-see/" class="project-card hover:no-underline" aria-label="How do you see the world — cognitive maps explainer">
+            <span class="project-tag">Explainer · Start Here</span>
+            <h3 class="text-lg font-bold tracking-tight text-white">How do <span class="italic text-cyan-400">you</span> see the world?</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">You already run a cognitive map. A short, plain-language walk through how one works — and how a robot borrows the trick with what + where vectors.</p>
+            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Read the explainer →</span>
+        </a>
+        <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
+            <span class="project-tag">Interactive · Deep Dive</span>
+            <h3 class="text-lg font-bold tracking-tight text-white">The cognitive map, live</h3>
+            <p class="text-sm text-slate-400 leading-relaxed">An interactive atlas of the research programme — event vision, VSA memory, and active perception, each with a demo you can drive.</p>
+            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Open the atlas →</span>
+        </a>
+    </div>
 </section>
 
 <!-- FEATURED PROJECTS -->
 <section id="projects" class="py-24 px-6 max-w-7xl mx-auto" aria-labelledby="projects-heading">
     <div class="text-center mb-16">
-        <h2 id="projects-heading" class="text-4xl font-black mb-4">Featured Projects</h2>
-        <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Future Research &amp; Existing Work</p>
+        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Projects · Future research &amp; existing work</p>
+        <h2 id="projects-heading" class="text-4xl font-black">Featured projects</h2>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -272,8 +391,8 @@
 <!-- INTERACTIVE RESEARCH HUB -->
 <section id="exhibits" class="py-24 px-6 max-w-7xl mx-auto space-y-12" aria-labelledby="exhibits-heading">
     <div class="text-center mb-20">
-        <h2 id="exhibits-heading" class="text-4xl font-black mb-4">Interactive Research Hub</h2>
-        <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Live Demonstrations of Core Mechanisms</p>
+        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Exhibits · Live demonstrations of core mechanisms</p>
+        <h2 id="exhibits-heading" class="text-4xl font-black">Interactive research hub</h2>
     </div>
 
     <!-- Exhibit 1: Neuro-Symbolic Pipeline -->
@@ -314,9 +433,9 @@
             </div>
             <div class="font-mono text-cyan-400 font-bold" id="vel-display" aria-live="polite">10 m/s</div>
         </div>
-        <input type="range" min="0" max="100" value="10" id="vel-slider" class="w-full mb-8" style="accent-color:#22d3ee;cursor:ew-resize" aria-label="Ego-motion velocity">
+        <input type="range" min="0" max="100" value="10" id="vel-slider" class="w-full mb-8" style="accent-color:#E0445E;cursor:ew-resize" aria-label="Ego-motion velocity">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="cnn-card" class="p-8 rounded-2xl border border-white/5 transition-colors duration-500" style="background:#020617">
+            <div id="cnn-card" class="p-8 rounded-2xl border border-white/5 transition-colors duration-500" style="background:#141412">
                 <h4 class="text-sm font-bold uppercase tracking-widest text-slate-500 mb-8">Conventional Frame-Based Stack</h4>
                 <div class="space-y-6">
                     <div>
@@ -391,7 +510,7 @@
             <div class="h-32 bg-slate-950 rounded-xl border border-white/10 relative p-4 flex items-end">
                 <div class="absolute left-0 w-full h-px border-t border-dashed border-red-500/50" style="top:20%"></div>
                 <div class="absolute left-4 text-[9px] font-mono text-red-500" style="top:calc(20% - 16px)">AMBIGUITY THRESHOLD (80%)</div>
-                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#22d3ee,#ef4444)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                <div id="fallback-bar" class="w-16 rounded-t transition-all duration-300" style="height:20%;background:linear-gradient(to top,#3B9BFF,#E0445E)" role="meter" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
                 <div class="ml-6 font-mono text-3xl font-light text-white">
                     <span id="fallback-pct">20.0</span>% <span class="text-[10px] text-slate-500">UNCERTAINTY</span>
                 </div>
@@ -400,62 +519,88 @@
     </div>
 
     <!-- Exhibit 4: VSA Explorer (new in v8) -->
+    <!-- Exhibit 4: VSA Explorer (new in v8) -->
     <div class="exhibit-card p-8" id="vsa-explorer" aria-labelledby="vsa-heading">
-        <div class="mb-8">
-            <h4 id="vsa-heading" class="text-xl font-black uppercase tracking-tight mb-1">VSA Explorer — Agent Encoding</h4>
-            <p class="text-sm text-slate-400 max-w-2xl">Click the map to <strong class="text-white">place agents</strong> — each is bound into a superposition hypervector (Domain ⊗ Val ⊕ Mobility ⊗ Val). Switch to <strong class="text-white">Query Loc</strong> or <strong class="text-white">Query Item</strong> to decode the memory. The phase wheel tracks mean superposition angle.</p>
+        <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h3 id="vsa-title" class="text-2xl font-black text-white">Neuro-symbolic VSA sandbox</h3>
+            <p class="mt-2 max-w-3xl text-sm leading-7 text-slate-300">
+              Agents are constructed dynamically: <code class="rounded bg-white/5 px-1.5 py-0.5 text-cyan-300">Agent = (Domain ⊗ Val) ⊕ (Mobility ⊗ Val)</code>.
+              When retrieving from the noisy superposition trace, the signal is passed through an associative clean-up memory to recover exact semantic features.
+            </p>
+          </div>
+          <button id="vsa-reset" class="shrink-0 inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-cyan-400 hover:bg-cyan-500/20 transition-colors">
+            Hard Reset
+          </button>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-2">
-                <canvas id="vsa-canvas" aria-label="VSA agent placement map — click to encode agents"></canvas>
+
+        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-6 flex flex-col md:flex-row items-center gap-6">
+            <div class="flex-1 w-full">
+              <h4 class="mb-2 flex items-center gap-2 text-sm font-bold uppercase tracking-[0.18em] text-purple-400">Phase encoding</h4>
+              <p class="mb-4 text-xs leading-relaxed text-slate-400">
+                Spatial coordinates are lifted into high-dimensional phase vectors.
+              </p>
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-mono text-slate-500">x=</span>
+                <input id="vsa-inspector-range" type="range" min="-10" max="10" step="0.1" value="2.5" class="flex-1 accent-purple-500" style="height:4px;background:rgba(255,255,255,0.1);border-radius:999px;appearance:none;" />
+                <span id="vsa-inspector-value" class="text-xs font-mono text-purple-400">2.5</span>
+              </div>
             </div>
-            <div class="flex flex-col gap-4">
-                <!-- Mode -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Mode</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-mode-place"      onclick="vsaSetMode('place')">Place</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-loc"  onclick="vsaSetMode('query_loc')">Query Loc</button>
-                        <button class="vsa-btn"        id="vsa-mode-query-item" onclick="vsaSetMode('query_item')">Query Item</button>
-                    </div>
-                </div>
-                <!-- Agent type -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Agent Type</div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button class="vsa-btn active" id="vsa-agent-DRONE"  onclick="vsaSetAgent('DRONE')"  style="border-color:rgba(34,211,238,.4)">DRONE</button>
-                        <button class="vsa-btn"        id="vsa-agent-ROVER"  onclick="vsaSetAgent('ROVER')"  style="border-color:rgba(0,255,136,.3)">ROVER</button>
-                        <button class="vsa-btn"        id="vsa-agent-SENSOR" onclick="vsaSetAgent('SENSOR')" style="border-color:rgba(168,85,247,.3)">SENSOR</button>
-                        <button class="vsa-btn"        id="vsa-agent-RELAY"  onclick="vsaSetAgent('RELAY')"  style="border-color:rgba(248,113,113,.3)">RELAY</button>
-                    </div>
-                </div>
-                <!-- Phase wheel -->
-                <div>
-                    <div class="text-[10px] font-mono text-slate-500 uppercase tracking-widest mb-2">Superposition Phase</div>
-                    <svg id="phase-wheel-svg" viewBox="0 0 120 120" class="w-28" aria-label="Phase wheel">
-                        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(34,211,238,.12)" stroke-width="2"/>
-                        <circle cx="60" cy="60" r="35" fill="none" stroke="rgba(34,211,238,.06)" stroke-width="1"/>
-                        <line id="phase-needle" x1="60" y1="60" x2="110" y2="60" stroke="#22d3ee" stroke-width="2" stroke-linecap="round"/>
-                        <circle cx="60" cy="60" r="4" fill="#22d3ee"/>
-                        <text x="60" y="118" text-anchor="middle" fill="rgba(34,211,238,.4)" font-size="9" font-family="monospace">0°</text>
-                    </svg>
-                    <div class="vsa-trace-bar mt-2"><div class="vsa-trace-fill" id="vsa-trace-fill"></div></div>
-                    <div class="text-[11px] font-mono text-slate-500 mt-1" id="vsa-status" aria-live="polite">0 agents encoded</div>
-                </div>
-                <!-- Reset -->
-                <button class="vsa-btn danger" onclick="vsaHardReset()">⟳ Hard Reset</button>
+            <div id="phase-wheel" class="vsa-phase-wheel w-32 shrink-0"></div>
+          </div>
+
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-6 flex flex-col justify-center">
+            <div class="mb-4 flex items-center justify-between">
+              <h4 class="text-sm font-bold uppercase tracking-[0.18em] text-cyan-400">Superposition trace</h4>
+              <span id="vsa-dim" class="rounded bg-slate-800 px-2 py-1 text-xs font-mono text-slate-400">D=1024</span>
             </div>
+            <div class="mb-3 h-2.5 w-full overflow-hidden rounded-full bg-slate-900">
+              <div id="vsa-trace-bar" class="h-full bg-cyan-400 transition-all duration-300" style="width:0%"></div>
+            </div>
+            <p class="text-xs text-slate-400">
+              <strong id="vsa-item-count" class="text-white">0</strong> robotic agents mathematically bundled into a single high-dimensional memory trace.
+            </p>
+            <p id="vsa-status" class="mt-3 text-xs text-slate-500"></p>
+          </div>
+        </div>
+
+        <div class="grid min-h-[560px] grid-cols-1 gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2 flex flex-col space-y-4">
+            <div class="rounded-xl border border-white/8 bg-slate-950 p-2 flex flex-wrap items-center justify-between gap-3">
+              <div class="flex rounded-lg bg-slate-900 p-1">
+                <button data-vsa-mode="place" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-cyan-400 bg-white/10">Encode</button>
+                <button data-vsa-mode="query_loc" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200">Decode Map</button>
+                <button data-vsa-mode="query_item" class="px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider text-slate-400 hover:text-slate-200">Scan Concept</button>
+              </div>
+              <div id="vsa-type-buttons" class="flex flex-wrap gap-2 px-2"></div>
+            </div>
+
+            <div class="relative flex-1 overflow-hidden rounded-2xl border border-white/8 bg-slate-950 min-h-[460px]">
+              <canvas id="vsa-map-canvas" class="vsa-map-canvas"></canvas>
+              <div id="vsa-map-hint" class="pointer-events-none absolute left-4 top-4 rounded-full border border-white/10 bg-slate-950/80 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400 backdrop-blur-sm">
+                Click the grid to encode agents into the memory trace
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-white/8 bg-slate-950 p-5 flex flex-col">
+            <h4 class="mb-4 flex items-center gap-2 border-b border-white/10 pb-3 text-sm font-bold uppercase tracking-[0.18em] text-white">
+              Pipeline Inspector
+            </h4>
+            <div id="vsa-inspector" class="flex-1"></div>
+          </div>
         </div>
     </div>
 </section>
 
 <!-- VIDEO — lazy-loaded -->
 <section class="py-24 bg-slate-900 border-y border-white/5 relative overflow-hidden mt-20" aria-labelledby="video-heading">
-    <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(34,211,238,.08) 0%,transparent 70%);" aria-hidden="true"></div>
+    <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(224,68,94,.08) 0%,transparent 70%);" aria-hidden="true"></div>
     <div class="max-w-6xl mx-auto px-6 relative z-10">
         <div class="text-center mb-12">
-            <h2 class="text-xs font-bold text-cyan-500 uppercase tracking-[0.3em] mb-2">Simulated Deployment</h2>
-            <h3 id="video-heading" class="text-3xl font-black">Benefits of Event-Based Vision</h3>
+            <h2 class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Watch · Simulated deployment</h2>
+            <h3 id="video-heading" class="text-3xl font-black">Benefits of event-based vision</h3>
         </div>
         <div class="video-iframe-wrap" id="video-shell">
             <!-- Lazy poster — replaced by iframe on click -->
@@ -472,8 +617,8 @@
 <!-- PUBLICATIONS -->
 <section id="publications" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/5" aria-labelledby="pubs-heading">
     <div class="text-center mb-16">
-        <h2 id="pubs-heading" class="text-4xl font-black mb-4">Research Archives</h2>
-        <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Selected Key Outputs</p>
+        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Outputs · Selected key publications</p>
+        <h2 id="pubs-heading" class="text-4xl font-black">Research archives</h2>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -532,8 +677,8 @@
 <section class="py-24 border-y border-white/5" style="background:rgba(255,255,255,.03)" aria-labelledby="partners-heading">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-            <h2 id="partners-heading" class="text-3xl font-black mb-4">Affiliations &amp; Partners</h2>
-            <p class="text-sm text-slate-400 uppercase tracking-[0.2em]">Supported by leading institutions</p>
+            <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Network · Supported by leading institutions</p>
+            <h2 id="partners-heading" class="text-3xl font-black">Affiliations &amp; partners</h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             <div class="partner-card p-10">
@@ -551,7 +696,7 @@
 </section>
 
 <!-- CTA -->
-<section id="contact" class="py-32 text-center px-6" style="background:#22d3ee;color:#000" aria-labelledby="contact-heading">
+<section id="contact" class="py-32 text-center px-6" style="background:#A20C32;color:#f4f1ea" aria-labelledby="contact-heading">
     <h2 id="contact-heading" class="text-5xl md:text-7xl font-black mb-8 tracking-tighter">Interested?</h2>
     <p class="text-lg md:text-2xl font-medium mb-12 max-w-2xl mx-auto" style="opacity:.8">Looking to collaborate on neuro-symbolic AI or apply these frameworks to real-world edge robotics?</p>
     <a href="mailto:p.kirkland@westernsydney.edu.au" class="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-bold uppercase tracking-widest text-sm rounded-full hover:scale-105 hover:shadow-2xl transition-all">
@@ -612,19 +757,62 @@
 
 <script>
 // ── SCROLL PROGRESS ───────────────────────────────────────────────────
-let scrollProgress = 0;
+let scrollProgress = 0, heroProgress = 0, rectCacheDirty = false;
+/* eased 0..1 ramp between two thresholds */
+function smooth01(v, a, b) {
+    const t = Math.max(0, Math.min(1, (v - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+}
 (function () {
     const bar = document.getElementById('progress-bar');
     let ticking = false;
+
+    function update() {
+        const t = document.documentElement.scrollTop;
+        const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        scrollProgress = h > 0 ? (t / h) * 100 : 0;
+        bar.style.width = scrollProgress + '%';
+
+        /* hero stage progress: 0 = flying through events, 1 = plan view */
+        const stage = document.getElementById('hero-scroll');
+        /* no hero on the page means no reason to hide the chrome */
+        let showChrome = true;
+        if (stage) {
+            const r = stage.getBoundingClientRect();
+            const span = r.height - window.innerHeight;
+            heroProgress = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
+            const copy = document.getElementById('hero-copy');
+            const ident = document.getElementById('hero-identity');
+            const cap = document.getElementById('map-caption');
+            /* 0-.20 hero copy leaves · .28-.60 the map resolves ·
+               .60-.74 it holds alone · .68-.86 scrim then text arrive ·
+               .86-1 the text simply sits there before the stage lets go */
+            const out = 1 - smooth01(heroProgress, 0, .20);
+            if (copy) copy.style.opacity = out;
+            if (ident) ident.style.opacity = out;
+            if (cap) cap.style.opacity = smooth01(heroProgress, .74, .86);
+            const scrim = document.getElementById('map-scrim');
+            if (scrim) scrim.style.opacity = smooth01(heroProgress, .68, .84);
+            const vig = document.getElementById('hero-vignette');
+            if (vig) vig.style.opacity = 1 - smooth01(heroProgress, .26, .56) * .68;
+            showChrome = heroProgress > .995;
+        }
+        /* chrome returns once the stage has fully played */
+        document.querySelectorAll('.site-chrome').forEach(el => {
+            el.classList.toggle('chrome-hidden', !showChrome);
+        });
+        rectCacheDirty = true;
+        ticking = false;
+    }
+
+    /* run once now: the page can load already scrolled (restored position,
+       or a deep link), and then no scroll event ever fires */
+    update();
+    window.addEventListener('load', update);
+
     window.addEventListener('scroll', () => {
         if (!ticking) {
-            window.requestAnimationFrame(() => {
-                const t = document.documentElement.scrollTop;
-                const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                scrollProgress = h > 0 ? (t / h) * 100 : 0;
-                bar.style.width = scrollProgress + '%';
-                ticking = false;
-            });
+            window.requestAnimationFrame(update);
             ticking = true;
         }
     }, { passive: true });
@@ -678,21 +866,21 @@ let scrollProgress = 0;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     container.appendChild(renderer.domElement);
 
-    const vsaRings = new THREE.Group();
-    for (let i = 1; i <= 5; i++) {
-        const g = new THREE.RingGeometry(i * 2 - .05, i * 2 + .05, 64);
-        const m = new THREE.MeshBasicMaterial({ color: 0xa855f7, side: THREE.DoubleSide, transparent: true, opacity: 0 });
-        vsaRings.add(new THREE.Mesh(g, m));
-    }
-    vsaRings.position.set(0, 5, -20);
-    scene.add(vsaRings);
+    /* WHERE YOU ARE — one quiet marker, no rings around it. */
+    const selfDot = new THREE.Mesh(
+        new THREE.CircleGeometry(.6, 24),
+        new THREE.MeshBasicMaterial({ color: 0x7CE0C0, transparent: true, opacity: 0 })
+    );
+    selfDot.rotation.x = -Math.PI / 2;
+    selfDot.position.set(0, .02, -22);
+    scene.add(selfDot);
 
-    const edgePoints = [], phasorPoints = [], edgeColors = [];
+    const edgePoints = [], edgeColors = [];
     const targetCenters = [];
     const WORLD_DEPTH = 100;
     const upVec = new THREE.Vector3(0, 1, 0);
 
-    function addShapeEdges(geo, ox, oy, oz, rotY, phase, density) {
+    function addShapeEdges(geo, ox, oy, oz, rotY, density) {
         geo.rotateY(rotY); geo.translate(ox, oy, oz);
         const edges = new THREE.EdgesGeometry(geo);
         const arr = edges.attributes.position.array;
@@ -707,55 +895,64 @@ let scrollProgress = 0;
             const SEP = 0.12;
             for (let k = 0; k < n; k++) {
                 const t = Math.random();
-                const isOn = (k & 1) === 0;
+                const isOn = (k % 2) === 0; // half tight blue leading edge, half orange tail
                 const side = isOn ? SEP : -SEP;
+                /* Apparent motion is +z (world streams past the camera).
+                   ON  = blue,   brightness rising at the leading edge — tight band.
+                   OFF = orange, brightness falling behind it — a longer decaying tail. */
+                const decay = Math.pow(Math.random(), .6);
+                const tail = isOn ? .12 : -decay * 2.2;
+                const fade = isOn ? 1 : 1 - decay * .55;   // tail dims as it ages
                 edgePoints.push(
-                    v1.x + (v2.x - v1.x) * t + perp.x * side + (Math.random() - .5) * .06,
-                    v1.y + (v2.y - v1.y) * t + perp.y * side + (Math.random() - .5) * .06,
-                    v1.z + (v2.z - v1.z) * t + perp.z * side + (Math.random() - .5) * .06
+                    v1.x + (v2.x - v1.x) * t + perp.x * side * .35 + (Math.random() - .5) * .06,
+                    v1.y + (v2.y - v1.y) * t + perp.y * side * .35 + (Math.random() - .5) * .06,
+                    v1.z + (v2.z - v1.z) * t + perp.z * side * .35 + tail + (Math.random() - .5) * .06
                 );
-                if (isOn) edgeColors.push(1.0, .1, .1);
-                else      edgeColors.push(.05, .2, 1.0);
-                const r = Math.random() * 8 + 2;
-                phasorPoints.push(Math.cos(phase) * r, Math.sin(phase) * r + 5, -20);
+                if (isOn) edgeColors.push(.23, .61, 1.0);
+                else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
             }
         }
         geo.dispose(); edges.dispose();
     }
 
+    const nameSeq = { house: 0, vehicle: 0, sign: 0, tower: 0 };
+    const pad = n => (n < 10 ? '0' : '') + n;
     for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
         if (Math.random() > .2) {
-            const ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           ph, 12);
-            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, ph, 12);
-            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'STRUCTURE' });
+            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           30);
+            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, 30);
+            targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .2) {
-            const ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           ph, 12);
-            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, ph, 12);
-            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'STRUCTURE' });
+            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           30);
+            addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, 30);
+            targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .4) {
-            const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5, ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, ph, 15);
-            addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, ph, 15);
-            targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE' });
+            const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5;
+            addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, 36);
+            addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, 36);
+            targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE', name: 'vehicle_' + pad(++nameSeq.vehicle) });
         }
         if (Math.random() > .5) {
-            const sx = (Math.random() > .5 ? -5.5 : 5.5), sz = z + 7, ph = Math.random() * Math.PI * 2;
-            addShapeEdges(new THREE.CylinderGeometry(.05, .05, 4, 6), sx, 2,   sz, 0, ph, 20);
-            addShapeEdges(new THREE.BoxGeometry(1.5, 1, .1),          sx, 4.5, sz, 0, ph, 20);
-            targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE' });
+            const sx = (Math.random() > .5 ? -5.5 : 5.5), sz = z + 7;
+            addShapeEdges(new THREE.CylinderGeometry(.05, .05, 4, 6), sx, 2,   sz, 0, 20);
+            addShapeEdges(new THREE.BoxGeometry(1.5, 1, .1),          sx, 4.5, sz, 0, 20);
+            targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE', name: 'sign_' + pad(++nameSeq.sign) });
+        }
+        /* outer landmarks: sparse, and they give the plan view its width */
+        if (Math.random() > .45) {
+            const ox = (Math.random() > .5 ? -1 : 1) * (16 + Math.random() * 6), oz = z + 3;
+            addShapeEdges(new THREE.BoxGeometry(3, 5, 3), ox, 2.5, oz, 0, 16);
+            targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'TOWER', name: 'tower_' + pad(++nameSeq.tower) });
         }
     }
 
-    const TOTAL = Math.max(edgePoints.length / 3, 20000);
+    const TOTAL = edgePoints.length / 3 + 6000;  // always add sparse sensor-noise speckle
     for (let i = edgePoints.length / 3; i < TOTAL; i++) {
         edgePoints.push((Math.random() - .5) * 60, Math.random() * 20, -Math.random() * WORLD_DEPTH);
-        if (Math.random() > .5) edgeColors.push(.05, .2, 1.0);
-        else edgeColors.push(1.0, .1, .1);
-        phasorPoints.push((Math.random() - .5) * .5, (Math.random() - .5) * .5 + 5, -20);
+        if (Math.random() > .4) edgeColors.push(.23, .61, 1.0);
+        else edgeColors.push(1.0, .55, .26);
     }
 
     const FC = edgePoints.length / 3;
@@ -763,15 +960,163 @@ let scrollProgress = 0;
     const geo = new THREE.BufferGeometry();
     geo.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
     geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeColors, 3));
-    const mat = new THREE.PointsMaterial({ size: .08, vertexColors: true, transparent: true, opacity: .8, blending: THREE.AdditiveBlending, depthWrite: false });
+    const mat = new THREE.PointsMaterial({ size: 2.6, sizeAttenuation: false, vertexColors: true, transparent: true, opacity: .95, blending: THREE.NormalBlending, depthWrite: false });
     scene.add(new THREE.Points(geo, mat));
 
-    let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0;
+    /* Polarity is a property of change. Once events are bound into a map
+       there is nothing changing, so the two colours collapse to one ink. */
+    const colAttr = geo.attributes.color;
+    const origColors = Float32Array.from(colAttr.array);
+    const INK = [.86, .85, .83];
+    let lastInk = -1;
+    function updateInk(k) {
+        if (Math.abs(k - lastInk) < .004) return;
+        lastInk = k;
+        const a = colAttr.array;
+        for (let i = 0; i < a.length; i++) a[i] = origColors[i] + (INK[i % 3] - origColors[i]) * k;
+        colAttr.needsUpdate = true;
+    }
+
+    /* Each point starts its collapse at a slightly different moment, so the
+       map accumulates instead of snapping into place. */
+    const stagger = new Float32Array(FC);
+    for (let i = 0; i < FC; i++) stagger[i] = Math.random() * .3;
+    const noiseStart = FC - 6000;   // background speckle: transient, never bound
+
+    /* ── WHAT IS WHERE ────────────────────────────────────────────────────
+       A cognitive map is not a picture: it is landmarks, your own place
+       among them, and a belief about where each one is. Query the map for a
+       landmark and you get back a distribution with a peak, not a
+       coordinate — so each landmark carries a cloud whose density IS its
+       positional certainty, tightest at the estimate and fraying outward. */
+    const mapGroup = new THREE.Group();
+    mapGroup.visible = false;
+    scene.add(mapGroup);
+
+    /* Every landmark carries an object vector, deterministic so the strip in
+       its label never flickers. It is mostly its CLASS with a little instance
+       identity mixed in, which is the whole point: two towers unbind alike
+       without being the same thing. Query one and its siblings answer too. */
+    const HV_D = 16;
+    function lcgVec(seed) {
+        const v = new Float32Array(HV_D);
+        let x = ((seed * 9301 + 49297) % 233280 + 233280) % 233280;
+        for (let i = 0; i < HV_D; i++) { x = (x * 9301 + 49297) % 233280; v[i] = x / 233280 * 2 - 1; }
+        return v;
+    }
+    function unit(v) {
+        let n = 0;
+        for (let i = 0; i < v.length; i++) n += v[i] * v[i];
+        n = Math.sqrt(n) || 1;
+        for (let i = 0; i < v.length; i++) v[i] /= n;
+        return v;
+    }
+    function dot(a, b) {
+        let d = 0;
+        for (let i = 0; i < a.length; i++) d += a[i] * b[i];
+        return d;
+    }
+    const CLASS_SEED = { HOUSE: 11, VEHICLE: 27, SIGNAGE: 43, TOWER: 59 };
+    const classHV = {};
+    Object.keys(CLASS_SEED).forEach(k => { classHV[k] = unit(lcgVec(CLASS_SEED[k])); });
+
+    const landmarks = targetCenters.map((t, idx) => {
+        /* a landmark seen from further off is pinned down less precisely */
+        const sigma = t.type === 'TOWER' ? 2.6 : t.type === 'VEHICLE' ? 1.3 : 1.8;
+
+        const ring = new THREE.Mesh(
+            new THREE.RingGeometry(sigma - .07, sigma + .07, 40),
+            new THREE.MeshBasicMaterial({ color: 0xE0445E, side: THREE.DoubleSide, transparent: true, opacity: 0 })
+        );
+        ring.rotation.x = -Math.PI / 2;
+        mapGroup.add(ring);
+
+        const cls = classHV[t.type] || classHV.HOUSE;
+        const inst = unit(lcgVec(idx * 7 + 101));
+        const hv = new Float32Array(HV_D);
+        for (let i = 0; i < HV_D; i++) hv[i] = cls[i] * .62 + inst[i] * .38;
+        t.hv = unit(hv);
+        return { baseX: t.pos.x, baseZ: t.pos.z, sigma, ring, target: t };
+    });
+
+    /* ── THE QUERY FIELD ──────────────────────────────────────────────────
+       Unbind the map by a landmark's hypervector and you do not get a
+       coordinate back — you get a similarity field over the whole plane,
+       peaking where that landmark is and rippling everywhere else with the
+       cross-talk of everything else stored in the same vector. This is that
+       field, drawn underneath the events it was built from. */
+    const FW = 80, FH = 72, FIELD_W = 86, FIELD_D = 78, FIELD_CZ = -22;
+    const fieldData = new Uint8Array(FW * FH * 4);
+    const fieldTex = new THREE.DataTexture(fieldData, FW, FH, THREE.RGBAFormat);
+    fieldTex.minFilter = fieldTex.magFilter = THREE.LinearFilter;
+    fieldTex.needsUpdate = true;
+    const fieldMesh = new THREE.Mesh(
+        new THREE.PlaneGeometry(FIELD_W, FIELD_D),
+        new THREE.MeshBasicMaterial({ map: fieldTex, transparent: true, opacity: 0, depthWrite: false })
+    );
+    fieldMesh.rotation.x = -Math.PI / 2;
+    fieldMesh.position.set(0, -.02, FIELD_CZ);
+    scene.add(fieldMesh);
+
+    const raw = new Float32Array(FW * FH);
+    let queried = null, autoQ = null, hovered = null, lastQueryAt = -1e9, fieldWz = -1e9;
+    let mouseX = -1, mouseY = -1;
+    const hoverVec = new THREE.Vector3();
+
+    function rebuildField(wzNow) {
+        const pts = [];
+        for (let i = 0; i < landmarks.length; i++) {
+            const L = landmarks[i];
+            let z = L.baseZ + wzNow; if (z > 5) z -= WORLD_DEPTH;
+            /* unbinding by one object's vector answers for everything that
+               shares its code — strongly for itself, well for its class, and
+               with a little negative cross-talk for everything else */
+            const sim = queried ? dot(queried.target.hv, L.target.hv) : 0;
+            L.sim = sim;
+            pts.push({ x: L.baseX, z, s: L.sigma, w: sim * 1.18 - .17 });
+        }
+        let peak = 1e-6;
+        for (let j = 0; j < FH; j++) {
+            const wzp = FIELD_CZ - ((j + .5) / FH - .5) * FIELD_D;
+            for (let i = 0; i < FW; i++) {
+                const wx = ((i + .5) / FW - .5) * FIELD_W;
+                let acc = 0;
+                for (let k = 0; k < pts.length; k++) {
+                    const P = pts[k], dx = wx - P.x, dz = wzp - P.z;
+                    const d2 = dx * dx + dz * dz, r2 = P.s * P.s * 2.6;
+                    if (d2 < r2 * 9) acc += P.w * Math.exp(-d2 / r2);
+                }
+                raw[j * FW + i] = acc;
+                const a = Math.abs(acc); if (a > peak) peak = a;
+            }
+        }
+        for (let n = 0; n < FW * FH; n++) {
+            const lin = Math.max(-1, Math.min(1, raw[n] / peak));
+            /* gamma lifts the cross-talk ripples so the field reads across the
+               whole plane instead of one peak on a black background */
+            const v = Math.sign(lin) * Math.pow(Math.abs(lin), .5);
+            let r, g, b;
+            if (v < 0) { const t = -v; r = .10 * t; g = .22 * t; b = .52 * t; }
+            else if (v < .6) { const t = v / .6; r = .88 * t; g = .27 * t; b = .37 * t; }
+            else { const t = (v - .6) / .4; r = .88 + .12 * t; g = .27 + .53 * t; b = .37 - .12 * t; }
+            const o = n * 4;
+            fieldData[o] = r * 255; fieldData[o + 1] = g * 255; fieldData[o + 2] = b * 255;
+            fieldData[o + 3] = 105 + Math.abs(v) * 150;
+        }
+        fieldTex.needsUpdate = true;
+        fieldWz = wzNow;
+    }
+
+    let tgtVel = 0, vel = 0, tgtRX = 0, tgtRY = 0, evFrame = 0;
     let lastTouchX = null, lastTouchY = null;
     let rectCache = null;
-    function getRect() { return rectCache || (rectCache = container.getBoundingClientRect()); }
+    function getRect() {
+        if (rectCacheDirty) { rectCache = null; rectCacheDirty = false; }
+        return rectCache || (rectCache = container.getBoundingClientRect());
+    }
 
     window.addEventListener('mousemove', e => {
+        mouseX = e.clientX; mouseY = e.clientY;
         tgtVel = Math.min(Math.sqrt(e.movementX * e.movementX + e.movementY * e.movementY), 100);
         const r = getRect();
         tgtRY = ((e.clientX - r.left) / r.width - .5) * -1.2;
@@ -789,7 +1134,55 @@ let scrollProgress = 0;
     }, { passive: true });
     window.addEventListener('touchend', () => { lastTouchX = null; lastTouchY = null; }, { passive: true });
 
-    const hudSlots = Array.from({ length: 5 }, (_, i) => document.getElementById('hud-' + i));
+    /* ── HUD LABEL TEXT ───────────────────────────────────────────────────
+       Every word that appears in a tracked-object label. Edit here only —
+       the five HUD boxes are built from this. */
+    const HUD_LABELS = {
+        name:         'OBJ_SEM',    // the object's token
+        dist:         'DIST',       // range to the observer
+        distUnit:     'm',
+        bind:         'VSA_BIND',   // binding state
+        bindStable:   'STABLE',     // tracked, holding
+        bindUnstable: 'UNSTABLE',   // tracked, ego-motion too fast
+        bindBound:    'BOUND',      // written into the map
+        sim:          'SIM'         // similarity to the current query
+    };
+
+    const hudOverlay = document.getElementById('hud-overlay');
+    const hudSlots = [], hudVecs = [];
+    for (let i = 0; i < 5; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'hud-slot';
+        const frame = document.createElement('div');
+        frame.className = 'hud-frame';
+        ['tl', 'tr', 'bl', 'br'].forEach(c => {
+            const d = document.createElement('div');
+            d.className = 'hud-corner ' + c;
+            frame.appendChild(d);
+        });
+        const info = document.createElement('div');
+        info.className = 'hud-info';
+        info.innerHTML =
+            HUD_LABELS.name + ': <span class="hud-type font-bold text-white"></span><br>' +
+            HUD_LABELS.dist + ': <span class="hud-dist font-bold text-white"></span>' + HUD_LABELS.distUnit + '<br>' +
+            HUD_LABELS.bind + ': <span class="target-bind text-emerald-400">' + HUD_LABELS.bindStable + '</span>';
+        const sim = document.createElement('div');
+        sim.className = 'hud-sim';
+        const strip = document.createElement('div');   // one cell per vector component
+        strip.className = 'hud-vec';
+        for (let c = 0; c < 16; c++) strip.appendChild(document.createElement('i'));
+        info.appendChild(sim);
+        info.appendChild(strip);
+        slot.appendChild(frame);
+        slot.appendChild(info);
+        hudOverlay.appendChild(slot);
+        hudSlots.push(slot);
+        hudVecs.push({ strip, sim });
+    }
+
+    const mapLegend = document.getElementById('map-legend');
+    const qToken = document.getElementById('q-token');
+    const qMode = document.getElementById('q-mode');
     const projVec = new THREE.Vector3();
     let lastHUD = 0;
 
@@ -799,59 +1192,165 @@ let scrollProgress = 0;
         lastHUD = now;
         const rect = renderer.domElement.getBoundingClientRect();
         let visible = 0;
-        if (blend < 0.5) {
-            for (let i = 0; i < targetCenters.length && visible < 5; i++) {
-                projVec.copy(targetCenters[i].pos);
-                projVec.z += wz;
-                if (projVec.z > 5) projVec.z -= WORLD_DEPTH;
-                if (projVec.z > -5 || projVec.z < -40) continue;
-                const rawDist = Math.abs(projVec.z - camera.position.z);
-                projVec.project(camera);
-                if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
-                const sx = (projVec.x * .5 + .5) * rect.width;
-                const sy = (-projVec.y * .5 + .5) * rect.height;
-                const slot = hudSlots[visible];
-                slot.style.left = sx + 'px'; slot.style.top = sy + 'px'; slot.style.opacity = '1';
-                slot.querySelector('.hud-type').textContent = targetCenters[i].type;
-                slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
-                const bs = slot.querySelector('.target-bind');
-                if (bs) {
-                    if (vel > 30) { bs.textContent = 'UNSTABLE'; bs.className = 'target-bind text-red-400'; }
-                    else          { bs.textContent = 'STABLE';   bs.className = 'target-bind text-emerald-400'; }
-                }
-                visible++;
+        const mapMode = blend > .5;
+        for (let i = 0; i < targetCenters.length && visible < 5; i++) {
+            projVec.copy(targetCenters[i].pos);
+            projVec.z += wz;
+            if (projVec.z > 5) projVec.z -= WORLD_DEPTH;
+            /* in plan view the label belongs on the footprint, not the roof */
+            if (mapMode) projVec.y *= 1 - flatten;
+            const rawDist = mapMode
+                ? camera.position.distanceTo(projVec)
+                : Math.abs(projVec.z - camera.position.z);
+            /* cull relative to how high the camera has climbed, not a fixed
+               distance - a pulled-back plan view is legitimately far away */
+            if (mapMode) { if (rawDist > camera.position.y + 55) continue; }
+            else if (projVec.z > -5 || projVec.z < -40) continue;
+            projVec.project(camera);
+            if (projVec.x < -.8 || projVec.x > .8 || projVec.y < -.8 || projVec.y > .8) continue;
+            if (blend < .25) {
+                if (Math.abs(projVec.x) < .45 && Math.abs(projVec.y) < .5) continue; // centre question zone
+                if (projVec.y < -.6) continue; // bottom identity band
             }
+            if (blend > .64 && projVec.y < -.3) continue; // clear for the closing text
+            const sx = (projVec.x * .5 + .5) * rect.width;
+            const sy = (-projVec.y * .5 + .5) * rect.height;
+            const slot = hudSlots[visible];
+            slot.style.left = sx + 'px'; slot.style.top = sy + 'px'; slot.style.opacity = '1';
+            slot.querySelector('.hud-type').textContent = targetCenters[i].name || targetCenters[i].type;
+            const hv = targetCenters[i].hv;
+            const { strip, sim } = hudVecs[visible];
+            strip.style.display = mapMode ? 'flex' : 'none';
+            sim.style.display = mapMode ? 'block' : 'none';
+            if (mapMode) {
+                for (let c = 0; c < 16; c++) {
+                    /* components run -1..1; the strip shows magnitude */
+                    strip.children[c].style.background = 'rgba(224,68,94,' + (.12 + Math.abs(hv[c]) * 3.4).toFixed(2) + ')';
+                }
+                const L = landmarks[i];
+                const v = L && L.sim !== undefined ? L.sim : 0;
+                sim.textContent = HUD_LABELS.sim + ' ' + (v >= 0 ? ' ' : '') + v.toFixed(2);
+                sim.style.color = v > .55 ? '#FFB000' : v > .2 ? '#E0445E' : 'rgba(237,237,235,.35)';
+            }
+            slot.querySelector('.hud-dist').textContent = rawDist.toFixed(1);
+            const bs = slot.querySelector('.target-bind');
+            if (bs) {
+                if (mapMode)        { bs.textContent = HUD_LABELS.bindBound;    bs.className = 'target-bind text-emerald-400'; }
+                else if (vel > 30)  { bs.textContent = HUD_LABELS.bindUnstable; bs.className = 'target-bind text-red-400'; }
+                else                { bs.textContent = HUD_LABELS.bindStable;   bs.className = 'target-bind text-emerald-400'; }
+            }
+            visible++;
         }
         for (let i = visible; i < 5; i++) hudSlots[i].style.opacity = '0';
     }
 
     const clock = new THREE.Clock();
-    let wz = 0, blend = 0;
+    let wz = 0, blend = 0, flatten = 0, rise = 0;
     (function animate() {
         requestAnimationFrame(animate);
         const delta = clock.getDelta();
         vel += (tgtVel - vel) * 10 * delta; tgtVel = 0;
-        wz += 15 * delta; if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
-        const tb = Math.max(0, Math.min(1, (scrollProgress - 5) / 20));
-        blend += (tb - blend) * 5 * delta;
-        vsaRings.children.forEach(r => { r.material.opacity = THREE.MathUtils.lerp(r.material.opacity, blend * .6, 5 * delta); });
-        camera.rotation.y += (tgtRY - camera.rotation.y) * 5 * delta;
-        camera.rotation.x += (tgtRX - camera.rotation.x) * 5 * delta;
+
+        blend += (heroProgress - blend) * 5 * delta;
+        /* Stage 1 flatten the world to its footprint, stage 2 rise above it.
+           Flatten-then-rise reads as a camera climbing; the reverse reads as
+           a shuffle. The flight decays to nothing as the map resolves. */
+        flatten = smooth01(blend, .06, .40);
+        rise    = smooth01(blend, .28, .60);
+        updateInk(smooth01(blend, .15, .52));
+
+        wz += 15 * delta * (1 - flatten); if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
+
+        selfDot.material.opacity = THREE.MathUtils.lerp(selfDot.material.opacity, rise * .9, 5 * delta);
+
+        /* mouse-look hands over to the plan view as the camera climbs */
+        const look = 1 - rise;
+        camera.position.z = -22 * rise;
+        const wantFov = 70 - 30 * rise;
+        if (Math.abs(camera.fov - wantFov) > .2) { camera.fov = wantFov; camera.updateProjectionMatrix(); }
+        camera.rotation.y += ((tgtRY * look) - camera.rotation.y) * 5 * delta;
+        const pitch = tgtRX * look + (-Math.PI / 2) * rise;
+        camera.rotation.x += (pitch - camera.rotation.x) * 5 * delta;
         const sh = vel * .001 * (1 - blend);
         camera.position.x = (Math.random() - .5) * sh;
-        camera.position.y = 3 + (Math.random() - .5) * sh;
+        const halfTan = Math.tan(wantFov * Math.PI / 360);
+        const planY = Math.min(115, Math.max(46, 32 / (halfTan * camera.aspect)));
+        camera.position.y = 3 + rise * (planY - 3) + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
+        evFrame++;
         for (let i = 0; i < FC; i++) {
             const i3 = i * 3;
-            let sx = edgePoints[i3], sy = edgePoints[i3+1], sz = edgePoints[i3+2] + wz;
-            if (sz > 5) sz -= WORLD_DEPTH;
-            let cx = sx + (phasorPoints[i3] - sx) * blend;
-            let cy = sy + (phasorPoints[i3+1] - sy) * blend;
-            let cz = sz + (phasorPoints[i3+2] - sz) * blend;
+            let cx = edgePoints[i3], sy = edgePoints[i3+1], cz = edgePoints[i3+2] + wz;
+            if (cz > 5) cz -= WORLD_DEPTH;
+            /* height collapses to the footprint, each point on its own beat */
+            const f = Math.max(0, Math.min(1, (flatten - stagger[i]) / (1 - stagger[i])));
+            let cy = sy * (1 - f);
             if (scatter) { cx += (Math.random() - .5) * sa; cy += (Math.random() - .5) * sa; cz += (Math.random() - .5) * sa; }
+            /* events flicker only while they are events; a bound map is stable */
+            if (flatten < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60;
+            if (i >= noiseStart && stagger[i] * 3.34 < flatten) cz = 60;
             posArray[i3] = cx; posArray[i3+1] = cy; posArray[i3+2] = cz;
         }
         geo.attributes.position.needsUpdate = true;
+
+        /* landmarks and beliefs ride the same world wrap as the events */
+        mapGroup.visible = rise > .01;
+        fieldMesh.visible = mapGroup.visible;
+        if (mapGroup.visible) {
+            const o = smooth01(rise, .3, 1);
+            const now = performance.now() / 1000;
+
+            /* place the rings, and find whichever one the cursor is nearest */
+            const hr = getRect();
+            let best = null, bestD = 68 * 68;
+            for (let i = 0; i < landmarks.length; i++) {
+                const L = landmarks[i];
+                let lz = L.baseZ + wz; if (lz > 5) lz -= WORLD_DEPTH;
+                L.ring.position.set(L.baseX, .03, lz);
+                if (mouseX >= 0 && rise > .55) {
+                    hoverVec.set(L.baseX, .03, lz).project(camera);
+                    if (Math.abs(hoverVec.x) < 1.1 && Math.abs(hoverVec.y) < 1.1) {
+                        const px = (hoverVec.x * .5 + .5) * hr.width + hr.left;
+                        const py = (-hoverVec.y * .5 + .5) * hr.height + hr.top;
+                        const d = (px - mouseX) * (px - mouseX) + (py - mouseY) * (py - mouseY);
+                        if (d < bestD) { bestD = d; best = L; }
+                    }
+                }
+            }
+            hovered = best;
+
+            /* hovering takes the query; otherwise it cycles on its own */
+            if (!hovered && now - lastQueryAt > 3.8) {
+                lastQueryAt = now;
+                const near = landmarks.filter(L => {
+                    let z = L.baseZ + wz; if (z > 5) z -= WORLD_DEPTH;
+                    return Math.abs(z - FIELD_CZ) < 15 && Math.abs(L.baseX) < 24;
+                });
+                const pool = near.length ? near : landmarks;
+                autoQ = pool[(pool.indexOf(autoQ) + 1 + pool.length) % pool.length] || pool[0];
+            }
+            const want = hovered || autoQ || landmarks[0];
+            if (want !== queried) {
+                queried = want;
+                rebuildField(wz);
+                if (qToken) qToken.textContent = queried.target.name;
+                if (qMode) qMode.textContent = hovered ? 'Hovering · unbind by' : 'Query · unbind by';
+            } else if (Math.abs(wz - fieldWz) > .6) {
+                rebuildField(wz);
+            }
+
+            for (let i = 0; i < landmarks.length; i++) {
+                const L = landmarks[i];
+                /* a ring's brightness is how well it answers the query */
+                const sim = L.sim || 0;
+                L.ring.material.opacity = o * (L === queried ? .95 : Math.max(.12, sim * .8));
+            }
+            fieldMesh.material.opacity = o * .95;
+            if (mapLegend) mapLegend.style.opacity = o;
+        } else if (mapLegend) {
+            mapLegend.style.opacity = 0;
+        }
+
         updateHUD(wz, blend);
         renderer.render(scene, camera);
     })();
@@ -869,7 +1368,7 @@ const _pipeDescs = [
     "The filtered neural spikes are translated into high-dimensional Spatial Semantic Pointers. Using Fourier Holographic Reduced Representations (FHRR), we bind object features to spatial coordinates mathematically via phase angles.",
     "A continuous monitor evaluates the clarity of the VSA resonance. When epistemic uncertainty peaks (e.g., scene ambiguity), the control loop triggers an active sensing fallback (like SPAD or LiDAR) to physically resolve the environment."
 ];
-const _pipeColors = ['#22d3ee', '#a855f7', '#34d399'];
+const _pipeColors = ['#E0445E', '#3B9BFF', '#FFB000'];
 
 function setPipeline(i) {
     [0, 1, 2].forEach(j => {
@@ -906,12 +1405,12 @@ setPipeline(0);
         const cnnAcc   = Math.max(12, 95 - vel * .9).toFixed(1);
         document.getElementById('cnn-power-val').textContent        = cnnPower + ' W';
         document.getElementById('cnn-power-bar').style.width        = Math.min(100, cnnPower) + '%';
-        document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#ef4444' : '#64748b';
+        document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#E0445E' : '#64748b';
         document.getElementById('cnn-acc-val').textContent          = cnnAcc + '%';
-        document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#f87171' : 'white';
+        document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#ededeb' : 'white';
         document.getElementById('cnn-acc-bar').style.width          = cnnAcc + '%';
-        document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#ef4444' : '#64748b';
-        cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#020617';
+        document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#E0445E' : '#64748b';
+        cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#141412';
         cnnCard.style.borderColor = vel > 60 ? 'rgba(239,68,68,.3)' : 'rgba(255,255,255,.05)';
         const snnPower = (0.5 + vel * .02).toFixed(2);
         const snnLat   = (1.2 + vel * .05).toFixed(1);
@@ -944,10 +1443,10 @@ setPipeline(0);
         parent.appendChild(d); return d;
     }
 
-    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#22d3ee', 6));
+    const spatialDots    = anchors.map(() => makeDot(spatialPanel, '#3B9BFF', 6));
     const phaseDots      = anchors.map(() => makeDot(phasePanel,   '#a855f7', 6));
     const noiseDots      = Array.from({ length: 100 }, () => {
-        const d = makeDot(spatialPanel, '#ef4444', 4);
+        const d = makeDot(spatialPanel, '#FFB000', 4);
         d.style.opacity = '0'; d.style.transition = 'opacity .2s';
         d.style.left = Math.random() * 100 + '%'; d.style.top = Math.random() * 100 + '%';
         return d;
@@ -1021,118 +1520,327 @@ setPipeline(0);
 })();
 
 // ── VSA EXPLORER ──────────────────────────────────────────────────────
-(function VSAExplorer() {
-    const canvas = document.getElementById('vsa-canvas');
-    const ctx    = canvas.getContext('2d');
-    let agents = [], mode = 'place', agentType = 'DRONE', queryResult = null;
+class ComplexVector {
+  constructor(re, im) { this.re = re; this.im = im; this.dim = re.length; }
+  bind(other) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      r[k] = this.re[k] * other.re[k] - this.im[k] * other.im[k];
+      i[k] = this.re[k] * other.im[k] + this.im[k] * other.re[k];
+    }
+    return new ComplexVector(r, i);
+  }
+  add(other) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) { r[k] = this.re[k] + other.re[k]; i[k] = this.im[k] + other.im[k]; }
+    return new ComplexVector(r, i);
+  }
+  normalize() {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      const mag = Math.sqrt(this.re[k]*this.re[k] + this.im[k]*this.im[k]);
+      if (mag > 0) { r[k] = this.re[k]/mag; i[k] = this.im[k]/mag; } else { r[k] = 1; i[k] = 0; }
+    }
+    return new ComplexVector(r, i);
+  }
+  inverse() {
+    const i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) i[k] = -this.im[k];
+    return new ComplexVector(this.re, i);
+  }
+  similarity(other) {
+    let dot = 0, magThis = 0, magOther = 0;
+    for (let k = 0; k < this.dim; k++) {
+      dot += this.re[k]*other.re[k] + this.im[k]*other.im[k];
+      magThis += this.re[k]*this.re[k] + this.im[k]*this.im[k];
+      magOther += other.re[k]*other.re[k] + other.im[k]*other.im[k];
+    }
+    if (magThis === 0 || magOther === 0) return 0;
+    return dot / (Math.sqrt(magThis) * Math.sqrt(magOther));
+  }
+}
+class BaseVector {
+  constructor(frequencies) { this.freqs = frequencies; this.dim = frequencies.length; }
+  static random(dim) {
+    const f = new Float32Array(dim);
+    for (let k = 0; k < dim; k++) f[k] = (Math.random() * 2 - 1) * Math.PI;
+    return new BaseVector(f);
+  }
+  static spatial(dim, maxFreq) {
+    const f = new Float32Array(dim);
+    for (let k = 0; k < dim; k++) f[k] = (Math.random() * 2 - 1) * maxFreq;
+    return new BaseVector(f);
+  }
+  power(x) {
+    const r = new Float32Array(this.dim), i = new Float32Array(this.dim);
+    for (let k = 0; k < this.dim; k++) {
+      const angle = this.freqs[k] * x;
+      r[k] = Math.cos(angle); i[k] = Math.sin(angle);
+    }
+    return new ComplexVector(r, i);
+  }
+  toComplex() { return this.power(1); }
+}
 
-    const AGENT_CFG = {
-        DRONE:  { col: '#22d3ee', label: 'D' },
-        ROVER:  { col: '#00ff88', label: 'R' },
-        SENSOR: { col: '#a855f7', label: 'S' },
-        RELAY:  { col: '#f87171', label: 'L' }
+(function initVSAExplorer() {
+  const root = document.querySelector('#vsa-explorer');
+  if(!root) return;
+  const canvas = document.querySelector('#vsa-map-canvas');
+  const inspector = document.querySelector('#vsa-inspector');
+  const phaseWheelRoot = document.querySelector('#phase-wheel');
+  const range = document.querySelector('#vsa-inspector-range');
+  const rangeValue = document.querySelector('#vsa-inspector-value');
+  const resetBtn = document.querySelector('#vsa-reset');
+  const status = document.querySelector('#vsa-status');
+  const traceBar = document.querySelector('#vsa-trace-bar');
+  const itemCount = document.querySelector('#vsa-item-count');
+  const dimLabel = document.querySelector('#vsa-dim');
+  const mapHint = document.querySelector('#vsa-map-hint');
+  const typeButtonRoot = document.querySelector('#vsa-type-buttons');
+  const modeButtons = document.querySelectorAll('[data-vsa-mode]');
+  
+  if(!canvas||!inspector) return;
+  const ctx = canvas.getContext('2d');
+  const GRID_SIZE = 10, DIM = 1024, HEAT_RES = 48, SPATIAL_FREQ_LIMIT = Math.PI / 4;
+  const objTypes = [
+    { name: 'Drone', color: '#FF3DA6' }, { name: 'Rover', color: '#FFB000' }, { name: 'Beacon', color: '#3B9BFF' }
+  ];
+  
+  const explorer = {
+    vocab: null, featureMemory: null, itemMemory: null, items: [],
+    mode: 'place', selectedObjType: 'Drone', queryPoint: null, pipelineState: null, inspectorVal: 2.5
+  };
+  const zeroVector = () => new ComplexVector(new Float32Array(DIM), new Float32Array(DIM));
+
+  function seedItems() {
+    return [
+      { id: 1, type: 'Drone', x: -4.2, y: 3.5, color: '#ef4444' },
+      { id: 2, type: 'Rover', x: 3.2, y: -2.4, color: '#34d399' },
+      { id: 3, type: 'Beacon', x: -1.0, y: -4.5, color: '#E0445E' },
+      { id: 4, type: 'Drone', x: 4.6, y: 2.2, color: '#ef4444' }
+    ];
+  }
+
+  function initVocab() {
+    const v = {
+      X: BaseVector.spatial(DIM, SPATIAL_FREQ_LIMIT),
+      Y: BaseVector.spatial(DIM, SPATIAL_FREQ_LIMIT),
+      Role_Domain: BaseVector.random(DIM).toComplex(),
+      Role_Mobility: BaseVector.random(DIM).toComplex(),
+      Val_Air: BaseVector.random(DIM).toComplex(),
+      Val_Ground: BaseVector.random(DIM).toComplex(),
+      Val_Static: BaseVector.random(DIM).toComplex(),
+      Val_Dynamic: BaseVector.random(DIM).toComplex()
     };
+    explorer.vocab = v;
+    explorer.featureMemory = {
+      domains: { Air: v.Val_Air, Ground: v.Val_Ground },
+      mobility: { Static: v.Val_Static, Dynamic: v.Val_Dynamic }
+    };
+    const buildObj = (domainVal, mobilityVal) => {
+      return v.Role_Domain.bind(domainVal).add(v.Role_Mobility.bind(mobilityVal)).normalize();
+    };
+    explorer.itemMemory = {
+      Drone: { color: '#ef4444', vector: buildObj(v.Val_Air, v.Val_Dynamic) },
+      Rover: { color: '#34d399', vector: buildObj(v.Val_Ground, v.Val_Dynamic) },
+      Beacon: { color: '#E0445E', vector: buildObj(v.Val_Ground, v.Val_Static) }
+    };
+    explorer.items = seedItems();
+    explorer.queryPoint = null; explorer.pipelineState = null; explorer.mode = 'place'; explorer.selectedObjType = 'Drone';
+    renderAll();
+  }
 
-    function resize() {
-        const r = canvas.getBoundingClientRect();
-        const w = Math.round(r.width  || canvas.offsetWidth  || 400);
-        const h = Math.round(r.height || canvas.offsetHeight || 320);
-        if (canvas.width !== w || canvas.height !== h) {
-            canvas.width  = w;
-            canvas.height = h;
-        }
-    }
-    window.addEventListener('resize', resize);
-    requestAnimationFrame(resize);
+  function getSSP(x, y) { return explorer.vocab.X.power(x).bind(explorer.vocab.Y.power(y)); }
+  function getMapVector() {
+    let M = zeroVector();
+    explorer.items.forEach(item => { M = M.add(getSSP(item.x, item.y).bind(explorer.itemMemory[item.type].vector)); });
+    return M;
+  }
 
-    function draw() {
-        requestAnimationFrame(draw);
-        const w = canvas.width, h = canvas.height;
-        ctx.fillStyle = '#020617';
-        ctx.fillRect(0, 0, w, h);
-        // grid
-        ctx.strokeStyle = 'rgba(34,211,238,.05)';
-        ctx.lineWidth = 1;
-        for (let x = 0; x < w; x += 40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,h); ctx.stroke(); }
-        for (let y = 0; y < h; y += 40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w,y); ctx.stroke(); }
-        // labels
-        ctx.fillStyle = 'rgba(34,211,238,.5)';
-        ctx.font = '10px "JetBrains Mono",monospace';
-        ctx.fillText('MODE: ' + mode.toUpperCase(), 8, 18);
-        ctx.fillText(agents.length + ' agents', 8, 32);
-        // query ring
-        if (queryResult) {
-            ctx.beginPath(); ctx.arc(queryResult.x, queryResult.y, queryResult.radius, 0, Math.PI * 2);
-            ctx.strokeStyle = 'rgba(52,211,153,.6)'; ctx.lineWidth = 1.5; ctx.stroke();
-            ctx.fillStyle = 'rgba(52,211,153,.08)'; ctx.fill();
-        }
-        // agents
-        agents.forEach(ag => {
-            const cfg = AGENT_CFG[ag.type];
-            const grd = ctx.createRadialGradient(ag.x, ag.y, 0, ag.x, ag.y, 14);
-            grd.addColorStop(0, cfg.col + '44'); grd.addColorStop(1, 'transparent');
-            ctx.fillStyle = grd;
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 14, 0, Math.PI * 2); ctx.fill();
-            ctx.beginPath(); ctx.arc(ag.x, ag.y, 6, 0, Math.PI * 2);
-            ctx.fillStyle = cfg.col; ctx.fill();
-            ctx.fillStyle = '#000'; ctx.font = 'bold 8px monospace';
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.fillText(cfg.label, ag.x, ag.y);
-            ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-        });
-    }
-    draw();
-
-    canvas.addEventListener('click', e => {
-        const r = canvas.getBoundingClientRect();
-        const cx = e.clientX - r.left, cy = e.clientY - r.top;
-        if (mode === 'place') {
-            const phase = (Math.atan2(cy - canvas.height/2, cx - canvas.width/2) + Math.PI*2) % (Math.PI*2);
-            agents.push({ x: cx, y: cy, type: agentType, phase });
-            updateVSAUI();
-        } else if (mode === 'query_loc') {
-            queryResult = { x: cx, y: cy, radius: 40 };
-            const near = agents.filter(a => Math.hypot(a.x-cx, a.y-cy) < 40);
-            document.getElementById('vsa-status').textContent = 'Query: found ' + near.length + ' agent(s) within radius';
-            setTimeout(() => { queryResult = null; }, 1500);
-        } else {
-            const found = agents.filter(a => a.type === agentType);
-            document.getElementById('vsa-status').textContent = 'Item query: ' + agentType + ' → ' + found.length + ' match(es)';
-        }
+  function cleanupFeature(noisyVec, memoryDict) {
+    let bestSim = -1, bestName = null, scores = [];
+    Object.keys(memoryDict).forEach(key => {
+      const sim = noisyVec.similarity(memoryDict[key]);
+      scores.push({ name: key, score: sim });
+      if (sim > bestSim) { bestSim = sim; bestName = key; }
     });
+    return { winner: bestName, scores };
+  }
 
-    function updateVSAUI() {
-        const n = agents.length;
-        let sumX = 0, sumY = 0;
-        agents.forEach(a => { sumX += Math.cos(a.phase); sumY += Math.sin(a.phase); });
-        const meanPhase = Math.atan2(sumY / (n||1), sumX / (n||1));
-        const nx = 60 + 50 * Math.cos(meanPhase);
-        const ny = 60 + 50 * Math.sin(meanPhase);
-        document.getElementById('phase-needle').setAttribute('x2', nx.toFixed(1));
-        document.getElementById('phase-needle').setAttribute('y2', ny.toFixed(1));
-        document.getElementById('vsa-trace-fill').style.width = Math.min(100, n * 6) + '%';
-        document.getElementById('vsa-status').textContent = n + ' agent' + (n===1?'':'s') + ' encoded';
+  function handleMapClick(x, y) {
+    if (!explorer.itemMemory) return;
+    if (explorer.mode === 'place') {
+      explorer.items.push({ id: Date.now(), type: explorer.selectedObjType, x, y, color: objTypes.find(o=>o.name===explorer.selectedObjType).color });
+      explorer.pipelineState = null; explorer.queryPoint = null;
+    } else if (explorer.mode === 'query_loc') {
+      explorer.queryPoint = { x, y };
+      const noisyItem = getMapVector().bind(getSSP(x, y).inverse());
+      let bestItemSim = -1, cleanItemName = null, cleanItemVector = null, itemScores = [];
+      Object.keys(explorer.itemMemory).forEach(key => {
+        const sim = noisyItem.similarity(explorer.itemMemory[key].vector);
+        itemScores.push({ name: key, score: sim, color: explorer.itemMemory[key].color });
+        if (sim > bestItemSim) { bestItemSim = sim; cleanItemName = key; cleanItemVector = explorer.itemMemory[key].vector; }
+      });
+      if (bestItemSim < 0.1) { explorer.pipelineState = { status: 'empty', itemScores }; renderAll(); return; }
+      explorer.pipelineState = {
+        status: 'found', itemScores, cleanItem: { name: cleanItemName, color: explorer.itemMemory[cleanItemName].color },
+        domainCleanUp: cleanupFeature(cleanItemVector.bind(explorer.vocab.Role_Domain.inverse()), explorer.featureMemory.domains),
+        mobilityCleanUp: cleanupFeature(cleanItemVector.bind(explorer.vocab.Role_Mobility.inverse()), explorer.featureMemory.mobility)
+      };
     }
+    renderAll();
+  }
 
-    window.vsaSetMode = m => {
-        mode = m; queryResult = null;
-        ['place','query_loc','query_item'].forEach(id => {
-            document.getElementById('vsa-mode-' + id).classList.toggle('active', id === m);
-        });
-    };
-    window.vsaSetAgent = type => {
-        agentType = type;
-        ['DRONE','ROVER','SENSOR','RELAY'].forEach(t => {
-            document.getElementById('vsa-agent-' + t).classList.toggle('active', t === type);
-        });
-    };
-    window.vsaHardReset = () => {
-        agents = []; queryResult = null;
-        document.getElementById('vsa-trace-fill').style.width = '0%';
-        document.getElementById('vsa-status').textContent = '0 agents encoded';
-        document.getElementById('phase-needle').setAttribute('x2', '110');
-        document.getElementById('phase-needle').setAttribute('y2', '60');
-    };
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr)); canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { width: rect.width, height: rect.height };
+  }
+  function worldToCanvas(x, y, w, h) { return { x: ((x + GRID_SIZE) / (GRID_SIZE * 2)) * w, y: ((GRID_SIZE - y) / (GRID_SIZE * 2)) * h }; }
+  function canvasToWorld(px, py, w, h) { return { x: (px / w) * (GRID_SIZE * 2) - GRID_SIZE, y: GRID_SIZE - (py / h) * (GRID_SIZE * 2) }; }
+
+  function drawGrid(w, h) {
+    ctx.fillStyle = '#141412'; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)'; ctx.lineWidth = 1;
+    for (let i = 0; i <= GRID_SIZE * 2; i++) {
+      const x = (i / (GRID_SIZE * 2)) * w, y = (i / (GRID_SIZE * 2)) * h;
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+    ctx.strokeStyle = 'rgba(224,68,94,0.2)'; ctx.lineWidth = 1.25;
+    const center = worldToCanvas(0, 0, w, h);
+    ctx.beginPath(); ctx.moveTo(center.x, 0); ctx.lineTo(center.x, h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, center.y); ctx.lineTo(w, center.y); ctx.stroke();
+  }
+
+  function drawHeatmap(w, h) {
+    if (explorer.mode !== 'query_item' || explorer.items.length === 0) return;
+    const queryVec = getMapVector().bind(explorer.itemMemory[explorer.selectedObjType].vector.inverse());
+    const cellW = w / HEAT_RES, cellH = h / HEAT_RES;
+    for (let ix = 0; ix < HEAT_RES; ix++) {
+      const sspX = explorer.vocab.X.power((ix / HEAT_RES) * (GRID_SIZE * 2) - GRID_SIZE);
+      for (let iy = 0; iy < HEAT_RES; iy++) {
+        const sim = queryVec.similarity(sspX.bind(explorer.vocab.Y.power(GRID_SIZE - (iy / HEAT_RES) * (GRID_SIZE * 2))));
+        if (sim > 0.05) {
+          ctx.fillStyle = `rgba(224,68,94, ${0.12 + Math.min(1, Math.pow(sim, 2) * 3.2) * 0.75})`;
+          ctx.fillRect(ix * cellW, iy * cellH, cellW + 1, cellH + 1);
+        }
+      }
+    }
+  }
+
+  function drawQueryRing(w, h) {
+    if (explorer.mode !== 'query_loc' || !explorer.queryPoint) return;
+    const p = worldToCanvas(explorer.queryPoint.x, explorer.queryPoint.y, w, h);
+    ctx.beginPath(); ctx.arc(p.x, p.y, 18, 0, Math.PI * 2); ctx.strokeStyle = '#a855f7'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI * 2); ctx.fillStyle = 'rgba(168,85,247,0.9)'; ctx.fill();
+  }
+
+  function drawItems(w, h) {
+    explorer.items.forEach(item => {
+      const p = worldToCanvas(item.x, item.y, w, h);
+      ctx.save(); ctx.translate(p.x, p.y);
+      if (item.type === 'Drone') {
+        ctx.strokeStyle = item.color; ctx.fillStyle = item.color; ctx.globalAlpha = 0.95;
+        ctx.beginPath(); ctx.moveTo(0, -14); ctx.lineTo(10, 10); ctx.lineTo(-10, 10); ctx.closePath(); ctx.fill();
+        ctx.globalAlpha = 0.45; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 24); ctx.stroke();
+      } else if (item.type === 'Rover') {
+        ctx.fillStyle = item.color; ctx.fillRect(-12, -7, 24, 14);
+        ctx.fillStyle = 'rgba(255,255,255,0.12)'; ctx.fillRect(-8, -4, 16, 8);
+      } else {
+        ctx.strokeStyle = item.color; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 10); ctx.lineTo(0, -10); ctx.stroke();
+        ctx.fillStyle = item.color; ctx.beginPath(); ctx.arc(0, -12, 5, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+    });
+  }
+
+  function renderPhaseWheel(value) {
+    if (!explorer.vocab || !phaseWheelRoot) return;
+    const baseVector = explorer.vocab.X;
+    const lines = Array.from({ length: 64 }, (_, i) => {
+      const angle = baseVector.freqs[i] * value;
+      const px = Math.cos(angle) * 100, py = Math.sin(angle) * 100;
+      const color = `hsl(${(i / 64) * 360}, 80%, 65%)`;
+      return `<g><line x1="0" y1="0" x2="${(px * 0.9).toFixed(2)}" y2="${(py * 0.9).toFixed(2)}" stroke="${color}" stroke-width="1.5" opacity="0.6"></line><circle cx="${px.toFixed(2)}" cy="${py.toFixed(2)}" r="3" fill="${color}" stroke="rgba(0,0,0,0.5)" stroke-width="1"></circle></g>`;
+    }).join('');
+    phaseWheelRoot.innerHTML = `<svg viewBox="-110 -110 220 220" class="w-full h-full"><circle cx="0" cy="0" r="100" fill="rgba(255,255,255,0.02)" stroke="rgba(255,255,255,0.1)" stroke-width="2"></circle><circle cx="0" cy="0" r="4" fill="#94a3b8"></circle>${lines}</svg>`;
+  }
+
+  function scoreRows(scores, formatter) {
+    return scores.map(s => {
+      const w = Math.max(2, Math.min(100, ((s.score + 1) / 2) * 100));
+      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
+    }).join('');
+  }
+
+  function renderInspector() {
+    if (!inspector) return;
+    if (explorer.mode === 'place') {
+      inspector.innerHTML = `<div class="flex h-full items-center justify-center p-4 text-center text-sm text-slate-500">Select <strong class="mx-1 text-cyan-300">Decode Map</strong> and click the grid to execute associative clean-up pipeline.</div>`;
+      return;
+    }
+    if (explorer.mode === 'query_item') {
+      const count = explorer.items.filter(item => item.type === explorer.selectedObjType).length;
+      const accent = explorer.itemMemory[explorer.selectedObjType].color;
+      inspector.innerHTML = `<div class="flex h-full flex-col justify-center p-4 text-center"><div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2" style="border-color:${accent}55;color:${accent}">◉</div><p class="text-sm text-slate-300">Scanning the global trace for <strong style="color:${accent}">${explorer.selectedObjType}</strong> and rendering a decoded location heatmap.</p><p class="mt-3 text-xs text-slate-500">${count} matching agents directly contribute to representation.</p></div>`;
+      return;
+    }
+    if (!explorer.queryPoint) {
+      inspector.innerHTML = `<div class="flex h-full items-center justify-center p-4 text-center text-sm text-slate-500">Click a location to decode the bundled object representation at that coordinate.</div>`;
+      return;
+    }
+    if (!explorer.pipelineState || explorer.pipelineState.status === 'empty') {
+      const rows = explorer.pipelineState ? scoreRows(explorer.pipelineState.itemScores, n => n.toFixed(2)) : '';
+      inspector.innerHTML = `<div class="space-y-4"><div class="rounded-2xl border border-red-500/20 bg-red-500/5 p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-red-300">No stable recovery</div><p class="mt-2 text-sm leading-7 text-slate-300">The queried location did not clearly identify an item above threshold.</p></div><div class="space-y-3">${rows}</div></div>`;
+      return;
+    }
+    const state = explorer.pipelineState;
+    inspector.innerHTML = `<div class="space-y-5"><div class="rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div class="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Recovered concept</div><div class="mt-2 text-lg font-black" style="color:${state.cleanItem.color}">${state.cleanItem.name}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Item similarity</div><div class="space-y-3">${scoreRows(state.itemScores, n => n.toFixed(2))}</div></div><div><div class="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Decoded features</div><div class="space-y-4 rounded-2xl border border-white/8 bg-white/[0.02] p-4"><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-cyan-300">Domain → ${state.domainCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.domainCleanUp.scores.map(s => ({...s, color:'#E0445E'})), n => n.toFixed(2))}</div></div><div><div class="mb-2 text-xs font-bold uppercase tracking-[0.16em] text-emerald-300">Mobility → ${state.mobilityCleanUp.winner}</div><div class="space-y-2">${scoreRows(state.mobilityCleanUp.scores.map(s => ({...s, color:'#34d399'})), n => n.toFixed(2))}</div></div></div></div></div>`;
+  }
+
+  function renderButtons() {
+    if (modeButtons) modeButtons.forEach(btn => {
+      const active = btn.dataset.vsaMode === explorer.mode;
+      btn.className = `px-4 py-2 rounded-md text-xs font-bold uppercase tracking-wider transition-all ${active ? 'bg-white/10 text-cyan-400' : 'text-slate-400 hover:text-slate-200'}`;
+    });
+    if (typeButtonRoot) {
+      typeButtonRoot.innerHTML = objTypes.map(obj => {
+        const active = explorer.selectedObjType === obj.name;
+        return `<button data-vsa-type="${obj.name}" class="px-3 py-1.5 rounded-full text-[11px] font-bold uppercase tracking-widest border transition-all ${active ? 'opacity-100 shadow-[0_0_10px_rgba(0,0,0,0.2)]' : 'border-transparent opacity-50 hover:opacity-100 bg-white/5'}" style="color:${active ? obj.color : '#94a3b8'};border-color:${active ? obj.color : 'transparent'}">${obj.name}</button>`;
+      }).join('');
+      typeButtonRoot.querySelectorAll('[data-vsa-type]').forEach(btn => {
+        btn.addEventListener('click', () => { explorer.selectedObjType = btn.dataset.vsaType; renderAll(); });
+      });
+    }
+  }
+
+  function renderAll() {
+    if (range) { range.value = explorer.inspectorVal; rangeValue.textContent = explorer.inspectorVal.toFixed(1); }
+    renderButtons(); renderPhaseWheel(explorer.inspectorVal);
+    if (itemCount) itemCount.textContent = explorer.items.length;
+    if (traceBar) traceBar.style.width = `${Math.min(100, explorer.items.length * 8)}%`;
+    if (status) status.textContent = `mode: ${explorer.mode} • ` + (explorer.queryPoint ? `x=${explorer.queryPoint.x.toFixed(1)}, y=${explorer.queryPoint.y.toFixed(1)}` : 'no query');
+    renderInspector();
+    const { width, height } = resizeCanvas();
+    drawGrid(width, height);
+    if (explorer.vocab && explorer.itemMemory) { drawHeatmap(width, height); drawQueryRing(width, height); drawItems(width, height); }
+  }
+
+  if (range) range.addEventListener('input', () => { explorer.inspectorVal = parseFloat(range.value); renderAll(); });
+  if (resetBtn) resetBtn.addEventListener('click', initVocab);
+  if (modeButtons) modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => { explorer.mode = btn.dataset.vsaMode; explorer.pipelineState = null; if(explorer.mode !== 'query_loc') explorer.queryPoint = null; renderAll(); });
+  });
+  if (canvas) canvas.addEventListener('click', e => {
+    const r = canvas.getBoundingClientRect();
+    const world = canvasToWorld(e.clientX - r.left, e.clientY - r.top, r.width, r.height);
+    handleMapClick(world.x, world.y);
+  });
+  window.addEventListener('resize', () => { if(explorer.vocab) renderAll(); }, { passive: true });
+  initVocab();
 })();
 </script>
 
