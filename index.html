@@ -28,13 +28,13 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: { extend: {
-                fontFamily: { sans: ['Inter','sans-serif'], mono: ['JetBrains Mono','monospace'] },
+                fontFamily: { sans: ['IBM Plex Sans','sans-serif'], mono: ['JetBrains Mono','monospace'] },
                 colors: {
                     /* warm-dark / red re-theme: remap the palette the markup already uses */
                     cyan:  { 300:'#ea6d82', 400:'#E0445E', 500:'#E0445E', 600:'#c22b45' },
@@ -48,7 +48,7 @@
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#141412; color:white; overflow-x:hidden; font-family:'Inter',sans-serif; cursor:crosshair; }
+        body { background:#141412; color:white; overflow-x:hidden; font-family:'IBM Plex Sans',sans-serif; cursor:crosshair; }
         ::selection { background:#E0445E; color:#141412; }
 
         /* The hero opens full-screen: no bar, no chrome. The top bar arrives
@@ -149,7 +149,7 @@
         .pipeline-btn.inactive { opacity:.5; }
         .pipeline-btn:hover { opacity:1; }
         .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#141412; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
-        .metric-bar { height:6px; border-radius:9999px; transition:width .3s ease, background .3s ease; }
+        .metric-bar { height:6px; width:100%; transform-origin:left; will-change:transform; transition:transform .3s ease, background .3s ease; }
 
         /* Video */
         .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#141412; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
@@ -165,7 +165,7 @@
         .vsa-phase-wheel svg { overflow: visible; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.28)); }
         .vsa-score-row { display: grid; grid-template-columns: 72px 1fr 46px; gap: 0.75rem; align-items: center; font-size: 12px; }
         .vsa-score-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
-        .vsa-score-fill { height: 100%; border-radius: 999px; transition: width .25s ease; }
+        .vsa-score-fill { height: 100%; width: 100%; transform-origin: left; transition: transform .25s ease; }
 
         /* Mobile menu */
         #mobile-menu { display:none; }
@@ -188,7 +188,7 @@
 
 <!-- Progress Bar -->
 <div id="progress-shell" class="site-chrome chrome-hidden fixed top-0 left-0 w-full h-1 z-50 bg-slate-900" aria-hidden="true">
-    <div id="progress-bar" class="h-full bg-cyan-500 transition-all duration-75" style="width:0%"></div>
+    <div id="progress-bar" class="h-full w-full bg-cyan-500 transition-transform duration-75" style="transform:scaleX(0);transform-origin:left"></div>
 </div>
 
 <!-- NAV -->
@@ -207,11 +207,8 @@
             <a href="#about"        class="hover:text-cyan-400 transition-colors">Perception</a>
             <a href="#cognition"    class="hover:text-cyan-400 transition-colors">Cognition</a>
             <a href="#projects"     class="hover:text-cyan-400 transition-colors">Projects</a>
-            <a href="#exhibits"     class="hover:text-cyan-400 transition-colors">Research Hub</a>
             <a href="#publications" class="hover:text-cyan-400 transition-colors">Outputs</a>
-            <a href="cognitive_map.html" class="hover:text-cyan-400 transition-colors">Cognitive Map</a>
-            <a href="how-you-see/" class="hover:text-cyan-400 transition-colors">How You See</a>
-            <a href="#contact" class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Let's Talk</a>
+            <a href="#contact" class="px-5 py-2.5 bg-white text-black rounded-full hover:bg-cyan-400 transition-all shadow-lg font-black">Work with me</a>
         </div>
         <!-- Mobile hamburger -->
         <button id="mobile-menu-toggle" class="md:hidden flex flex-col gap-1.5 p-2" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
@@ -227,11 +224,8 @@
     <a href="#about"        class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Perception</a>
     <a href="#cognition"    class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Cognition</a>
     <a href="#projects"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Projects</a>
-    <a href="#exhibits"     class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Research Hub</a>
     <a href="#publications" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Outputs</a>
-    <a href="cognitive_map.html" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Cognitive Map</a>
-    <a href="how-you-see/" class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">How You See</a>
-    <a href="#contact"      class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Contact</a>
+    <a href="#contact"      class="mobile-link text-lg font-bold text-cyan-400 uppercase tracking-widest hover:text-white transition-colors">Work with me</a>
 </nav>
 
 <!-- HERO -->
@@ -250,7 +244,8 @@
         </h1>
     </div>
     <div id="hero-identity" class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
-        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">Neuromorphic Perception <span style="color:#FF8C42">&amp;</span> Cognition</div>
+        <!-- same lockup in both beats; the lit half is the half you are in -->
+        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight drop-shadow-md"><span class="text-white">Neuromorphic Perception</span> <span style="color:#FF8C42">&amp;</span> <span class="text-white/30">Cognition</span></div>
         <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
         <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
     </div>
@@ -263,14 +258,21 @@
         <div class="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-600 max-w-[9rem] leading-relaxed">Hover a landmark to unbind by it — its kind answers too</div>
     </div>
 
-    <div id="map-scrim" class="absolute inset-x-0 bottom-0 z-[6] pointer-events-none" aria-hidden="true"
-         style="opacity:0;height:56%;transition:opacity .3s;background:linear-gradient(to top,rgba(8,8,7,.97) 0%,rgba(8,8,7,.9) 30%,rgba(8,8,7,.55) 60%,transparent 100%)"></div>
+    <!-- darkens the middle for the question and the foot for its blurb, the
+         same two places the opening beat puts its text -->
+    <div id="map-scrim" class="absolute inset-0 z-[6] pointer-events-none" aria-hidden="true"
+         style="opacity:0;transition:opacity .3s;background:radial-gradient(ellipse 64% 34% at 50% 52%,rgba(8,8,7,.84) 0%,rgba(8,8,7,.4) 55%,transparent 78%),linear-gradient(to top,rgba(8,8,7,.95) 0%,rgba(8,8,7,.6) 16%,transparent 40%)"></div>
 
-    <div id="map-caption" class="absolute z-10 inset-x-0 bottom-10 md:bottom-14 flex flex-col items-center gap-4 text-center px-6 pointer-events-none" style="opacity:0">
-        <h2 class="text-4xl md:text-6xl lg:text-[4.25rem] font-normal tracking-tight text-white leading-[1.06] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
-            How do <span class="text-cyan-400">you</span> map the world?
+    <!-- second beat, laid out exactly like the first: question centred, blurb at the foot -->
+    <div id="map-question" class="map-reveal absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none" style="opacity:0;transform:translateY(7vh)">
+        <h2 class="text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
+            How do <span class="text-cyan-400">you</span><br/>remember it?
         </h2>
-        <p class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Landmarks bound to places · query the vector · read where it peaks</p>
+    </div>
+
+    <div id="map-blurb" class="map-reveal absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6 pointer-events-none" style="opacity:0">
+        <div class="text-base md:text-xl font-black uppercase tracking-tight drop-shadow-md"><span class="text-white/30">Neuromorphic Perception</span> <span style="color:#FF8C42">&amp;</span> <span class="text-white">Cognition</span></div>
+        <div class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Landmarks bound to places · query the vector · read where it peaks</div>
     </div>
 </div>
 <div class="snap-stop absolute bottom-0 left-0 w-px h-screen pointer-events-none" aria-hidden="true"></div>
@@ -294,7 +296,7 @@
 <!-- 02 · MAPPING → COGNITION -->
 <section id="cognition" class="py-28 md:py-36 px-6 max-w-3xl mx-auto border-t border-white/5" aria-labelledby="cognition-heading">
     <p class="font-mono text-[11px] font-bold uppercase tracking-[0.25em] text-cyan-400 mb-6">Cognition</p>
-    <h2 id="cognition-heading" class="ask">How do <span class="text-cyan-400">you</span> map the world?</h2>
+    <h2 id="cognition-heading" class="ask">How do <span class="text-cyan-400">you</span> remember it?</h2>
 
     <p class="beat-obvious">Probably not by keeping a perfect reconstruction of everything you have ever seen.</p>
     <p class="beat">You remember what was there, where it was, what it was near, and roughly when you saw it. You know where the door is without looking at it. That is a <em class="text-white not-italic font-medium">cognitive map</em> — and it is the thing a robot with a perfect point cloud still does not have.</p>
@@ -315,33 +317,24 @@
 </section>
 
 <!-- EXPLORE -->
-<section id="explore" class="py-16 px-6 max-w-5xl mx-auto" aria-labelledby="explore-heading">
-    <h2 id="explore-heading" class="sr-only">Explore</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <a href="how-you-see/" class="project-card hover:no-underline" aria-label="How do you see the world — cognitive maps explainer">
-            <span class="project-tag">Explainer · Start Here</span>
-            <h3 class="text-lg font-bold tracking-tight text-white">How do <span class="italic text-cyan-400">you</span> see the world?</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">You already run a cognitive map. A short, plain-language walk through how one works — and how a robot borrows the trick with what + where vectors.</p>
-            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Read the explainer →</span>
-        </a>
-        <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
-            <span class="project-tag">Interactive · Deep Dive</span>
-            <h3 class="text-lg font-bold tracking-tight text-white">The cognitive map, live</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">An interactive atlas of the research programme — event vision, VSA memory, and active perception, each with a demo you can drive.</p>
-            <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Open the atlas →</span>
-        </a>
-    </div>
+<section id="explore" class="pb-20 px-6 max-w-3xl mx-auto" aria-labelledby="explore-heading">
+    <h2 id="explore-heading" class="sr-only">Explore the cognitive map</h2>
+    <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
+        <span class="project-tag">Interactive · Deep dive</span>
+        <h3 class="text-lg font-bold tracking-tight text-white">The cognitive map, live</h3>
+        <p class="text-sm text-slate-400 leading-relaxed">An interactive atlas of the research programme — event vision, VSA memory, and active perception, each with a demo you can drive.</p>
+        <span class="text-xs text-cyan-400 font-bold uppercase tracking-widest mt-auto pt-2 border-t border-white/5">Open the atlas →</span>
+    </a>
 </section>
 
 <!-- FEATURED PROJECTS -->
 <section id="projects" class="py-24 px-6 max-w-7xl mx-auto" aria-labelledby="projects-heading">
     <div class="text-center mb-16">
-        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Projects · Future research &amp; existing work</p>
+        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Projects · Things you can try</p>
         <h2 id="projects-heading" class="text-4xl font-black">Featured projects</h2>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- Future projects -->
         <article class="project-card" aria-labelledby="proj1-title">
             <span class="project-tag">Event Vision · Log-Polar</span>
             <h3 id="proj1-title" class="text-lg font-bold tracking-tight">Log-Polar Equivariant Features</h3>
@@ -361,28 +354,6 @@
             <h3 id="proj3-title" class="text-lg font-bold tracking-tight">Uncertainty-Driven Active Perception</h3>
             <p class="text-sm text-slate-400 leading-relaxed">A continuous epistemic uncertainty monitor over VSA resonance directs the robot's attention — triggering SPAD or LiDAR fallback only when the scene exceeds ambiguity thresholds, realising sense-less-understand-more efficiency.</p>
             <a href="#exhibits" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">See Active Fallback →</a>
-        </article>
-
-        <!-- Existing highlighted projects -->
-        <article class="project-card" aria-labelledby="proj4-title">
-            <span class="project-tag">Neuromorphic · Structural Plasticity</span>
-            <h3 id="proj4-title" class="text-lg font-bold tracking-tight">Structicity</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">Structural plasticity mechanisms for spiking neural networks — dynamic rewiring of synaptic connectivity in response to sensory statistics, enabling continual adaptation without catastrophic forgetting.</p>
-            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
-        </article>
-
-        <article class="project-card" aria-labelledby="proj5-title">
-            <span class="project-tag">SNN · Event Vision · Segmentation</span>
-            <h3 id="proj5-title" class="text-lg font-bold tracking-tight">Event Camera SNN Segmentation</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">First unsupervised semantic and instance segmentation spiking neural networks operating directly on DVS event data — no frame conversion, no labelled training set.</p>
-            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
-        </article>
-
-        <article class="project-card" aria-labelledby="proj6-title">
-            <span class="project-tag">SPAD · 3D Imaging · Asynchronous</span>
-            <h3 id="proj6-title" class="text-lg font-bold tracking-tight">Event-Based SPAD Imaging</h3>
-            <p class="text-sm text-slate-400 leading-relaxed">First asynchronous 3D imaging pipeline coupling event cameras with SPAD arrays — exploiting photon-counting sensitivity and microsecond timing for depth reconstruction in low-light autonomous navigation.</p>
-            <a href="#publications" class="text-xs text-cyan-400 font-bold uppercase tracking-widest hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">View Publications →</a>
         </article>
 
     </div>
@@ -440,15 +411,15 @@
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Power Draw</span><span id="cnn-power-val">18.0 W</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-power-bar" class="metric-bar" style="width:18%;background:#64748b"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-power-bar" class="metric-bar" style="transform:scaleX(.18);background:#64748b"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Latency</span><span>33.3 ms</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div class="metric-bar bg-slate-500" style="width:33%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div class="metric-bar bg-slate-500" style="transform:scaleX(.33)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Tracking Accuracy</span><span id="cnn-acc-val" class="text-white">86.0%</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-acc-bar" class="metric-bar" style="width:86%;background:#64748b"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-acc-bar" class="metric-bar" style="transform:scaleX(.86);background:#64748b"></div></div>
                     </div>
                 </div>
             </div>
@@ -458,15 +429,15 @@
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Power Draw</span><span id="snn-power-val">0.70 mW</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-power-bar" class="metric-bar bg-cyan-400" style="width:3.5%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-power-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.035)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Latency</span><span id="snn-lat-val">1.7 µs</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-lat-bar" class="metric-bar bg-cyan-400" style="width:3.4%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-lat-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.034)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Tracking Accuracy</span><span id="snn-acc-val">97.0%</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-acc-bar" class="metric-bar bg-cyan-400" style="width:97%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-acc-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.97)"></div></div>
                     </div>
                 </div>
             </div>
@@ -622,18 +593,6 @@
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <a href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">Scientific Reports · 2022</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Ultrafast neuromorphic photonic image processing with a VCSEL neuron</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Validates VCSELs as spiking neurons for target tracking.</p>
-            </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">VCSEL</span><span class="pub-kw">Photonic SNN</span><span class="pub-kw">Target Tracking</span></div>
-        </a>
-
         <a href="https://doi.org/10.1016/j.neucom.2024.128657" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
             <div>
                 <div class="flex items-center justify-between mb-4">
@@ -645,19 +604,6 @@
             </div>
             <div class="flex gap-2 flex-wrap"><span class="pub-kw">SNN</span><span class="pub-kw">Event Camera</span><span class="pub-kw">Action Recognition</span></div>
         </a>
-
-        <a href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">IEEE Trans. Computers · 2022</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Unsupervised Spiking Instance Segmentation on Event Data</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Engineered the first semantic and instance segmentation SNNs.</p>
-            </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">Instance Segmentation</span><span class="pub-kw">Unsupervised</span><span class="pub-kw">DVS</span></div>
-        </a>
-
         <a href="https://doi.org/10.1038/s44172-025-00555-7" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
             <div>
                 <div class="flex items-center justify-between mb-4">
@@ -668,6 +614,28 @@
                 <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">First asynchronous 3D imaging pipeline using SPADs.</p>
             </div>
             <div class="flex gap-2 flex-wrap"><span class="pub-kw">SPAD</span><span class="pub-kw">3D Imaging</span><span class="pub-kw">Asynchronous</span></div>
+        </a>
+        <a href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">Scientific Reports · 2022</div>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </div>
+                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Ultrafast neuromorphic photonic image processing with a VCSEL neuron</h4>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Validates VCSELs as spiking neurons for target tracking.</p>
+            </div>
+            <div class="flex gap-2 flex-wrap"><span class="pub-kw">VCSEL</span><span class="pub-kw">Photonic SNN</span><span class="pub-kw">Target Tracking</span></div>
+        </a>
+        <a href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
+            <div>
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">IEEE Trans. Computers · 2022</div>
+                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                </div>
+                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Unsupervised Spiking Instance Segmentation on Event Data</h4>
+                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Engineered the first semantic and instance segmentation SNNs.</p>
+            </div>
+            <div class="flex gap-2 flex-wrap"><span class="pub-kw">Instance Segmentation</span><span class="pub-kw">Unsupervised</span><span class="pub-kw">DVS</span></div>
         </a>
 
     </div>
@@ -697,11 +665,11 @@
 
 <!-- CTA -->
 <section id="contact" class="py-32 text-center px-6" style="background:#A20C32;color:#f4f1ea" aria-labelledby="contact-heading">
-    <h2 id="contact-heading" class="text-5xl md:text-7xl font-black mb-8 tracking-tighter">Interested?</h2>
+    <h2 id="contact-heading" class="text-5xl md:text-7xl font-black mb-8 tracking-tighter">Work with me</h2>
     <p class="text-lg md:text-2xl font-medium mb-12 max-w-2xl mx-auto" style="opacity:.8">Looking to collaborate on neuro-symbolic AI or apply these frameworks to real-world edge robotics?</p>
     <a href="mailto:p.kirkland@westernsydney.edu.au" class="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-bold uppercase tracking-widest text-sm rounded-full hover:scale-105 hover:shadow-2xl transition-all">
         <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-        Let's Talk!
+        p.kirkland@westernsydney.edu.au
     </a>
 </section>
 
@@ -727,7 +695,8 @@
                 <div>
                     <h5 class="text-[10px] font-black uppercase tracking-[0.3em] text-white mb-6">Research Hub</h5>
                     <ul class="space-y-4 text-xs font-bold text-slate-400 uppercase tracking-widest">
-                        <li><a href="#about"        class="hover:text-cyan-400 transition-colors">Overview</a></li>
+                        <li><a href="#about"        class="hover:text-cyan-400 transition-colors">Perception</a></li>
+                        <li><a href="#cognition"    class="hover:text-cyan-400 transition-colors">Cognition</a></li>
                         <li><a href="#projects"     class="hover:text-cyan-400 transition-colors">Projects</a></li>
                         <li><a href="#exhibits"     class="hover:text-cyan-400 transition-colors">Research Hub</a></li>
                         <li><a href="#publications" class="hover:text-cyan-400 transition-colors">Publications</a></li>
@@ -771,7 +740,7 @@ function smooth01(v, a, b) {
         const t = document.documentElement.scrollTop;
         const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         scrollProgress = h > 0 ? (t / h) * 100 : 0;
-        bar.style.width = scrollProgress + '%';
+        bar.style.transform = 'scaleX(' + (scrollProgress / 100) + ')';
 
         /* hero stage progress: 0 = flying through events, 1 = plan view */
         const stage = document.getElementById('hero-scroll');
@@ -783,14 +752,15 @@ function smooth01(v, a, b) {
             heroProgress = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
             const copy = document.getElementById('hero-copy');
             const ident = document.getElementById('hero-identity');
-            const cap = document.getElementById('map-caption');
+            const caps = document.querySelectorAll('.map-reveal');
             /* 0-.20 hero copy leaves · .28-.60 the map resolves ·
                .60-.74 it holds alone · .68-.86 scrim then text arrive ·
                .86-1 the text simply sits there before the stage lets go */
             const out = 1 - smooth01(heroProgress, 0, .20);
             if (copy) copy.style.opacity = out;
             if (ident) ident.style.opacity = out;
-            if (cap) cap.style.opacity = smooth01(heroProgress, .74, .86);
+            const capIn = smooth01(heroProgress, .74, .86);
+            caps.forEach(el => { el.style.opacity = capIn; });
             const scrim = document.getElementById('map-scrim');
             if (scrim) scrim.style.opacity = smooth01(heroProgress, .68, .84);
             const vig = document.getElementById('hero-vignette');
@@ -1045,7 +1015,7 @@ function smooth01(v, a, b) {
        peaking where that landmark is and rippling everywhere else with the
        cross-talk of everything else stored in the same vector. This is that
        field, drawn underneath the events it was built from. */
-    const FW = 80, FH = 72, FIELD_W = 86, FIELD_D = 78, FIELD_CZ = -22;
+    const FW = 80, FH = 72, FIELD_W = 124, FIELD_D = 112, FIELD_CZ = -22;
     const fieldData = new Uint8Array(FW * FH * 4);
     const fieldTex = new THREE.DataTexture(fieldData, FW, FH, THREE.RGBAFormat);
     fieldTex.minFilter = fieldTex.magFilter = THREE.LinearFilter;
@@ -1274,7 +1244,7 @@ function smooth01(v, a, b) {
         const sh = vel * .001 * (1 - blend);
         camera.position.x = (Math.random() - .5) * sh;
         const halfTan = Math.tan(wantFov * Math.PI / 360);
-        const planY = Math.min(115, Math.max(46, 32 / (halfTan * camera.aspect)));
+        const planY = Math.min(150, Math.max(60, 48 / (halfTan * camera.aspect)));
         camera.position.y = 3 + rise * (planY - 3) + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
         evFrame++;
@@ -1404,11 +1374,11 @@ setPipeline(0);
         const cnnPower = (10 + vel * .8).toFixed(1);
         const cnnAcc   = Math.max(12, 95 - vel * .9).toFixed(1);
         document.getElementById('cnn-power-val').textContent        = cnnPower + ' W';
-        document.getElementById('cnn-power-bar').style.width        = Math.min(100, cnnPower) + '%';
+        document.getElementById('cnn-power-bar').style.transform    = 'scaleX(' + Math.min(1, cnnPower / 100) + ')';
         document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#E0445E' : '#64748b';
         document.getElementById('cnn-acc-val').textContent          = cnnAcc + '%';
         document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#ededeb' : 'white';
-        document.getElementById('cnn-acc-bar').style.width          = cnnAcc + '%';
+        document.getElementById('cnn-acc-bar').style.transform      = 'scaleX(' + (cnnAcc / 100) + ')';
         document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#E0445E' : '#64748b';
         cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#141412';
         cnnCard.style.borderColor = vel > 60 ? 'rgba(239,68,68,.3)' : 'rgba(255,255,255,.05)';
@@ -1416,11 +1386,11 @@ setPipeline(0);
         const snnLat   = (1.2 + vel * .05).toFixed(1);
         const snnAcc   = Math.max(78, 98 - vel * .1).toFixed(1);
         document.getElementById('snn-power-val').textContent = snnPower + ' mW';
-        document.getElementById('snn-power-bar').style.width = Math.min(100, parseFloat(snnPower) * 5) + '%';
+        document.getElementById('snn-power-bar').style.transform = 'scaleX(' + Math.min(1, parseFloat(snnPower) * .05) + ')';
         document.getElementById('snn-lat-val').textContent   = snnLat + ' µs';
-        document.getElementById('snn-lat-bar').style.width   = Math.min(100, parseFloat(snnLat) * 2) + '%';
+        document.getElementById('snn-lat-bar').style.transform   = 'scaleX(' + Math.min(1, parseFloat(snnLat) * .02) + ')';
         document.getElementById('snn-acc-val').textContent   = snnAcc + '%';
-        document.getElementById('snn-acc-bar').style.width   = snnAcc + '%';
+        document.getElementById('snn-acc-bar').style.transform   = 'scaleX(' + (snnAcc / 100) + ')';
     }
     slider.addEventListener('input', update);
     update();
@@ -1772,7 +1742,7 @@ class BaseVector {
   function scoreRows(scores, formatter) {
     return scores.map(s => {
       const w = Math.max(2, Math.min(100, ((s.score + 1) / 2) * 100));
-      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
+      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="transform:scaleX(${w / 100});background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
     }).join('');
   }
 

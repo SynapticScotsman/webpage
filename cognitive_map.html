@@ -7,12 +7,12 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = { theme: { extend: {
-  fontFamily: { sans:['Inter','sans-serif'], mono:['JetBrains Mono','monospace'], serif:['Newsreader','serif'] }
+  fontFamily: { sans:['system-ui','sans-serif'], mono:['JetBrains Mono','monospace'], serif:['Newsreader','serif'] }
 }}}
 </script>
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
@@ -257,7 +257,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 .vw-blurb{font-family:'Newsreader',serif;font-size:13px;line-height:1.55;color:rgba(255,255,255,.7);margin-bottom:12px}
 .vw-blurb em{color:var(--hi);font-style:italic}
 .vw-trace-fill{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin-bottom:6px}
-#vw-trace-bar{height:100%;width:0%;background:linear-gradient(90deg, var(--hi), #a78bfa);transition:width .35s}
+#vw-trace-bar{height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg, var(--hi), #a78bfa);transition:transform .35s}
 .vw-trace-meta{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;color:rgba(255,255,255,.45);margin-bottom:10px}
 .vw-trace-meta span{color:#fff;font-weight:700}
 .vw-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:180px;overflow:auto}
@@ -320,9 +320,9 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 @media(max-width:560px){.ap-body{grid-template-columns:1fr}}
 .ap-meter-wrap{display:flex;align-items:flex-end;gap:12px}
 .ap-meter{position:relative;width:48px;height:140px;background:rgba(255,255,255,.04);border-radius:6px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
-.ap-meter-bar{position:absolute;left:0;right:0;bottom:0;height:22%;
+.ap-meter-bar{position:absolute;left:0;right:0;bottom:0;height:100%;transform:scaleY(.22);transform-origin:bottom;will-change:transform;
   background:linear-gradient(to top, #22d3ee 0%, #fbbf24 60%, #f87171 100%);
-  transition:height .25s ease}
+  transition:transform .25s ease}
 .ap-meter-thresh{position:absolute;left:-4px;right:-4px;height:1px;background:#f87171;box-shadow:0 0 6px #f87171}
 .ap-meter-thresh span{position:absolute;left:54px;top:-7px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.15em;color:#f87171;white-space:nowrap}
 .ap-pct{font-family:'Newsreader',serif;font-weight:300;font-size:34px;color:#fff}
@@ -823,7 +823,7 @@ html,body{background:#000;color:#e7e9ec;font-family:'JetBrains Mono','SF Mono',u
 </section>
 
 <footer class="py-12 text-center font-mono text-[10px] tracking-[.25em] text-white/30 border-t border-white/5">
-  <a href="index.html" class="hover:text-white/70">← HOME</a> · <a href="how-you-see/index.html" class="hover:text-white/70">HOW YOU SEE →</a><br><br>
+  <a href="index.html" class="hover:text-white/70">← HOME</a><br><br>
   © 2026 PAUL KIRKLAND · ICNS / WSU · COGNITIVE MAP v1
 </footer>
 
@@ -1349,7 +1349,7 @@ let scrollProgress = 0;
     nEl.textContent = trace.length;
     const fill = Math.min(100, trace.length * 14);
     fillEl.textContent = Math.round(fill) + '%';
-    barEl.style.width = fill + '%';
+    barEl.style.transform = 'scaleX(' + (fill / 100) + ')';
     list.innerHTML = '';
     trace.forEach(t => {
       const li = document.createElement('li');
