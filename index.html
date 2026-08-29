@@ -132,6 +132,17 @@
         /* Cards */
         .pub-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; transition:all .3s ease; display:flex; flex-direction:column; justify-content:space-between; }
         .pub-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); }
+        .pub-finder { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.07); border-radius:1rem; padding:1.5rem; }
+        .pub-input { background:#141412; border:1px solid rgba(255,255,255,.1); border-radius:.65rem; color:#ededeb; font-size:.9rem; }
+        .pub-input::placeholder { color:#6b6a66; }
+        .pub-input:focus { outline:2px solid #E0445E; outline-offset:2px; border-color:transparent; }
+        .pub-chip { font-family:'JetBrains Mono',monospace; font-size:.68rem; letter-spacing:.06em; padding:.4rem .75rem; border-radius:.5rem;
+                    background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.09); color:#b4b2a9; cursor:pointer; transition:color .2s, border-color .2s, background .2s; }
+        .pub-chip:hover { color:#ededeb; border-color:rgba(224,68,94,.45); }
+        .pub-chip[aria-pressed="true"] { background:rgba(224,68,94,.12); border-color:#E0445E; color:#E0445E; }
+        .pub-cite { font-family:'JetBrains Mono',monospace; font-size:.62rem; letter-spacing:.08em; text-transform:uppercase;
+                    color:#8a8a86; background:none; border:0; cursor:pointer; padding:.25rem 0; transition:color .2s; }
+        .pub-cite:hover { color:#E0445E; }
         .pub-kw { font-size:.6rem; padding:.15rem .45rem; border-radius:3px; background:rgba(224,68,94,.08); border:1px solid rgba(224,68,94,.2); color:#E0445E; font-family:'JetBrains Mono',monospace; }
         .partner-card { background:#141412; border:1px solid rgba(255,255,255,.05); border-radius:.75rem; transition:border-color .3s ease; text-align:center; }
         .partner-card:hover { border-color:rgba(224,68,94,.3); }
@@ -243,11 +254,20 @@
             How do <span class="text-cyan-400">you</span><br/>see the world?
         </h1>
     </div>
+    <!-- The tag never leaves. Neuromorphic stays lit throughout; only the
+         second half hands over from Perception to Cognition as you scroll. -->
     <div id="hero-identity" class="absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6">
-        <!-- same lockup in both beats; the lit half is the half you are in -->
-        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight drop-shadow-md"><span class="text-white">Neuromorphic Perception</span> <span style="color:#FF8C42">&amp;</span> <span class="text-white/30">Cognition</span></div>
+        <div class="hero-beat-2 text-base md:text-xl font-black uppercase tracking-tight drop-shadow-md">
+            <span class="text-white">Neuromorphic</span>
+            <span id="lock-perc" style="color:#fff;transition:color .5s ease">Perception</span>
+            <span style="color:#FF8C42">&amp;</span>
+            <span id="lock-cog" style="color:rgba(255,255,255,.28);transition:color .5s ease">Cognition</span>
+        </div>
         <div class="hero-beat-2 font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Paul Kirkland · ICNS · Western Sydney</div>
-        <button class="hero-beat-2 mt-2 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
+        <div class="hero-beat-2 relative w-full mt-2" style="height:1.05rem">
+            <button id="hero-cue" class="absolute inset-0 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500 hover:text-cyan-400 transition-colors pointer-events-auto" onclick="document.getElementById('hero-scroll').scrollIntoView({block:'end',behavior:'smooth'})" aria-label="Scroll: watch the events resolve into a map">scroll ↓ · watch the events become a map</button>
+            <div id="map-hint" class="absolute inset-0 font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-slate-500" style="opacity:0">Landmarks bound to places · query the vector · read where it peaks</div>
+        </div>
     </div>
 
     <div id="map-legend" class="absolute z-10 left-6 md:left-10 top-24 pointer-events-none font-mono" style="opacity:0;transition:opacity .3s">
@@ -258,21 +278,11 @@
         <div class="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-600 max-w-[9rem] leading-relaxed">Hover a landmark to unbind by it — its kind answers too</div>
     </div>
 
-    <!-- darkens the middle for the question and the foot for its blurb, the
-         same two places the opening beat puts its text -->
-    <div id="map-scrim" class="absolute inset-0 z-[6] pointer-events-none" aria-hidden="true"
-         style="opacity:0;transition:opacity .3s;background:radial-gradient(ellipse 64% 34% at 50% 52%,rgba(8,8,7,.84) 0%,rgba(8,8,7,.4) 55%,transparent 78%),linear-gradient(to top,rgba(8,8,7,.95) 0%,rgba(8,8,7,.6) 16%,transparent 40%)"></div>
-
-    <!-- second beat, laid out exactly like the first: question centred, blurb at the foot -->
+    <!-- second beat: only the question, the tag beneath is shared with the first -->
     <div id="map-question" class="map-reveal absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none" style="opacity:0;transform:translateY(7vh)">
         <h2 class="text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
             How do <span class="text-cyan-400">you</span><br/>remember it?
         </h2>
-    </div>
-
-    <div id="map-blurb" class="map-reveal absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6 pointer-events-none" style="opacity:0">
-        <div class="text-base md:text-xl font-black uppercase tracking-tight drop-shadow-md"><span class="text-white/30">Neuromorphic Perception</span> <span style="color:#FF8C42">&amp;</span> <span class="text-white">Cognition</span></div>
-        <div class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Landmarks bound to places · query the vector · read where it peaks</div>
     </div>
 </div>
 <div class="snap-stop absolute bottom-0 left-0 w-px h-screen pointer-events-none" aria-hidden="true"></div>
@@ -587,58 +597,34 @@
 
 <!-- PUBLICATIONS -->
 <section id="publications" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/5" aria-labelledby="pubs-heading">
-    <div class="text-center mb-16">
-        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Outputs · Selected key publications</p>
+    <div class="text-center mb-12">
+        <p class="font-mono text-[11px] font-bold text-cyan-400 uppercase tracking-[0.25em] mb-3">Outputs · Peer-reviewed publications</p>
         <h2 id="pubs-heading" class="text-4xl font-black">Research archives</h2>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <a href="https://doi.org/10.1016/j.neucom.2024.128657" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">Neurocomputing · 2025</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Spiking Neural Networks for event-based action recognition</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Advances event-based action recognition on complex temporal data.</p>
+    <div class="pub-finder mb-10">
+        <div class="flex flex-col lg:flex-row gap-4 lg:items-center">
+            <label class="sr-only" for="pub-search">Search publications</label>
+            <div class="relative flex-1">
+                <svg class="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                <input id="pub-search" type="search" autocomplete="off" placeholder="Search titles, venues, topics, DOI…" class="pub-input w-full pl-11 pr-4 py-3" />
             </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">SNN</span><span class="pub-kw">Event Camera</span><span class="pub-kw">Action Recognition</span></div>
-        </a>
-        <a href="https://doi.org/10.1038/s44172-025-00555-7" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">Comms Engineering · 2025</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Single photon event-driven 3D imaging</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">First asynchronous 3D imaging pipeline using SPADs.</p>
-            </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">SPAD</span><span class="pub-kw">3D Imaging</span><span class="pub-kw">Asynchronous</span></div>
-        </a>
-        <a href="https://doi.org/10.1038/s41598-022-08703-1" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">Scientific Reports · 2022</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Ultrafast neuromorphic photonic image processing with a VCSEL neuron</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Validates VCSELs as spiking neurons for target tracking.</p>
-            </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">VCSEL</span><span class="pub-kw">Photonic SNN</span><span class="pub-kw">Target Tracking</span></div>
-        </a>
-        <a href="https://doi.org/10.1109/tc.2022.3191968" target="_blank" rel="noopener noreferrer" class="pub-card group p-8">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded">IEEE Trans. Computers · 2022</div>
-                    <svg class="w-4 h-4 text-slate-600 group-hover:text-white transition-colors shrink-0 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                </div>
-                <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight group-hover:text-cyan-400 transition-colors">Unsupervised Spiking Instance Segmentation on Event Data</h4>
-                <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">Engineered the first semantic and instance segmentation SNNs.</p>
-            </div>
-            <div class="flex gap-2 flex-wrap"><span class="pub-kw">Instance Segmentation</span><span class="pub-kw">Unsupervised</span><span class="pub-kw">DVS</span></div>
-        </a>
-
+            <label class="sr-only" for="pub-sort">Sort publications</label>
+            <select id="pub-sort" class="pub-input px-4 py-3 lg:w-52">
+                <option value="new">Newest first</option>
+                <option value="old">Oldest first</option>
+                <option value="az">Title A–Z</option>
+            </select>
+        </div>
+        <div class="flex items-start gap-3 mt-5 flex-wrap">
+            <span class="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 pt-2 shrink-0">Topics</span>
+            <div id="pub-topics" class="flex gap-2 flex-wrap"></div>
+        </div>
     </div>
+
+    <p id="pub-count" class="font-mono text-[11px] uppercase tracking-[0.2em] text-slate-500 mb-6" role="status" aria-live="polite"></p>
+    <div id="pub-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    <p id="pub-empty" class="hidden text-center py-16 text-slate-500">No publications match that search. <button type="button" id="pub-clear" class="text-cyan-400 underline underline-offset-4 hover:text-white">Clear filters</button></p>
 </section>
 
 <!-- PARTNERS -->
@@ -758,11 +744,20 @@ function smooth01(v, a, b) {
                .86-1 the text simply sits there before the stage lets go */
             const out = 1 - smooth01(heroProgress, 0, .20);
             if (copy) copy.style.opacity = out;
-            if (ident) ident.style.opacity = out;
             const capIn = smooth01(heroProgress, .74, .86);
             caps.forEach(el => { el.style.opacity = capIn; });
-            const scrim = document.getElementById('map-scrim');
-            if (scrim) scrim.style.opacity = smooth01(heroProgress, .68, .84);
+
+            /* the tag stays put all the way through - only the lit half moves,
+               and the line under it swaps the scroll cue for the map legend */
+            const cue = document.getElementById('hero-cue');
+            const hint = document.getElementById('map-hint');
+            if (cue) { cue.style.opacity = out; cue.style.pointerEvents = out < .1 ? 'none' : 'auto'; }
+            if (hint) hint.style.opacity = capIn;
+            const onCognition = heroProgress > .6;
+            const lp = document.getElementById('lock-perc');
+            const lc = document.getElementById('lock-cog');
+            if (lp) lp.style.color = onCognition ? 'rgba(255,255,255,.28)' : '#fff';
+            if (lc) lc.style.color = onCognition ? '#fff' : 'rgba(255,255,255,.28)';
             const vig = document.getElementById('hero-vignette');
             if (vig) vig.style.opacity = 1 - smooth01(heroProgress, .26, .56) * .68;
             showChrome = heroProgress > .995;
@@ -1394,6 +1389,123 @@ setPipeline(0);
     }
     slider.addEventListener('input', update);
     update();
+})();
+
+// ── PUBLICATION FINDER ────────────────────────────────────────────────
+// One entry per paper. Adding a publication is a single object here; the
+// topic chips, counts and sorting all derive from this list.
+const PAPERS = [
+    { title: 'Spiking Neural Networks for event-based action recognition',
+      venue: 'Neurocomputing', year: 2025, doi: '10.1016/j.neucom.2024.128657',
+      note: 'Advances event-based action recognition on complex temporal data.',
+      topics: ['SNN', 'Event Camera', 'Action Recognition'] },
+    { title: 'Single photon event-driven 3D imaging',
+      venue: 'Communications Engineering', year: 2025, doi: '10.1038/s44172-025-00555-7',
+      note: 'First asynchronous 3D imaging pipeline using SPADs.',
+      topics: ['SPAD', '3D Imaging', 'Asynchronous'] },
+    { title: 'Ultrafast neuromorphic photonic image processing with a VCSEL neuron',
+      venue: 'Scientific Reports', year: 2022, doi: '10.1038/s41598-022-08703-1',
+      note: 'Validates VCSELs as spiking neurons for target tracking.',
+      topics: ['VCSEL', 'Photonic SNN', 'Target Tracking'] },
+    { title: 'Unsupervised Spiking Instance Segmentation on Event Data',
+      venue: 'IEEE Transactions on Computers', year: 2022, doi: '10.1109/tc.2022.3191968',
+      note: 'Engineered the first semantic and instance segmentation SNNs.',
+      topics: ['Instance Segmentation', 'Unsupervised', 'DVS'] }
+];
+
+(function () {
+    const grid   = document.getElementById('pub-grid');
+    if (!grid) return;
+    const search = document.getElementById('pub-search');
+    const sort   = document.getElementById('pub-sort');
+    const chips  = document.getElementById('pub-topics');
+    const count  = document.getElementById('pub-count');
+    const empty  = document.getElementById('pub-empty');
+    let topic = null;
+
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const allTopics = [...new Set(PAPERS.flatMap(p => p.topics))].sort();
+
+    chips.innerHTML = ['All papers', ...allTopics].map((t, i) =>
+        `<button type="button" class="pub-chip" data-topic="${i ? esc(t) : ''}" aria-pressed="${i ? 'false' : 'true'}">${esc(t)}${i ? '' : ' (' + PAPERS.length + ')'}</button>`
+    ).join('');
+
+    function render() {
+        const q = search.value.trim().toLowerCase();
+        let list = PAPERS.filter(p => {
+            if (topic && !p.topics.includes(topic)) return false;
+            if (!q) return true;
+            return (p.title + ' ' + p.venue + ' ' + p.year + ' ' + p.doi + ' ' + p.topics.join(' ')).toLowerCase().includes(q);
+        });
+        const by = sort.value;
+        list = list.slice().sort((a, b) =>
+            by === 'az' ? a.title.localeCompare(b.title) :
+            by === 'old' ? a.year - b.year : b.year - a.year);
+
+        count.textContent = 'Showing ' + list.length + ' of ' + PAPERS.length + (PAPERS.length === 1 ? ' paper' : ' papers');
+        empty.classList.toggle('hidden', list.length > 0);
+
+        grid.innerHTML = list.map(p => `
+            <article class="pub-card group p-8">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer"
+                           class="text-[10px] font-bold text-cyan-400 uppercase tracking-widest bg-cyan-500/10 px-3 py-1 rounded hover:bg-cyan-500/20 transition-colors">${esc(p.venue)} · ${p.year}</a>
+                        <a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(p.title)} at its DOI"
+                           class="text-slate-600 hover:text-white transition-colors shrink-0 ml-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+                        </a>
+                    </div>
+                    <h4 class="text-lg font-bold mb-3 tracking-tight leading-tight">
+                        <a href="https://doi.org/${esc(p.doi)}" target="_blank" rel="noopener noreferrer" class="hover:text-cyan-400 transition-colors">${esc(p.title)}</a>
+                    </h4>
+                    <p class="text-sm text-slate-400 italic border-l-2 border-white/10 pl-4 leading-relaxed mb-4">${esc(p.note)}</p>
+                </div>
+                <div class="flex gap-2 flex-wrap items-center justify-between">
+                    <div class="flex gap-2 flex-wrap">${p.topics.map(t => `<span class="pub-kw">${esc(t)}</span>`).join('')}</div>
+                    <button type="button" class="pub-cite" data-doi="${esc(p.doi)}">⧉ Cite</button>
+                </div>
+            </article>`).join('');
+    }
+
+    chips.addEventListener('click', e => {
+        const b = e.target.closest('.pub-chip');
+        if (!b) return;
+        topic = b.dataset.topic || null;
+        chips.querySelectorAll('.pub-chip').forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+        render();
+    });
+
+    /* BibTeX comes from doi.org itself rather than being hand-written here,
+       so author lists are always the publisher's, never invented. */
+    grid.addEventListener('click', async e => {
+        const b = e.target.closest('.pub-cite');
+        if (!b) return;
+        const original = b.textContent;
+        b.textContent = '… fetching';
+        try {
+            const r = await fetch('https://doi.org/' + b.dataset.doi, { headers: { Accept: 'application/x-bibtex' } });
+            if (!r.ok) throw new Error(r.status);
+            await navigator.clipboard.writeText((await r.text()).trim());
+            b.textContent = '✓ BibTeX copied';
+        } catch (err) {
+            try {
+                await navigator.clipboard.writeText('https://doi.org/' + b.dataset.doi);
+                b.textContent = '✓ DOI copied';
+            } catch (e2) { b.textContent = '✗ copy failed'; }
+        }
+        setTimeout(() => { b.textContent = original; }, 2400);
+    });
+
+    document.getElementById('pub-clear').addEventListener('click', () => {
+        search.value = ''; topic = null;
+        chips.querySelectorAll('.pub-chip').forEach((c, i) => c.setAttribute('aria-pressed', String(i === 0)));
+        render();
+    });
+
+    search.addEventListener('input', render);
+    sort.addEventListener('change', render);
+    render();
 })();
 
 // ── PHASE SANDBOX ─────────────────────────────────────────────────────
