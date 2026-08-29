@@ -257,14 +257,21 @@
         <div class="mt-3 text-[9px] uppercase tracking-[0.18em] text-slate-600 max-w-[9rem] leading-relaxed">Hover a landmark to unbind by it — its kind answers too</div>
     </div>
 
-    <div id="map-scrim" class="absolute inset-x-0 bottom-0 z-[6] pointer-events-none" aria-hidden="true"
-         style="opacity:0;height:56%;transition:opacity .3s;background:linear-gradient(to top,rgba(8,8,7,.97) 0%,rgba(8,8,7,.9) 30%,rgba(8,8,7,.55) 60%,transparent 100%)"></div>
+    <!-- darkens the middle for the question and the foot for its blurb, the
+         same two places the opening beat puts its text -->
+    <div id="map-scrim" class="absolute inset-0 z-[6] pointer-events-none" aria-hidden="true"
+         style="opacity:0;transition:opacity .3s;background:radial-gradient(ellipse 64% 34% at 50% 52%,rgba(8,8,7,.84) 0%,rgba(8,8,7,.4) 55%,transparent 78%),linear-gradient(to top,rgba(8,8,7,.95) 0%,rgba(8,8,7,.6) 16%,transparent 40%)"></div>
 
-    <div id="map-caption" class="absolute z-10 inset-x-0 bottom-10 md:bottom-14 flex flex-col items-center gap-4 text-center px-6 pointer-events-none" style="opacity:0">
-        <h2 class="text-4xl md:text-6xl lg:text-[4.25rem] font-normal tracking-tight text-white leading-[1.06] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
-            How do <span class="text-cyan-400">you</span> remember it?
+    <!-- second beat, laid out exactly like the first: question centred, blurb at the foot -->
+    <div id="map-question" class="map-reveal absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6 pointer-events-none" style="opacity:0;transform:translateY(7vh)">
+        <h2 class="text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] drop-shadow-2xl" style="font-family:'Playfair Display','Newsreader',Georgia,serif">
+            How do <span class="text-cyan-400">you</span><br/>remember it?
         </h2>
-        <p class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.28em] text-slate-400">Landmarks bound to places · query the vector · read where it peaks</p>
+    </div>
+
+    <div id="map-blurb" class="map-reveal absolute bottom-6 inset-x-0 z-10 flex flex-col items-center gap-2 text-center px-6 pointer-events-none" style="opacity:0">
+        <div class="text-base md:text-xl font-black uppercase tracking-tight text-white drop-shadow-md">Cognitive maps <span style="color:#FF8C42">&amp;</span> VSA memory</div>
+        <div class="font-mono text-[10px] md:text-[11px] font-bold uppercase tracking-[0.3em] text-slate-400 drop-shadow-md">Landmarks bound to places · query the vector · read where it peaks</div>
     </div>
 </div>
 <div class="snap-stop absolute bottom-0 left-0 w-px h-screen pointer-events-none" aria-hidden="true"></div>
@@ -744,14 +751,15 @@ function smooth01(v, a, b) {
             heroProgress = span > 0 ? Math.min(1, Math.max(0, -r.top / span)) : 0;
             const copy = document.getElementById('hero-copy');
             const ident = document.getElementById('hero-identity');
-            const cap = document.getElementById('map-caption');
+            const caps = document.querySelectorAll('.map-reveal');
             /* 0-.20 hero copy leaves · .28-.60 the map resolves ·
                .60-.74 it holds alone · .68-.86 scrim then text arrive ·
                .86-1 the text simply sits there before the stage lets go */
             const out = 1 - smooth01(heroProgress, 0, .20);
             if (copy) copy.style.opacity = out;
             if (ident) ident.style.opacity = out;
-            if (cap) cap.style.opacity = smooth01(heroProgress, .74, .86);
+            const capIn = smooth01(heroProgress, .74, .86);
+            caps.forEach(el => { el.style.opacity = capIn; });
             const scrim = document.getElementById('map-scrim');
             if (scrim) scrim.style.opacity = smooth01(heroProgress, .68, .84);
             const vig = document.getElementById('hero-vignette');
