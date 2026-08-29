@@ -1045,7 +1045,7 @@ function smooth01(v, a, b) {
        peaking where that landmark is and rippling everywhere else with the
        cross-talk of everything else stored in the same vector. This is that
        field, drawn underneath the events it was built from. */
-    const FW = 80, FH = 72, FIELD_W = 86, FIELD_D = 78, FIELD_CZ = -22;
+    const FW = 80, FH = 72, FIELD_W = 124, FIELD_D = 112, FIELD_CZ = -22;
     const fieldData = new Uint8Array(FW * FH * 4);
     const fieldTex = new THREE.DataTexture(fieldData, FW, FH, THREE.RGBAFormat);
     fieldTex.minFilter = fieldTex.magFilter = THREE.LinearFilter;
@@ -1274,7 +1274,7 @@ function smooth01(v, a, b) {
         const sh = vel * .001 * (1 - blend);
         camera.position.x = (Math.random() - .5) * sh;
         const halfTan = Math.tan(wantFov * Math.PI / 360);
-        const planY = Math.min(115, Math.max(46, 32 / (halfTan * camera.aspect)));
+        const planY = Math.min(150, Math.max(60, 48 / (halfTan * camera.aspect)));
         camera.position.y = 3 + rise * (planY - 3) + (Math.random() - .5) * sh;
         const scatter = blend < .8 && vel > 15, sa = vel * .01 * (1 - blend);
         evFrame++;
