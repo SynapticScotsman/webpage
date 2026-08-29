@@ -149,7 +149,7 @@
         .pipeline-btn.inactive { opacity:.5; }
         .pipeline-btn:hover { opacity:1; }
         .pipeline-circle { width:64px; height:64px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#141412; border:2px solid; transition:box-shadow .3s, border-color .3s, color .3s; }
-        .metric-bar { height:6px; border-radius:9999px; transition:width .3s ease, background .3s ease; }
+        .metric-bar { height:6px; width:100%; transform-origin:left; will-change:transform; transition:transform .3s ease, background .3s ease; }
 
         /* Video */
         .video-iframe-wrap { position:relative; aspect-ratio:16/9; background:#141412; border-radius:1rem; overflow:hidden; border:1px solid rgba(255,255,255,.1); box-shadow:0 25px 50px rgba(0,0,0,.5); }
@@ -165,7 +165,7 @@
         .vsa-phase-wheel svg { overflow: visible; filter: drop-shadow(0 12px 30px rgba(0,0,0,0.28)); }
         .vsa-score-row { display: grid; grid-template-columns: 72px 1fr 46px; gap: 0.75rem; align-items: center; font-size: 12px; }
         .vsa-score-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
-        .vsa-score-fill { height: 100%; border-radius: 999px; transition: width .25s ease; }
+        .vsa-score-fill { height: 100%; width: 100%; transform-origin: left; transition: transform .25s ease; }
 
         /* Mobile menu */
         #mobile-menu { display:none; }
@@ -188,7 +188,7 @@
 
 <!-- Progress Bar -->
 <div id="progress-shell" class="site-chrome chrome-hidden fixed top-0 left-0 w-full h-1 z-50 bg-slate-900" aria-hidden="true">
-    <div id="progress-bar" class="h-full bg-cyan-500 transition-all duration-75" style="width:0%"></div>
+    <div id="progress-bar" class="h-full w-full bg-cyan-500 transition-transform duration-75" style="transform:scaleX(0);transform-origin:left"></div>
 </div>
 
 <!-- NAV -->
@@ -410,15 +410,15 @@
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Power Draw</span><span id="cnn-power-val">18.0 W</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-power-bar" class="metric-bar" style="width:18%;background:#64748b"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-power-bar" class="metric-bar" style="transform:scaleX(.18);background:#64748b"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Latency</span><span>33.3 ms</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div class="metric-bar bg-slate-500" style="width:33%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div class="metric-bar bg-slate-500" style="transform:scaleX(.33)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-slate-400 mb-1.5"><span>Tracking Accuracy</span><span id="cnn-acc-val" class="text-white">86.0%</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-acc-bar" class="metric-bar" style="width:86%;background:#64748b"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="cnn-acc-bar" class="metric-bar" style="transform:scaleX(.86);background:#64748b"></div></div>
                     </div>
                 </div>
             </div>
@@ -428,15 +428,15 @@
                 <div class="space-y-6">
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Power Draw</span><span id="snn-power-val">0.70 mW</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-power-bar" class="metric-bar bg-cyan-400" style="width:3.5%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-power-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.035)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Latency</span><span id="snn-lat-val">1.7 µs</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-lat-bar" class="metric-bar bg-cyan-400" style="width:3.4%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-lat-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.034)"></div></div>
                     </div>
                     <div>
                         <div class="flex justify-between text-xs font-mono text-cyan-400 mb-1.5"><span>Tracking Accuracy</span><span id="snn-acc-val">97.0%</span></div>
-                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-acc-bar" class="metric-bar bg-cyan-400" style="width:97%"></div></div>
+                        <div class="h-1.5 w-full bg-slate-900 rounded-full overflow-hidden"><div id="snn-acc-bar" class="metric-bar bg-cyan-400" style="transform:scaleX(.97)"></div></div>
                     </div>
                 </div>
             </div>
@@ -739,7 +739,7 @@ function smooth01(v, a, b) {
         const t = document.documentElement.scrollTop;
         const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         scrollProgress = h > 0 ? (t / h) * 100 : 0;
-        bar.style.width = scrollProgress + '%';
+        bar.style.transform = 'scaleX(' + (scrollProgress / 100) + ')';
 
         /* hero stage progress: 0 = flying through events, 1 = plan view */
         const stage = document.getElementById('hero-scroll');
@@ -1373,11 +1373,11 @@ setPipeline(0);
         const cnnPower = (10 + vel * .8).toFixed(1);
         const cnnAcc   = Math.max(12, 95 - vel * .9).toFixed(1);
         document.getElementById('cnn-power-val').textContent        = cnnPower + ' W';
-        document.getElementById('cnn-power-bar').style.width        = Math.min(100, cnnPower) + '%';
+        document.getElementById('cnn-power-bar').style.transform    = 'scaleX(' + Math.min(1, cnnPower / 100) + ')';
         document.getElementById('cnn-power-bar').style.background   = vel > 40 ? '#E0445E' : '#64748b';
         document.getElementById('cnn-acc-val').textContent          = cnnAcc + '%';
         document.getElementById('cnn-acc-val').style.color          = vel > 50 ? '#ededeb' : 'white';
-        document.getElementById('cnn-acc-bar').style.width          = cnnAcc + '%';
+        document.getElementById('cnn-acc-bar').style.transform      = 'scaleX(' + (cnnAcc / 100) + ')';
         document.getElementById('cnn-acc-bar').style.background     = vel > 50 ? '#E0445E' : '#64748b';
         cnnCard.style.background  = vel > 60 ? 'rgba(127,29,29,.2)' : '#141412';
         cnnCard.style.borderColor = vel > 60 ? 'rgba(239,68,68,.3)' : 'rgba(255,255,255,.05)';
@@ -1385,11 +1385,11 @@ setPipeline(0);
         const snnLat   = (1.2 + vel * .05).toFixed(1);
         const snnAcc   = Math.max(78, 98 - vel * .1).toFixed(1);
         document.getElementById('snn-power-val').textContent = snnPower + ' mW';
-        document.getElementById('snn-power-bar').style.width = Math.min(100, parseFloat(snnPower) * 5) + '%';
+        document.getElementById('snn-power-bar').style.transform = 'scaleX(' + Math.min(1, parseFloat(snnPower) * .05) + ')';
         document.getElementById('snn-lat-val').textContent   = snnLat + ' µs';
-        document.getElementById('snn-lat-bar').style.width   = Math.min(100, parseFloat(snnLat) * 2) + '%';
+        document.getElementById('snn-lat-bar').style.transform   = 'scaleX(' + Math.min(1, parseFloat(snnLat) * .02) + ')';
         document.getElementById('snn-acc-val').textContent   = snnAcc + '%';
-        document.getElementById('snn-acc-bar').style.width   = snnAcc + '%';
+        document.getElementById('snn-acc-bar').style.transform   = 'scaleX(' + (snnAcc / 100) + ')';
     }
     slider.addEventListener('input', update);
     update();
@@ -1741,7 +1741,7 @@ class BaseVector {
   function scoreRows(scores, formatter) {
     return scores.map(s => {
       const w = Math.max(2, Math.min(100, ((s.score + 1) / 2) * 100));
-      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="width:${w}%;background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
+      return `<div class="vsa-score-row"><div class="font-bold uppercase tracking-[0.14em]" style="color:${s.color||'#E0445E'}">${s.name}</div><div class="vsa-score-track"><div class="vsa-score-fill" style="transform:scaleX(${w / 100});background:${s.color||'#E0445E'}"></div></div><div class="font-mono text-right text-slate-400">${formatter(s.score)}</div></div>`;
     }).join('');
   }
 
