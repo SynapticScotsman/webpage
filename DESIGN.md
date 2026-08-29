@@ -18,13 +18,17 @@ touching.
 The pairing is the whole idea: a machine that sees, asked a human question. Keep both
 halves; neither works alone.
 
-## The three surfaces
+## The two surfaces
 
 | Surface | File | Look |
 |---|---|---|
 | Homepage | `index.html` | Warm black `#141412`, red `#E0445E`; Inter, JetBrains Mono, Playfair Display |
 | Cognitive map atlas | `cognitive_map.html` | Pure black, cyan `#22d3ee`; JetBrains Mono, Newsreader |
-| Explainer | `how-you-see/index.html` | Warm black, red; Inter, JetBrains Mono, Newsreader |
+
+There was a third surface, a `how-you-see/` explainer, deleted once the
+homepage's Perception and Cognition sections did the same job in place. If an
+explainer ever returns it should start where those sections stop — the
+bind/bundle/unbind detail — not repeat the introduction.
 
 The atlas keeps cyan on purpose — it predates the red identity and reads as its own
 artifact. If it is ever brought in line, the change is its `:root` block alone.
@@ -84,8 +88,6 @@ CSS variables at the top (`--accent` etc.). Tweak defaults in `TWEAK_DEFAULTS`
 IIFE near the bottom: hero three.js, VSA robot walk, maze sim, uncertainty thermostat,
 minimap and event strip.
 
-### Explainer — `how-you-see/index.html`
-All styling in its own `<style>` block, tokens under `:root`. No JavaScript at all.
 
 ## Typography
 
