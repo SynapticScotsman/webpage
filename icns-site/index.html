@@ -111,63 +111,6 @@
   .sec-link{font-size:.85rem; font-weight:600; color:var(--rose); text-decoration:none; white-space:nowrap}
   .sec-link:hover{text-decoration:underline; text-underline-offset:3px}
 
-  /* The reel: the centre's recorded work, which is the actual argument. */
-  .reel{display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:var(--s5)}
-  .clip{display:flex; flex-direction:column; gap:12px}
-  .clip.wide{grid-column:span 2}
-  @media (max-width:760px){ .clip.wide{grid-column:span 1} }
-  .frame{position:relative; aspect-ratio:16/9; background:#000;
-         border:1px solid var(--plate-line); border-radius:var(--r2); overflow:hidden}
-  .frame img{width:100%; height:100%; object-fit:cover; opacity:.82; transition:opacity .14s ease-out}
-  .frame:hover img{opacity:1}
-  .frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
-  .frame button{position:absolute; inset:0; width:100%; height:100%; background:transparent;
-                display:grid; place-items:center; cursor:pointer}
-  .play{width:56px; height:56px; border-radius:50%; background:var(--crimson);
-        display:grid; place-items:center; box-shadow:0 4px 20px rgba(5,7,10,.6);
-        transition:background .14s ease-out,transform .14s ease-out}
-  .play svg{width:20px; height:20px; margin-left:3px; fill:#fff}
-  .frame button:hover .play{background:var(--crimson-bright); transform:scale(1.08)}
-  .play.big{width:80px; height:80px}
-  .play.big svg{width:29px; height:29px; margin-left:4px}
-  .clip h3{margin:0; font-size:1.02rem; font-weight:700; color:var(--white); line-height:1.3}
-  .clip p{margin:0; font-size:.89rem}
-  .clip .meta{display:flex; flex-wrap:wrap; align-items:center; font-family:var(--font-mono);
-              font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
-  .clip .meta .dot{margin:0 8px; color:var(--faint)}
-  .clip .meta .tag{color:var(--rose)}
-  .clip .meta .arch{color:var(--viz-off)}
-
-  /* Programmes */
-  .progs{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s5)}
-  .prog{background:var(--plate-panel); border:1px solid var(--plate-line);
-        border-radius:var(--r2); padding:var(--s5); display:flex; flex-direction:column; gap:10px}
-  .prog:hover{border-color:#474D54}
-  .prog h3{margin:0; font-size:1.16rem; font-weight:700; color:var(--white)}
-  .prog p{margin:0; font-size:.91rem}
-  .prog .meta{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em;
-              text-transform:uppercase; color:var(--muted)}
-  .prog .meta .tag{color:var(--rose)}
-  .prog .meta .live{color:var(--viz-ref)}
-  .prog .meta .todo{color:var(--viz-off)}
-  .prog .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
-             color:var(--rose); text-decoration:none}
-  .prog .act:hover{text-decoration:underline; text-underline-offset:3px}
-
-  /* Sectors */
-  .sectors{background:var(--plate-panel); border-block:1px solid var(--plate-line)}
-  .sec-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1px;
-            background:var(--plate-line); border:1px solid var(--plate-line);
-            border-radius:var(--r2); overflow:hidden; margin-top:var(--s6)}
-  .sector{background:var(--plate); padding:var(--s5); display:flex; flex-direction:column; gap:9px}
-  .sector .n{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.12em;
-             text-transform:uppercase; color:var(--rose)}
-  .sector h3{margin:0; font-size:1.02rem; font-weight:700; color:var(--white)}
-  .sector p{margin:0; font-size:.87rem}
-  .sector .act{margin-top:auto; padding-top:8px; font-size:.85rem; font-weight:600;
-               color:var(--rose); text-decoration:none}
-  .sector .act:hover{text-decoration:underline; text-underline-offset:3px}
-
   footer{border-top:1px solid var(--plate-line); background:var(--plate-deep); padding:var(--s7) 0 var(--s6)}
   footer .cols{display:flex; justify-content:space-between; gap:var(--s6); flex-wrap:wrap}
   footer .links{display:flex; gap:var(--s6); flex-wrap:wrap}
@@ -179,6 +122,61 @@
   footer .ack{max-width:52ch; font-size:.8rem; color:var(--muted); font-family:var(--font-accent)}
   footer .fine{margin-top:var(--s6); padding-top:18px; border-top:1px solid var(--plate-line);
                font-size:.74rem; color:var(--faint); max-width:94ch}
+
+
+  /* ---- The work: one section, grouped by sector ---- */
+  .intro{max-width:68ch; margin:0 0 var(--s7); font-size:.97rem}
+  .group{padding:0 0 var(--s8); border:0}
+  .group h3{margin:0; font-size:1.28rem; font-weight:800; color:var(--white);
+            text-transform:uppercase; letter-spacing:-.01em;
+            padding-top:var(--s5); border-top:2px solid var(--crimson-bright)}
+  .group .problem{margin:8px 0 var(--s6); max-width:62ch; font-size:.93rem; color:var(--muted)}
+  .work-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:var(--s5)}
+  .wcard{display:flex; flex-direction:column; gap:10px}
+  .wcard.plain{background:var(--plate-panel); border:1px solid var(--plate-line);
+               border-radius:var(--r2); padding:var(--s5)}
+  .wcard.plain:hover{border-color:#474D54}
+  .wcard h4{margin:0; font-size:1.02rem; font-weight:700; color:var(--white); line-height:1.3}
+  .wcard p{margin:0; font-size:.89rem}
+  .wcard .meta{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em;
+               text-transform:uppercase; color:var(--muted); margin:0}
+  .wcard .meta .live{color:var(--viz-ref)}
+  .wcard .meta .arch,.wcard .meta .todo{color:var(--viz-off)}
+  .wcard .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
+              color:var(--rose); text-decoration:none}
+  .wcard .act:hover{text-decoration:underline; text-underline-offset:3px}
+  .note{margin:0; font-size:.86rem; color:var(--muted); max-width:74ch}
+
+  .frame{position:relative; aspect-ratio:16/9; background:#000;
+         border:1px solid var(--plate-line); border-radius:var(--r2); overflow:hidden}
+  .frame img{width:100%; height:100%; object-fit:cover; opacity:.82; transition:opacity .14s ease-out}
+  .frame:hover img{opacity:1}
+  .frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+  .frame button{position:absolute; inset:0; width:100%; height:100%; background:transparent;
+                display:grid; place-items:center; cursor:pointer}
+  .play{width:54px; height:54px; border-radius:50%; background:var(--crimson);
+        display:grid; place-items:center; box-shadow:0 4px 20px rgba(5,7,10,.6);
+        transition:background .14s ease-out,transform .14s ease-out}
+  .play svg{width:19px; height:19px; margin-left:3px; fill:#fff}
+  .frame button:hover .play{background:var(--crimson-bright); transform:scale(1.08)}
+
+  /* ---- DeepSouth facility band ---- */
+  .facility{background:var(--crimson); color:var(--white); border-block:1px solid var(--plate-line)}
+  .facility .wrap{padding-block:var(--s8)}
+  .facility .cols{display:grid; grid-template-columns:1.15fr .85fr; gap:var(--s7); align-items:center}
+  .facility .eyebrow{color:var(--crimson-tint)}
+  .facility h2{color:var(--white); margin-top:6px}
+  .facility p{max-width:56ch; margin:16px 0 0; font-size:.98rem; color:var(--crimson-tint)}
+  .btn-light{background:var(--white); color:var(--crimson); margin-top:24px}
+  .btn-light:hover{background:var(--crimson-tint)}
+  .specs{display:grid; grid-template-columns:1fr 1fr; gap:1px; margin:0;
+         background:rgba(255,255,255,.25); border:1px solid rgba(255,255,255,.25);
+         border-radius:var(--r2); overflow:hidden}
+  .specs > div{background:var(--crimson); padding:18px 20px}
+  .specs dt{font-family:var(--font-mono); font-weight:600; font-size:1.1rem;
+            font-variant-numeric:tabular-nums; color:var(--white)}
+  .specs dd{margin:2px 0 0; font-size:.74rem; color:var(--crimson-tint)}
+  @media (max-width:860px){ .facility .cols{grid-template-columns:1fr} }
 
   @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
@@ -196,9 +194,8 @@
       <span class="centre">International Centre for<br>Neuromorphic Systems</span>
     </a>
     <nav aria-label="Primary">
-      <a href="#reel">The work</a>
-      <a href="#programmes">Programmes</a>
-      <a href="#sectors">Applications</a>
+      <a href="#work">The work</a>
+      <a href="#deepsouth">DeepSouth</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
       <a href="https://www.westernsydney.edu.au/icns/research-projects/open-phd-projects">Study</a>
       <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
@@ -227,7 +224,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
         Play the footage
       </button>
-      <a class="btn btn-ghost" href="#reel">See the recorded work</a>
+      <a class="btn btn-ghost" href="#work">See the recorded work</a>
     </div>
   </div>
 </div>
@@ -241,192 +238,178 @@
   </div>
 </div>
 
-<section id="reel">
+<section id="work">
   <div class="wrap">
     <div class="sec-head">
       <div>
         <p class="eyebrow dim">The work, as recorded</p>
         <h2>What the sensors see</h2>
       </div>
-      <a class="sec-link" href="https://www.westernsydney.edu.au/icns/resources/research-videos">All footage &rarr;</a>
-    </div>
-
-    <div class="reel">
-
-      <article class="clip wide">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/5ct78VxCGlQ/maxresdefault.jpg" alt="The moon during a total lunar eclipse, the lit limb and the shadowed disc both visible" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="5ct78VxCGlQ" aria-label="Play: full lunar eclipse through a neuromorphic event-based camera"><span class="play big" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Dynamic range</span><span class="dot">&middot;</span>26 May 2021</p>
-        <h3>A full lunar eclipse, both halves visible at once</h3>
-        <p>The illuminated and the eclipsed portions of the moon stay clear together. A conventional sensor exposes for the brighter lit area and loses the rest, because it has one exposure to spend and every pixel must share it.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/rZHrqh5Sc3c/maxresdefault.jpg" alt="A star map being generated continuously as stars cross the telescope's field of view" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="rZHrqh5Sc3c" aria-label="Play: simultaneous sky mapping and satellite tracking"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Space situational awareness</span></p>
-        <h3>Simultaneous sky mapping and satellite tracking</h3>
-        <p>A star map builds continuously from the stars passing through the field of view. Their positions then reveal the motion of the telescope itself.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg" alt="The moon held stationary in a telescope's field of view on a cloudy night" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="ctQHzDC61DU" aria-label="Play: seeing the moon"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Perception</span></p>
-        <h3>Seeing the moon through cloud</h3>
-        <p>The telescope holds the moon still on a cloudy night. Because the cloud and the moon move at different velocities, the sensor separates them.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/goAtEGKRU1w/maxresdefault.jpg" alt="A moving scene in which near and far objects separate by how fast they cross the frame" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="goAtEGKRU1w" aria-label="Play: image segregation by relative motion"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Algorithms</span></p>
-        <h3>Separating a scene by motion alone</h3>
-        <p>Objects close to you cross the frame faster than distant ones when you are moving, as in a car or a train. That difference alone is enough to pull them apart.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/Aoj2g_qeG2I/maxresdefault.jpg" alt="Raw sensor events from a drone flight rendered on a decaying time surface" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="Aoj2g_qeG2I" aria-label="Play: self organising maps on a flying drone"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Onboard learning</span></p>
-        <h3>Self-organising maps on a flying drone</h3>
-        <p>Recorded from a drone over Telluride, Colorado. The raw events are rendered on an exponentially decaying time surface.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/Ws1DN_KvbH8/maxresdefault.jpg" alt="Several event-based sensor streams combined into a single wider field of view" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="Ws1DN_KvbH8" aria-label="Play: fusion of multiple sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Sensors</span></p>
-        <h3>Many sensors, one sensor</h3>
-        <p>The high temporal resolution of event-based sensors lets several of them fuse seamlessly into a single larger sensor.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/sRHC9C25CNs/maxresdefault.jpg" alt="Output of a cochlear model responding to music" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="sRHC9C25CNs" aria-label="Play: modelling the human auditory system"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Audition</span></p>
-        <h3>Modelling the human auditory system</h3>
-        <p>The CAR-FAC cochlear model responding to "54-46" by Toots and the Maytals, the band often credited with naming reggae.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/16-4hnFgWkM/maxresdefault.jpg" alt="The Astrosite mobile observatory and the team who built it" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="16-4hnFgWkM" aria-label="Play: Astrosite, space situational awareness and event-based sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Astrosite</span><span class="dot">&middot;</span><span class="arch">Archive &middot; 2020</span></p>
-        <h3>Space situational awareness, explained</h3>
-        <p>As the world grows more reliant on satellites, the risk of collision grows with it. An introduction to the problem, and to event-based sensing as an answer.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/ZqLeYGtDvr8/maxresdefault.jpg" alt="Introduction to neuromorphic engineering" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="ZqLeYGtDvr8" aria-label="Play: neuromorphic engineering, alternative technology inspired by biology"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">Primer</span><span class="dot">&middot;</span><span class="arch">Archive &middot; 2020</span></p>
-        <h3>What neuromorphic engineering is</h3>
-        <p>Alternative technology inspired by biology, and what the centre's researchers do with it. The plainest starting point if the field is new to you.</p>
-      </article>
-
-      <article class="clip">
-        <div class="frame">
-          <img src="https://i.ytimg.com/vi/UAnSuj0zZ3Y/maxresdefault.jpg" alt="Aerial view of the Werrington South campus where the centre is based" width="1280" height="720" loading="lazy">
-          <button type="button" data-video="UAnSuj0zZ3Y" aria-label="Play: introduction to the International Centre for Neuromorphic Systems"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
-        </div>
-        <p class="meta"><span class="tag">The centre</span></p>
-        <h3>Introducing the centre</h3>
-        <p>Who works here, what is in the labs, and how the sensing, the silicon and the algorithms fit together.</p>
-      </article>
-
-    </div>
-
-    <p style="margin-top:var(--s6); font-size:.88rem; color:var(--muted)" data-check="1">
-      One further recording, <em>Rocket launch from a neuromorphic camera: events versus frames</em>, is the clearest side-by-side comparison the centre has. Its page currently returns a 404, so it is left out until the link is restored.
-    </p>
-  </div>
-</section>
-
-<section id="programmes">
-  <div class="wrap">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow dim">Programmes</p>
-        <h2>Where the instruments go</h2>
-      </div>
       <a class="sec-link" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">All projects &rarr;</a>
     </div>
-    <div class="progs">
-      <article class="prog">
-        <p class="meta"><span class="tag">Space</span> &middot; <span class="live">On orbit</span></p>
-        <h3>Falcon Neuro</h3>
-        <p>Event cameras operating on the International Space Station, built with the United States Air Force Academy, watching lightning and upper-atmosphere sprites from orbit.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/news/biology-inspired-cameras-on-the-international-space-station">About Falcon Neuro</a>
-      </article>
-      <article class="prog">
-        <p class="meta"><span class="tag">Computation</span> &middot; <span class="todo" data-check="1">Confirm status</span></p>
-        <h3>DeepSouth</h3>
-        <p>A supercomputer built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware at a fraction of conventional power.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">About DeepSouth</a>
-      </article>
-      <article class="prog">
-        <p class="meta"><span class="tag">Space</span> &middot; <span class="todo" data-check="1">Confirm status</span></p>
-        <h3>Astrosite</h3>
-        <p>A shipping container of event-based telescopes that tracks satellites in full daylight, where conventional optics saturate and lose the target.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/resources/research-videos">Astrosite footage</a>
-      </article>
-    </div>
+    <p class="intro">One capability, four sectors. If the thing you need to see moves too fast, too dim or too often for a conventional camera, it is one of these. Captions are the centre&rsquo;s own wording. Press play on any panel.</p>
+
+    <!-- Sector is the only grouping on this page. Programmes and footage sit inside the
+         sector they serve rather than being listed again in a block of their own. -->
+
+    <section class="group" aria-labelledby="g-space">
+      <h3 id="g-space">Space &amp; defence</h3>
+      <p class="problem">Tracking in daylight, from orbit, or through obscured air, where optical systems saturate or lose the target.</p>
+      <div class="work-grid">
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/rZHrqh5Sc3c/maxresdefault.jpg" alt="A star map being generated continuously as stars cross the telescope's field of view" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="rZHrqh5Sc3c" aria-label="Play: simultaneous sky mapping and satellite tracking"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Simultaneous sky mapping and satellite tracking</h4>
+          <p>A star map builds continuously from the stars passing through the field of view. Their positions then reveal the motion of the telescope itself.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/5ct78VxCGlQ/maxresdefault.jpg" alt="The moon during a total lunar eclipse, the lit limb and the shadowed disc both visible" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="5ct78VxCGlQ" aria-label="Play: full lunar eclipse through a neuromorphic event-based camera"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <p class="meta"><span class="dt">26 May 2021</span></p>
+          <h4>A full lunar eclipse, both halves at once</h4>
+          <p>The illuminated and the eclipsed portions stay clear together. A conventional sensor exposes for the brighter lit area and loses the rest, because every pixel must share one exposure.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/16-4hnFgWkM/maxresdefault.jpg" alt="The Astrosite mobile observatory and the team who built it" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="16-4hnFgWkM" aria-label="Play: Astrosite, space situational awareness and event-based sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <p class="meta"><span class="arch">Archive &middot; 2020</span></p>
+          <h4>Astrosite</h4>
+          <p>A shipping container of event-based telescopes that tracks satellites in full daylight. The film introduces the collision problem and event-based sensing as an answer.</p>
+        </article>
+
+        <article class="wcard plain">
+          <p class="meta"><span class="live">On orbit since 2022</span></p>
+          <h4>Falcon Neuro</h4>
+          <p>Event cameras operating on the International Space Station, built with the United States Air Force Academy, watching lightning and upper-atmosphere sprites from orbit.</p>
+          <a class="act" href="https://www.westernsydney.edu.au/icns/news/biology-inspired-cameras-on-the-international-space-station">About Falcon Neuro</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="group" aria-labelledby="g-industry">
+      <h3 id="g-industry">Industry &amp; manufacturing</h3>
+      <p class="problem">Inspection and monitoring beyond frame rate: fast lines, vibration, faults that appear between frames. Capability established, seeking first industry partners.</p>
+      <div class="work-grid">
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/goAtEGKRU1w/maxresdefault.jpg" alt="A moving scene in which near and far objects separate by how fast they cross the frame" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="goAtEGKRU1w" aria-label="Play: image segregation by relative motion"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Separating a scene by motion alone</h4>
+          <p>Objects close to you cross the frame faster than distant ones when you are moving, as in a car or a train. That difference alone pulls them apart, with no recognition step.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/Ws1DN_KvbH8/maxresdefault.jpg" alt="Several event-based sensor streams combined into a single wider field of view" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="Ws1DN_KvbH8" aria-label="Play: fusion of multiple sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Many sensors, one sensor</h4>
+          <p>The high temporal resolution of event-based sensors lets several of them fuse seamlessly into a single larger sensor, covering a wider line without a stitching step.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/Aoj2g_qeG2I/maxresdefault.jpg" alt="Raw sensor events from a drone flight rendered on a decaying time surface" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="Aoj2g_qeG2I" aria-label="Play: self organising maps on a flying drone"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Learning onboard, in flight</h4>
+          <p>Recorded from a drone over Telluride, Colorado. Raw events are rendered on an exponentially decaying time surface, with the map learned on the platform rather than off it.</p>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="group" aria-labelledby="g-agri">
+      <h3 id="g-agri">Agriculture &amp; environment</h3>
+      <p class="problem">Counting and classifying living things in cluttered outdoor scenes, on battery, with no network.</p>
+      <div class="work-grid">
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg" alt="The moon held stationary in a telescope's field of view on a cloudy night" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="ctQHzDC61DU" aria-label="Play: seeing the moon through cloud"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Separating what moves from what drifts</h4>
+          <p>The telescope holds the moon still on a cloudy night and the cloud separates from it by velocity alone. The same separation finds an insect against moving vegetation.</p>
+        </article>
+
+        <article class="wcard plain">
+          <p class="meta"><span class="live">In the field, New South Wales</span></p>
+          <h4>Counting what moves</h4>
+          <p>Picking a bee out of moving foliage by how it moves rather than how bright it is, at wingbeat rates a frame camera cannot resolve. The same method finds a pest in a greenhouse.</p>
+          <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the sensing method</a>
+        </article>
+
+        <article class="wcard plain">
+          <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <h4>Acoustic monitoring in remote areas</h4>
+          <p>Low-power acoustic sensing for ecological survey, including automated koala detection and bushfire risk assessed from the sound of a landscape.</p>
+          <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the programme</a>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="group" aria-labelledby="g-health">
+      <h3 id="g-health">Health &amp; assistive</h3>
+      <p class="problem">Low-power sensing and models of biological hearing, applied to assessment, monitoring and hearing itself.</p>
+      <div class="work-grid">
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/sRHC9C25CNs/maxresdefault.jpg" alt="Output of a cochlear model responding to music" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="sRHC9C25CNs" aria-label="Play: modelling the human auditory system"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Modelling the human auditory system</h4>
+          <p>The CAR-FAC cochlear model responding to &ldquo;54-46&rdquo; by Toots and the Maytals, the band often credited with naming reggae.</p>
+        </article>
+
+        <article class="wcard plain">
+          <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <h4>Speech and reading assessment</h4>
+          <p>Automated tools for assessing children&rsquo;s reading and for tracking speech progress in late talkers, built on the same auditory modelling.</p>
+          <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the programme</a>
+        </article>
+
+      </div>
+    </section>
+
+    <p class="note" data-check="1">Two further recordings are not shown. <em>Rocket launch from a neuromorphic camera: events versus frames</em> is the clearest side-by-side comparison the centre has, and its page currently returns a 404. A 2020 primer on neuromorphic engineering is linked from the footer instead.</p>
   </div>
 </section>
 
-<section class="sectors" id="sectors">
+<!-- DeepSouth stands alone deliberately: a facility other people can come and use is a
+     different kind of thing from a research result, and it is the largest single asset. -->
+<div class="facility" id="deepsouth">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="cols">
       <div>
-        <p class="eyebrow dim">Applications</p>
-        <h2>Where it applies</h2>
+        <p class="eyebrow">The facility &middot; <span data-check="1">confirm status</span></p>
+        <h2>DeepSouth</h2>
+        <p>A supercomputer built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware and at a fraction of the power a conventional machine would need. Built here, and open to research collaborators.</p>
+        <a class="btn btn-light" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">Access and specifications</a>
       </div>
-      <a class="sec-link" href="https://www.westernsydney.edu.au/icns/partnership/partnership-opportunities">Partner with us &rarr;</a>
-    </div>
-    <p style="max-width:66ch; margin:0; font-size:.97rem">One capability, four sectors. If the thing you need to see moves too fast, too dim or too often for a conventional camera, it is probably one of these.</p>
-    <div class="sec-grid">
-      <div class="sector">
-        <span class="n">01</span><h3>Space &amp; defence</h3>
-        <p>Tracking in daylight, from orbit, or through obscured air, where optical systems saturate or lose the target.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Space &amp; defence work</a>
-      </div>
-      <div class="sector">
-        <span class="n">02</span><h3>Agriculture &amp; environment</h3>
-        <p>Counting and classifying living things in cluttered outdoor scenes, on battery, with no network.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Agriculture &amp; environment work</a>
-      </div>
-      <div class="sector">
-        <span class="n">03</span><h3>Industry &amp; manufacturing</h3>
-        <p>Inspection and monitoring beyond frame rate: fast lines, vibration, faults that appear between frames. Capability established, seeking first industry partners.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/partnership/partnership-opportunities">Talk to us about a trial</a>
-      </div>
-      <div class="sector">
-        <span class="n">04</span><h3>Health &amp; assistive</h3>
-        <p>Low-power sensing and auditory models applied to assessment, monitoring and hearing.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Health &amp; assistive work</a>
-      </div>
+      <dl class="specs">
+        <div><dt>228 &times; 10<sup>12</sup></dt><dd>synaptic operations per second</dd></div>
+        <div><dt>Human scale</dt><dd>spiking network simulated</dd></div>
+        <div><dt>FPGA</dt><dd>reconfigurable commodity hardware</dd></div>
+        <div><dt>Open</dt><dd>to research collaborators</dd></div>
+      </dl>
     </div>
   </div>
-</section>
+</div>
 
 </main>
 
