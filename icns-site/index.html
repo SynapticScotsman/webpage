@@ -5,20 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>International Centre for Neuromorphic Systems</title>
-<meta name="description" content="The International Centre for Neuromorphic Systems builds brain-inspired sensors and processors at Western Sydney University: event cameras flown on the International Space Station, and DeepSouth, a supercomputer built to simulate spiking networks at the scale of the human brain.">
+<meta name="description" content="The International Centre for Neuromorphic Systems builds sensors that report change rather than capturing frames. Recorded footage of event cameras resolving a lunar eclipse, mapping the sky, tracking satellites and separating objects by velocity.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
 
 <!--
-  CONTENT STATUS — read before publishing.
-  The live centre site is out of date, so nothing here should be trusted as current.
-  Every item marked data-check="1" needs confirming with the centre before this goes live.
-  Known gaps: project list and status, DeepSouth operating figures, Falcon Neuro dates,
-  partner list, and which of the eleven research videos are still representative.
+  DESIGN AXIOM
+  An event camera outputs nothing when nothing moves. A still frame is therefore a false
+  rendering of this centre's work, and video is the only honest primary medium. This page
+  is built around that: footage leads, text annotates it. Every caption below is the
+  centre's own wording, taken from its research-video pages.
+
+  CONTENT STATUS - the live centre site is out of date. Items marked data-check="1" need
+  confirming before publication. The 2020 videos are labelled as archive footage rather
+  than presented as current.
 -->
 
 <style>
-  /* Plate colourway, WSU 2026 brand via the ICNS design system. Single dark theme by
-     choice: event-camera media only reads on a dark ground. */
+  /* Plate colourway, WSU 2026 brand via the ICNS design system. Committed single dark
+     theme: event-camera footage is emitted against black and only reads on a dark ground. */
   :root{
     --crimson:#990033; --white:#FFFFFF; --crimson-tint:#F0D7D6;
     --crimson-bright:#C33A50; --rose:#E0687C;
@@ -36,106 +40,119 @@
   body{margin:0; background:var(--plate); color:var(--plate-text);
        font-family:var(--font-display); font-size:16px; line-height:1.55}
   img{max-width:100%; display:block}
-  .wrap{max-width:1120px; margin:0 auto; padding:0 var(--s5)}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 var(--s5)}
   a{color:var(--plate-text)}
-  a:focus-visible,button:focus-visible{outline:none; box-shadow:0 0 0 2px var(--plate),0 0 0 4px var(--rose); border-radius:2px}
+  a:focus-visible,button:focus-visible{outline:none; box-shadow:0 0 0 3px var(--plate-deep),0 0 0 6px var(--rose); border-radius:3px}
   .skip{position:absolute; left:-9999px; top:0; background:var(--crimson); color:#fff;
         padding:10px 16px; z-index:100; text-decoration:none; font-weight:700}
   .skip:focus{left:8px; top:8px}
-
   .eyebrow{font-family:var(--font-mono); font-size:.71rem; font-weight:500;
            letter-spacing:.14em; text-transform:uppercase; color:var(--rose); margin:0}
   .eyebrow.dim{color:var(--muted)}
 
-  /* Header */
-  header{border-bottom:1px solid var(--plate-line); background:var(--plate);
-         position:sticky; top:0; z-index:40}
+  /* Header sits over the hero footage, so it carries its own scrim rather than a fill. */
+  header{position:absolute; top:0; left:0; right:0; z-index:30;
+         background:linear-gradient(rgba(5,7,10,.85),rgba(5,7,10,0))}
   .bar{display:flex; align-items:center; justify-content:space-between; gap:var(--s5);
-       padding:16px var(--s5); max-width:1120px; margin:0 auto}
+       padding:18px var(--s5); max-width:1180px; margin:0 auto}
   .lockup{display:flex; align-items:center; gap:14px; text-decoration:none}
   .shield{width:26px; height:32.5px; flex:none; color:var(--white)}
   .lockup .uni{font-size:.66rem; font-weight:700; letter-spacing:.08em;
                text-transform:uppercase; color:var(--white); line-height:1.3}
   .lockup .centre{font-size:.92rem; font-weight:700; color:var(--white); line-height:1.25;
-                  border-left:1px solid var(--plate-line); padding-left:14px}
+                  border-left:1px solid rgba(255,255,255,.28); padding-left:14px}
   nav{display:flex; flex-wrap:wrap; gap:4px}
-  nav a{font-size:.85rem; font-weight:600; text-decoration:none; color:var(--plate-text);
-        padding:8px 12px; border-radius:var(--r1); transition:background .14s ease-out,color .14s ease-out}
-  nav a:hover{color:var(--white); background:var(--plate-panel)}
-  nav a.active{color:var(--white); box-shadow:inset 0 -2px 0 var(--crimson-bright)}
+  nav a{font-size:.85rem; font-weight:600; text-decoration:none; color:var(--white);
+        padding:8px 12px; border-radius:var(--r1); transition:background .14s ease-out}
+  nav a:hover{background:rgba(255,255,255,.14)}
 
-  /* Hero with the centre video */
-  .hero{background:var(--plate-deep); border-bottom:1px solid var(--plate-line)}
-  .hero .inner{max-width:1120px; margin:0 auto; padding:var(--s8) var(--s5);
-               display:grid; grid-template-columns:1fr 1.05fr; gap:var(--s7); align-items:center}
-  .hero h1{margin:14px 0 0; font-weight:800; text-transform:uppercase; letter-spacing:-.017em;
-           font-size:clamp(1.9rem,3.6vw,2.9rem); line-height:1.08; color:var(--white)}
-  .hero h1 span,.hero h1 em{display:block}
-  .hero h1 em{font-family:var(--font-accent); font-style:italic; font-weight:400;
-              font-size:1.067em; color:var(--rose); margin-left:1em}
-  .hero h1 .l3{margin-left:2.2em}
-  .hero p.lede{max-width:50ch; margin:20px 0 0; font-size:1.03rem}
-  .cta{margin-top:28px; display:flex; gap:12px; flex-wrap:wrap}
-  .btn{display:inline-block; text-decoration:none; font-weight:700; font-size:.9rem;
-       padding:13px 22px; border-radius:var(--r1); border:0; cursor:pointer;
+  /* Hero: footage is the page, not an illustration beside it. */
+  .stage{position:relative; min-height:100svh; background:var(--plate-deep); overflow:hidden;
+         display:flex; align-items:flex-end}
+  .stage .plate-img{position:absolute; inset:0}
+  .stage .plate-img img{width:100%; height:100%; object-fit:cover; opacity:.55}
+  /* Scrim guarantees text contrast over any frame of footage. */
+  .stage .scrim{position:absolute; inset:0;
+    background:linear-gradient(rgba(5,7,10,.35) 0%, rgba(5,7,10,.15) 35%, rgba(5,7,10,.92) 100%)}
+  .stage .fg{position:relative; width:100%; max-width:1180px; margin:0 auto;
+             padding:0 var(--s5) var(--s8)}
+  .stage h1{margin:16px 0 0; font-weight:800; text-transform:uppercase; letter-spacing:-.018em;
+            font-size:clamp(2.1rem,5.4vw,4rem); line-height:1.04; color:var(--white); max-width:16ch}
+  .stage h1 em{font-family:var(--font-accent); font-style:italic; font-weight:400;
+               font-size:1.067em; color:var(--rose)}
+  .stage .lede{max-width:56ch; margin:20px 0 0; font-size:1.08rem; color:var(--plate-text)}
+  .stage .cta{margin-top:30px; display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+  .stage iframe{position:absolute; inset:0; width:100%; height:100%; border:0; z-index:5}
+
+  .btn{display:inline-flex; align-items:center; gap:10px; text-decoration:none; font-weight:700;
+       font-size:.9rem; padding:13px 22px; border-radius:var(--r1); border:0; cursor:pointer;
        font-family:inherit; transition:background .14s ease-out,border-color .14s ease-out,color .14s ease-out}
   .btn-primary{background:var(--crimson); color:var(--white)}
   .btn-primary:hover{background:var(--crimson-bright)}
-  .btn-ghost{color:var(--plate-text); border:1px solid var(--plate-line); background:transparent}
-  .btn-ghost:hover{border-color:var(--muted); color:var(--white)}
+  .btn-ghost{color:var(--white); border:1px solid rgba(255,255,255,.4); background:rgba(5,7,10,.35)}
+  .btn-ghost:hover{border-color:var(--white)}
+  .btn svg{width:15px; height:15px; fill:currentColor}
 
-  /* Click-to-play video facade. No third-party script or cookie until the user asks for it,
-     which also keeps the page fast and avoids an autoplay accessibility failure. */
-  .video{position:relative; aspect-ratio:16/9; background:#000; border:1px solid var(--plate-line);
-         border-radius:var(--r2); overflow:hidden}
-  .video img{width:100%; height:100%; object-fit:cover; opacity:.72}
-  .video iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
-  .video button{position:absolute; inset:0; width:100%; height:100%; background:transparent;
-                display:flex; align-items:center; justify-content:center; gap:12px;
-                color:var(--white); font-weight:700; font-size:.95rem}
-  .video button:hover .play{background:var(--crimson-bright); transform:scale(1.06)}
-  .play{width:62px; height:62px; border-radius:50%; background:var(--crimson);
-        display:grid; place-items:center; transition:background .14s ease-out,transform .14s ease-out}
-  .play svg{width:22px; height:22px; margin-left:3px; fill:#fff}
-  .video figcaption{position:absolute; left:0; right:0; bottom:0; padding:10px 14px;
-                    background:linear-gradient(transparent,rgba(5,7,10,.9));
-                    font-family:var(--font-mono); font-size:.66rem; letter-spacing:.08em;
-                    text-transform:uppercase; color:var(--plate-text)}
-  @media (max-width:900px){ .hero .inner{grid-template-columns:1fr} }
+  /* Positioning line */
+  .thesis{border-block:1px solid var(--plate-line); background:var(--plate-panel)}
+  .thesis .wrap{padding-block:var(--s8)}
+  .thesis .cols{display:grid; grid-template-columns:1.1fr 1fr; gap:var(--s7); align-items:start}
+  .thesis p.big{margin:0; font-size:clamp(1.15rem,2.1vw,1.5rem); line-height:1.42;
+                max-width:40ch; color:var(--white); font-weight:600}
+  .thesis p.big em{font-family:var(--font-accent); font-style:italic; font-weight:400; color:var(--rose)}
+  .thesis p.sub{margin:0; font-size:.95rem; font-weight:400; color:var(--plate-text); max-width:52ch}
+  @media (max-width:860px){ .thesis .cols{grid-template-columns:1fr} }
 
-  /* Sections */
   section{padding:var(--s9) 0}
   .sec-head{display:flex; align-items:baseline; justify-content:space-between;
             gap:var(--s5); margin-bottom:var(--s6); flex-wrap:wrap}
   h2{margin:6px 0 0; font-weight:800; text-transform:uppercase; letter-spacing:-.012em;
-     font-size:clamp(1.4rem,2.6vw,1.9rem); color:var(--white)}
+     font-size:clamp(1.4rem,2.6vw,1.95rem); color:var(--white)}
   .sec-link{font-size:.85rem; font-weight:600; color:var(--rose); text-decoration:none; white-space:nowrap}
   .sec-link:hover{text-decoration:underline; text-underline-offset:3px}
 
-  /* Featured project */
-  .feature{display:grid; grid-template-columns:1.15fr .85fr; gap:var(--s6);
-           background:var(--plate-panel); border:1px solid var(--plate-line);
-           border-radius:var(--r2); padding:var(--s5); align-items:center; margin-bottom:var(--s5)}
-  .feature h3{margin:8px 0 0; font-size:1.5rem; font-weight:800; color:var(--white); line-height:1.15}
-  .feature p{margin:12px 0 0; font-size:.97rem}
-  @media (max-width:900px){ .feature{grid-template-columns:1fr} }
+  /* The reel: the centre's recorded work, which is the actual argument. */
+  .reel{display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:var(--s5)}
+  .clip{display:flex; flex-direction:column; gap:12px}
+  .clip.wide{grid-column:span 2}
+  @media (max-width:760px){ .clip.wide{grid-column:span 1} }
+  .frame{position:relative; aspect-ratio:16/9; background:#000;
+         border:1px solid var(--plate-line); border-radius:var(--r2); overflow:hidden}
+  .frame img{width:100%; height:100%; object-fit:cover; opacity:.82; transition:opacity .14s ease-out}
+  .frame:hover img{opacity:1}
+  .frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+  .frame button{position:absolute; inset:0; width:100%; height:100%; background:transparent;
+                display:grid; place-items:center; cursor:pointer}
+  .play{width:56px; height:56px; border-radius:50%; background:var(--crimson);
+        display:grid; place-items:center; box-shadow:0 4px 20px rgba(5,7,10,.6);
+        transition:background .14s ease-out,transform .14s ease-out}
+  .play svg{width:20px; height:20px; margin-left:3px; fill:#fff}
+  .frame button:hover .play{background:var(--crimson-bright); transform:scale(1.08)}
+  .play.big{width:80px; height:80px}
+  .play.big svg{width:29px; height:29px; margin-left:4px}
+  .clip h3{margin:0; font-size:1.02rem; font-weight:700; color:var(--white); line-height:1.3}
+  .clip p{margin:0; font-size:.89rem}
+  .clip .meta{display:flex; flex-wrap:wrap; align-items:center; font-family:var(--font-mono);
+              font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
+  .clip .meta .dot{margin:0 8px; color:var(--faint)}
+  .clip .meta .tag{color:var(--rose)}
+  .clip .meta .arch{color:var(--viz-off)}
 
-  /* Project grid */
-  .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:var(--s5)}
-  .card{background:var(--plate-panel); border:1px solid var(--plate-line);
+  /* Programmes */
+  .progs{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s5)}
+  .prog{background:var(--plate-panel); border:1px solid var(--plate-line);
         border-radius:var(--r2); padding:var(--s5); display:flex; flex-direction:column; gap:10px}
-  .card:hover{border-color:#474D54}
-  .meta{display:flex; flex-wrap:wrap; align-items:center; font-family:var(--font-mono);
-        font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted)}
-  .meta .dot{margin:0 8px; color:var(--faint)}
-  .meta .tag{color:var(--rose)}
-  .meta .live{color:var(--viz-ref)}
-  .meta .todo{color:var(--viz-off)}
-  .card h3{margin:0; font-size:1.1rem; font-weight:700; color:var(--white); line-height:1.28}
-  .card p{margin:0; font-size:.91rem}
-  .card .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
+  .prog:hover{border-color:#474D54}
+  .prog h3{margin:0; font-size:1.16rem; font-weight:700; color:var(--white)}
+  .prog p{margin:0; font-size:.91rem}
+  .prog .meta{font-family:var(--font-mono); font-size:.66rem; letter-spacing:.1em;
+              text-transform:uppercase; color:var(--muted)}
+  .prog .meta .tag{color:var(--rose)}
+  .prog .meta .live{color:var(--viz-ref)}
+  .prog .meta .todo{color:var(--viz-off)}
+  .prog .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
              color:var(--rose); text-decoration:none}
-  .card .act:hover{text-decoration:underline; text-underline-offset:3px}
+  .prog .act:hover{text-decoration:underline; text-underline-offset:3px}
 
   /* Sectors */
   .sectors{background:var(--plate-panel); border-block:1px solid var(--plate-line)}
@@ -161,9 +178,9 @@
   footer .links a:hover{text-decoration:underline; text-underline-offset:3px}
   footer .ack{max-width:52ch; font-size:.8rem; color:var(--muted); font-family:var(--font-accent)}
   footer .fine{margin-top:var(--s6); padding-top:18px; border-top:1px solid var(--plate-line);
-               font-size:.74rem; color:var(--faint); max-width:92ch}
+               font-size:.74rem; color:var(--faint); max-width:94ch}
 
-  @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start} section{padding:var(--s8) 0} }
+  @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
 </style>
 </head>
@@ -179,8 +196,8 @@
       <span class="centre">International Centre for<br>Neuromorphic Systems</span>
     </a>
     <nav aria-label="Primary">
-      <a href="#main" class="active">Home</a>
-      <a href="#projects">Projects</a>
+      <a href="#reel">The work</a>
+      <a href="#programmes">Programmes</a>
       <a href="#sectors">Applications</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
       <a href="https://www.westernsydney.edu.au/icns/research-projects/open-phd-projects">Study</a>
@@ -191,96 +208,186 @@
 
 <main id="main">
 
-<div class="hero">
-  <div class="inner">
-    <div>
-      <p class="eyebrow">Neuromorphic engineering &middot; Western Sydney University</p>
-      <h1><span>Sensors and processors</span><em>built like</em><span class="l3">biological brains</span></h1>
-      <p class="lede">We build event-based cameras, spiking processors and the algorithms between them, then take them into orbit, into the field and onto the production line.</p>
-      <div class="cta">
-        <a class="btn btn-primary" href="#projects">See the projects</a>
-        <a class="btn btn-ghost" href="https://www.westernsydney.edu.au/icns/contact-us">Work with us</a>
-      </div>
-    </div>
-    <figure class="video" style="margin:0">
-      <img src="https://i.ytimg.com/vi/UAnSuj0zZ3Y/maxresdefault.jpg" alt="Aerial view of the Western Sydney University Werrington South campus, where the centre is based" width="1280" height="720" loading="eager">
-      <button type="button" data-video="UAnSuj0zZ3Y" aria-label="Play: introduction to the International Centre for Neuromorphic Systems">
-        <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
+<!-- Hero. The eclipse leads because it demonstrates the sensor's defining property in a
+     single shot that needs no explanation: two brightness regimes, both resolved. -->
+<div class="stage" id="stage">
+  <div class="plate-img">
+    <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg"
+         alt="The moon held stationary in a telescope's field of view on a cloudy night, recorded with an event-based camera"
+         width="1280" height="720" loading="eager">
+  </div>
+  <div class="scrim"></div>
+  <div class="fg">
+    <p class="eyebrow">International Centre for Neuromorphic Systems &middot; Western Sydney University</p>
+    <h1>Sensors that report <em>change</em></h1>
+    <p class="lede">Every pixel decides for itself when something happened. Hold a telescope on the moon through cloud and the two separate on their own, because they cross the sensor at different speeds. No frames, no exposure to choose.</p>
+    <div class="cta">
+      <button class="btn btn-primary" type="button" data-video="ctQHzDC61DU" data-target="stage"
+              aria-label="Play: seeing the moon through cloud with an event-based camera">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        Play the footage
       </button>
-      <figcaption>Introducing the centre &middot; 2 min</figcaption>
-    </figure>
+      <a class="btn btn-ghost" href="#reel">See the recorded work</a>
+    </div>
   </div>
 </div>
 
-<section id="projects">
+<div class="thesis">
+  <div class="wrap">
+    <div class="cols">
+      <p class="big">An event camera produces nothing at all when nothing moves. Which makes a still photograph the <em>wrong</em> way to show this work.</p>
+      <p class="sub">The centre studies biological brains and engineers their advantages into hardware: sensors that report change instead of capturing frames, processors that compute in spikes, and the algorithms between them. The output is temporal, so the recordings below are the work itself rather than illustrations of it.</p>
+    </div>
+  </div>
+</div>
+
+<section id="reel">
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <p class="eyebrow dim">Projects</p>
-        <h2>What we build</h2>
+        <p class="eyebrow dim">The work, as recorded</p>
+        <h2>What the sensors see</h2>
+      </div>
+      <a class="sec-link" href="https://www.westernsydney.edu.au/icns/resources/research-videos">All footage &rarr;</a>
+    </div>
+
+    <div class="reel">
+
+      <article class="clip wide">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/5ct78VxCGlQ/maxresdefault.jpg" alt="The moon during a total lunar eclipse, the lit limb and the shadowed disc both visible" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="5ct78VxCGlQ" aria-label="Play: full lunar eclipse through a neuromorphic event-based camera"><span class="play big" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Dynamic range</span><span class="dot">&middot;</span>26 May 2021</p>
+        <h3>A full lunar eclipse, both halves visible at once</h3>
+        <p>The illuminated and the eclipsed portions of the moon stay clear together. A conventional sensor exposes for the brighter lit area and loses the rest, because it has one exposure to spend and every pixel must share it.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/rZHrqh5Sc3c/maxresdefault.jpg" alt="A star map being generated continuously as stars cross the telescope's field of view" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="rZHrqh5Sc3c" aria-label="Play: simultaneous sky mapping and satellite tracking"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Space situational awareness</span></p>
+        <h3>Simultaneous sky mapping and satellite tracking</h3>
+        <p>A star map builds continuously from the stars passing through the field of view. Their positions then reveal the motion of the telescope itself.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg" alt="The moon held stationary in a telescope's field of view on a cloudy night" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="ctQHzDC61DU" aria-label="Play: seeing the moon"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Perception</span></p>
+        <h3>Seeing the moon through cloud</h3>
+        <p>The telescope holds the moon still on a cloudy night. Because the cloud and the moon move at different velocities, the sensor separates them.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/goAtEGKRU1w/maxresdefault.jpg" alt="A moving scene in which near and far objects separate by how fast they cross the frame" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="goAtEGKRU1w" aria-label="Play: image segregation by relative motion"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Algorithms</span></p>
+        <h3>Separating a scene by motion alone</h3>
+        <p>Objects close to you cross the frame faster than distant ones when you are moving, as in a car or a train. That difference alone is enough to pull them apart.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/Aoj2g_qeG2I/maxresdefault.jpg" alt="Raw sensor events from a drone flight rendered on a decaying time surface" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="Aoj2g_qeG2I" aria-label="Play: self organising maps on a flying drone"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Onboard learning</span></p>
+        <h3>Self-organising maps on a flying drone</h3>
+        <p>Recorded from a drone over Telluride, Colorado. The raw events are rendered on an exponentially decaying time surface.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/Ws1DN_KvbH8/maxresdefault.jpg" alt="Several event-based sensor streams combined into a single wider field of view" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="Ws1DN_KvbH8" aria-label="Play: fusion of multiple sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Sensors</span></p>
+        <h3>Many sensors, one sensor</h3>
+        <p>The high temporal resolution of event-based sensors lets several of them fuse seamlessly into a single larger sensor.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/sRHC9C25CNs/maxresdefault.jpg" alt="Output of a cochlear model responding to music" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="sRHC9C25CNs" aria-label="Play: modelling the human auditory system"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Audition</span></p>
+        <h3>Modelling the human auditory system</h3>
+        <p>The CAR-FAC cochlear model responding to "54-46" by Toots and the Maytals, the band often credited with naming reggae.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/16-4hnFgWkM/maxresdefault.jpg" alt="The Astrosite mobile observatory and the team who built it" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="16-4hnFgWkM" aria-label="Play: Astrosite, space situational awareness and event-based sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Astrosite</span><span class="dot">&middot;</span><span class="arch">Archive &middot; 2020</span></p>
+        <h3>Space situational awareness, explained</h3>
+        <p>As the world grows more reliant on satellites, the risk of collision grows with it. An introduction to the problem, and to event-based sensing as an answer.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/ZqLeYGtDvr8/maxresdefault.jpg" alt="Introduction to neuromorphic engineering" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="ZqLeYGtDvr8" aria-label="Play: neuromorphic engineering, alternative technology inspired by biology"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">Primer</span><span class="dot">&middot;</span><span class="arch">Archive &middot; 2020</span></p>
+        <h3>What neuromorphic engineering is</h3>
+        <p>Alternative technology inspired by biology, and what the centre's researchers do with it. The plainest starting point if the field is new to you.</p>
+      </article>
+
+      <article class="clip">
+        <div class="frame">
+          <img src="https://i.ytimg.com/vi/UAnSuj0zZ3Y/maxresdefault.jpg" alt="Aerial view of the Werrington South campus where the centre is based" width="1280" height="720" loading="lazy">
+          <button type="button" data-video="UAnSuj0zZ3Y" aria-label="Play: introduction to the International Centre for Neuromorphic Systems"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+        </div>
+        <p class="meta"><span class="tag">The centre</span></p>
+        <h3>Introducing the centre</h3>
+        <p>Who works here, what is in the labs, and how the sensing, the silicon and the algorithms fit together.</p>
+      </article>
+
+    </div>
+
+    <p style="margin-top:var(--s6); font-size:.88rem; color:var(--muted)" data-check="1">
+      One further recording, <em>Rocket launch from a neuromorphic camera: events versus frames</em>, is the clearest side-by-side comparison the centre has. Its page currently returns a 404, so it is left out until the link is restored.
+    </p>
+  </div>
+</section>
+
+<section id="programmes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Programmes</p>
+        <h2>Where the instruments go</h2>
       </div>
       <a class="sec-link" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">All projects &rarr;</a>
     </div>
-
-    <!-- Featured: the clearest single demonstration of what an event camera does. -->
-    <div class="feature">
-      <figure class="video" style="margin:0">
-        <img src="https://i.ytimg.com/vi/5ct78VxCGlQ/maxresdefault.jpg" alt="The moon during a total lunar eclipse, recorded with a neuromorphic event-based camera" width="1280" height="720" loading="lazy">
-        <button type="button" data-video="5ct78VxCGlQ" aria-label="Play: full lunar eclipse through a neuromorphic event-based camera">
-          <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-        </button>
-        <figcaption>Lunar eclipse &middot; event camera &middot; 26 May 2021</figcaption>
-      </figure>
-      <div>
-        <p class="eyebrow">Featured &middot; Perception</p>
-        <h3>Seeing the lit and the eclipsed moon at once</h3>
-        <p>A conventional sensor exposes for the bright limb and loses the shadowed disc entirely. Because every pixel in an event camera sets its own threshold and reports only change, both parts of the moon stay visible through the whole eclipse.</p>
-        <p>This is the plainest demonstration of the property that makes the technology useful everywhere else: a scene with extreme contrast, resolved without choosing which half to lose.</p>
-        <a class="btn btn-ghost" style="margin-top:20px" href="https://www.westernsydney.edu.au/icns/resources/research-videos">More research footage</a>
-      </div>
-    </div>
-
-    <div class="grid">
-      <article class="card">
-        <p class="meta"><span class="tag">Space</span><span class="dot">&middot;</span><span class="live">On orbit</span></p>
+    <div class="progs">
+      <article class="prog">
+        <p class="meta"><span class="tag">Space</span> &middot; <span class="live">On orbit</span></p>
         <h3>Falcon Neuro</h3>
         <p>Event cameras operating on the International Space Station, built with the United States Air Force Academy, watching lightning and upper-atmosphere sprites from orbit.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/news/biology-inspired-cameras-on-the-international-space-station">About Falcon Neuro</a>
       </article>
-
-      <article class="card">
-        <p class="meta"><span class="tag">Computation</span><span class="dot">&middot;</span><span class="todo" data-check="1">Confirm status</span></p>
+      <article class="prog">
+        <p class="meta"><span class="tag">Computation</span> &middot; <span class="todo" data-check="1">Confirm status</span></p>
         <h3>DeepSouth</h3>
-        <p>A supercomputer built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware and a fraction of the power a conventional machine needs.</p>
+        <p>A supercomputer built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware at a fraction of conventional power.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">About DeepSouth</a>
       </article>
-
-      <article class="card">
-        <p class="meta"><span class="tag">Space</span><span class="dot">&middot;</span><span class="todo" data-check="1">Confirm status</span></p>
+      <article class="prog">
+        <p class="meta"><span class="tag">Space</span> &middot; <span class="todo" data-check="1">Confirm status</span></p>
         <h3>Astrosite</h3>
         <p>A shipping container of event-based telescopes that tracks satellites in full daylight, where conventional optics saturate and lose the target.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/resources/research-videos">Astrosite footage</a>
-      </article>
-
-      <article class="card">
-        <p class="meta"><span class="tag">Agriculture</span><span class="dot">&middot;</span><span class="live">In the field</span></p>
-        <h3>Counting what moves</h3>
-        <p>Separating a bee from moving vegetation by how it moves rather than how bright it is. The same method finds a pest in a greenhouse or a defect on a fast production line.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the sensing method</a>
-      </article>
-
-      <article class="card">
-        <p class="meta"><span class="tag">Maritime</span><span class="dot">&middot;</span><span class="todo" data-check="1">Confirm status</span></p>
-        <h3>Maritime situational awareness</h3>
-        <p>Neuromorphic sensors and processors for detection above and below the waterline, including underwater collision avoidance on autonomous platforms.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the programme</a>
-      </article>
-
-      <article class="card">
-        <p class="meta"><span class="tag">Hardware</span><span class="dot">&middot;</span><span class="todo" data-check="1">Confirm status</span></p>
-        <h3>Spiking networks on chip</h3>
-        <p>Silicon that computes in spikes: on-chip spiking networks, custom vision-sensor hardware, and low-power processors that run at the edge instead of in a data centre.</p>
-        <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the hardware</a>
       </article>
     </div>
   </div>
@@ -296,29 +403,24 @@
       <a class="sec-link" href="https://www.westernsydney.edu.au/icns/partnership/partnership-opportunities">Partner with us &rarr;</a>
     </div>
     <p style="max-width:66ch; margin:0; font-size:.97rem">One capability, four sectors. If the thing you need to see moves too fast, too dim or too often for a conventional camera, it is probably one of these.</p>
-
     <div class="sec-grid">
       <div class="sector">
-        <span class="n">01</span>
-        <h3>Space &amp; defence</h3>
+        <span class="n">01</span><h3>Space &amp; defence</h3>
         <p>Tracking in daylight, from orbit, or through obscured air, where optical systems saturate or lose the target.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Space &amp; defence work</a>
       </div>
       <div class="sector">
-        <span class="n">02</span>
-        <h3>Agriculture &amp; environment</h3>
+        <span class="n">02</span><h3>Agriculture &amp; environment</h3>
         <p>Counting and classifying living things in cluttered outdoor scenes, on battery, with no network.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Agriculture &amp; environment work</a>
       </div>
       <div class="sector">
-        <span class="n">03</span>
-        <h3>Industry &amp; manufacturing</h3>
+        <span class="n">03</span><h3>Industry &amp; manufacturing</h3>
         <p>Inspection and monitoring beyond frame rate: fast lines, vibration, faults that appear between frames. Capability established, seeking first industry partners.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/partnership/partnership-opportunities">Talk to us about a trial</a>
       </div>
       <div class="sector">
-        <span class="n">04</span>
-        <h3>Health &amp; assistive</h3>
+        <span class="n">04</span><h3>Health &amp; assistive</h3>
         <p>Low-power sensing and auditory models applied to assessment, monitoring and hearing.</p>
         <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">Health &amp; assistive work</a>
       </div>
@@ -357,15 +459,15 @@
       </div>
       <p class="ack">Western Sydney University acknowledges the Darug, Dharawal, Eora and Wiradjuri peoples as the traditional custodians of the lands on which the University stands, and pays respect to Elders past and present.</p>
     </div>
-    <p class="fine">Prototype. Content is drawn from the centre's public pages and from public sources, and the live pages are known to be out of date, so every figure, date and project status here needs confirming before publication. Production headers use the supplied reversed ICNS logo file rather than the type lockup shown here.</p>
+    <p class="fine">Prototype. Video captions are the centre's own wording, taken from its research-video pages; the footage dates from 2020 to 2021 and archive items are labelled as such. The live centre pages are known to be out of date, so every figure, date and programme status needs confirming before publication. Production headers use the supplied reversed ICNS logo file rather than the type lockup shown here. Nothing plays until a visitor presses play: no autoplay, and no third-party request on load.</p>
   </div>
 </footer>
 
 <script>
-// YouTube returns a 120x90 grey placeholder (HTTP 200) when maxresdefault is absent,
-// so onerror never fires. Check the decoded size instead and fall back to hqdefault,
-// which exists for every video. Covers any video added later.
-document.querySelectorAll('.video img').forEach(function (img) {
+// YouTube answers with a 120x90 grey placeholder and HTTP 200 when maxresdefault is
+// absent, so onerror never fires. Check the decoded width and fall back to hqdefault,
+// which exists for every video. Covers any clip added later.
+document.querySelectorAll('.frame img, .plate-img img').forEach(function (img) {
   function fallback() {
     if (img.naturalWidth <= 120 && img.src.indexOf('maxresdefault') !== -1) {
       img.src = img.src.replace('maxresdefault', 'hqdefault');
@@ -374,20 +476,26 @@ document.querySelectorAll('.video img').forEach(function (img) {
   if (img.complete) { fallback(); } else { img.addEventListener('load', fallback); }
 });
 
-// Video facade: swap the poster for the real player only when the visitor asks.
-// Keeps the page fast, sets no third-party cookie on load, and avoids autoplay.
-document.querySelectorAll('.video button[data-video]').forEach(function (btn) {
+// Click-to-play facade. Nothing loads from YouTube until the visitor asks, which keeps
+// the page fast, sets no third-party cookie on arrival, and avoids autoplay entirely.
+function playInto(container, id, label) {
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+  f.title = label;
+  f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
+  f.allowFullscreen = true;
+  container.textContent = '';
+  container.appendChild(f);
+  f.focus();
+}
+
+document.querySelectorAll('[data-video]').forEach(function (btn) {
   btn.addEventListener('click', function () {
-    var fig = btn.closest('.video');
-    var id = btn.dataset.video;
-    var f = document.createElement('iframe');
-    f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
-    f.title = btn.getAttribute('aria-label').replace(/^Play: /, '');
-    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; picture-in-picture';
-    f.allowFullscreen = true;
-    fig.textContent = '';
-    fig.appendChild(f);
-    f.focus();
+    var label = (btn.getAttribute('aria-label') || 'Video').replace(/^Play(?: the)?:? /, '');
+    var target = btn.dataset.target === 'stage'
+      ? document.getElementById('stage')
+      : btn.closest('.frame');
+    playInto(target, btn.dataset.video, label);
   });
 });
 </script>
