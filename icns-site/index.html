@@ -198,7 +198,7 @@
                      border-left:2px solid var(--plate-line)}
   .study-lead .btn{margin-top:24px}
   .clusters{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s6)}
-  .cluster h3{margin:0 0 4px; font-size:1rem; font-weight:800; color:var(--white);
+  .cluster h4{margin:0 0 4px; font-size:1rem; font-weight:800; color:var(--white);
               text-transform:uppercase; letter-spacing:.01em;
               padding-top:14px; border-top:2px solid var(--crimson-bright)}
   .cluster .note-sm{margin:2px 0 0; font-size:.8rem; color:var(--muted)}
@@ -207,6 +207,27 @@
   .cluster li{font-size:.89rem; padding-left:15px; position:relative; color:var(--plate-text)}
   .cluster li::before{content:""; position:absolute; left:0; top:.62em;
                       width:5px; height:5px; border-radius:50%; background:var(--rose)}
+
+  /* Study levels. Described once; the single topic list below serves all three. */
+  .levels{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+          gap:var(--s5); margin:var(--s7) 0 var(--s6)}
+  .level{background:var(--plate-panel); border:1px solid var(--plate-line);
+         border-radius:var(--r2); padding:var(--s5); display:flex; flex-direction:column; gap:8px}
+  .level:hover{border-color:#474D54}
+  .level .lvl{margin:0; font-family:var(--font-mono); font-size:.66rem; letter-spacing:.14em;
+              text-transform:uppercase; color:var(--rose)}
+  .level h3{margin:0; font-size:1.06rem; font-weight:700; color:var(--white); line-height:1.3;
+            border:0; padding:0; text-transform:none; letter-spacing:0}
+  .level p{margin:0; font-size:.89rem}
+  .level .conf{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.08em;
+               text-transform:uppercase; color:var(--viz-off); margin-top:auto; padding-top:6px}
+  .level .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
+              color:var(--rose); text-decoration:none}
+  .level .act:hover{text-decoration:underline; text-underline-offset:3px}
+  .study .aside{max-width:70ch; color:var(--muted); font-size:.88rem; padding-left:14px;
+                border-left:2px solid var(--plate-line); margin:0 0 var(--s7)}
+  .topics-head{margin:0 0 var(--s6); font-size:1.05rem; font-weight:800; color:var(--white);
+               text-transform:uppercase; letter-spacing:.01em; border:0; padding:0}
 
   @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
@@ -226,7 +247,7 @@
     <nav aria-label="Primary">
       <a href="#work">The work</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
-      <a href="#study">Doctoral study</a>
+      <a href="#study">Study</a>
       <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
     </nav>
   </div>
@@ -470,23 +491,49 @@
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <p class="eyebrow dim">Doctoral study</p>
-        <h2>Topics we supervise</h2>
+        <p class="eyebrow dim">Study with us</p>
+        <h2>Work with us on this</h2>
       </div>
       <a class="sec-link" href="https://www.westernsydney.edu.au/icns/contact-us">Write to the centre &rarr;</a>
     </div>
 
     <div class="study-lead">
       <p class="big">Recruitment here is continuous. There is no closing date and no application window.</p>
-      <p>These are directions we would supervise, not vacancies that open and close. If one of them interests you, send a page describing what you would want to do and who you would want to work with, and we will tell you honestly whether it fits. Scholarships are applied for alongside a project rather than before one.</p>
-      <p class="aside">The University also publishes a list of specific funded projects. It lags behind what we are actually supervising, so treat it as a sample rather than the full set.</p>
+      <p>The list below is directions we would supervise, not vacancies that open and close. Most of them scope to any of the three levels: a capstone takes a slice, a masters project takes a stage, a doctorate takes the whole question. Send a page describing what you would want to do and who you would want to work with, and we will tell you honestly whether it fits.</p>
       <a class="btn btn-primary" href="https://www.westernsydney.edu.au/icns/contact-us">Start a conversation</a>
     </div>
+
+    <div class="levels">
+      <div class="level">
+        <p class="lvl">Capstone</p>
+        <h3>Final-year undergraduate project</h3>
+        <p>A scoped slice of live work: one sensor, one dataset, one question, finished within the session. The cheapest way to find out whether research suits you, and several of ours have turned into masters places.</p>
+        <p class="conf" data-check="1">Confirm eligible degrees and session length.</p>
+      </div>
+
+      <div class="level">
+        <p class="lvl">Masters</p>
+        <h3>Master of Applied Neuromorphic Engineering</h3>
+        <p>A world-first degree spanning electrical engineering, computer science, neuroscience and mathematics, taught by the people building the field, with either a coursework or a research pathway.</p>
+        <a class="act" href="https://www.westernsydney.edu.au/icns/masters-program">About the degree</a>
+      </div>
+
+      <div class="level">
+        <p class="lvl">Doctorate</p>
+        <h3>PhD with the centre</h3>
+        <p>One of the directions below, taken the whole way. Scholarships are applied for alongside a project rather than before one, so start with the topic and the supervisor, not the paperwork.</p>
+        <p class="conf" data-check="1">Confirm scholarship routes and typical duration.</p>
+      </div>
+    </div>
+
+    <p class="aside">The University also publishes a list of specific funded doctoral projects. It lags behind what we are actually supervising, so treat it as a sample rather than the full set.</p>
+
+    <h3 class="topics-head">Directions we supervise</h3>
 
     <div class="clusters">
 
       <div class="cluster">
-        <h3>Space &amp; defence</h3>
+        <h4>Space &amp; defence</h4>
         <ul>
           <li>Astrometry with event-based vision sensors</li>
           <li>Cold-start astrometry for high-precision airspace and space-object tracking</li>
@@ -499,7 +546,7 @@
       </div>
 
       <div class="cluster">
-        <h3>Industry &amp; manufacturing</h3>
+        <h4>Industry &amp; manufacturing</h4>
         <ul>
           <li>Performance metrics for closed-loop event-based imaging systems</li>
           <li>Neuromorphic cyber security at the edge</li>
@@ -510,7 +557,7 @@
       </div>
 
       <div class="cluster">
-        <h3>Agriculture &amp; environment</h3>
+        <h4>Agriculture &amp; environment</h4>
         <ul>
           <li>Honey bee waggle dance detection</li>
           <li>Low-power acoustic ecological monitoring in remote areas</li>
@@ -520,7 +567,7 @@
       </div>
 
       <div class="cluster">
-        <h3>Health &amp; assistive</h3>
+        <h4>Health &amp; assistive</h4>
         <ul>
           <li>Building a neuromorphic auditory pathway for sensing the surrounding environment</li>
           <li>Automated child reading assessment and intervention</li>
@@ -529,7 +576,7 @@
       </div>
 
       <div class="cluster">
-        <h3>Sensors, chips &amp; computing</h3>
+        <h4>Sensors, chips &amp; computing</h4>
         <p class="note-sm">Underpinning work, not tied to one application.</p>
         <ul>
           <li>Integrated circuit design for event-based vision sensors</li>
@@ -580,7 +627,7 @@
         <div>
           <span class="h">Study</span>
           <a href="https://www.westernsydney.edu.au/icns/masters-program">Master's program</a>
-          <a href="#study">Doctoral study</a>
+          <a href="#study">Study</a>
         </div>
         <div>
           <span class="h">More</span>
