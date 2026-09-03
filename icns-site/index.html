@@ -8,6 +8,34 @@
 <meta name="description" content="The International Centre for Neuromorphic Systems builds sensors that report change rather than capturing frames. Recorded footage of event cameras resolving a lunar eclipse, mapping the sky, tracking satellites and separating objects by velocity.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
 
+<!-- Sharing. Without these the page previews as a bare link in LinkedIn, Teams and
+     Slack, which is a poor outcome for a page whose argument is a picture. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="International Centre for Neuromorphic Systems">
+<meta property="og:title" content="Sensors that report change">
+<meta property="og:description" content="Point a conventional camera and an event camera at the same scene and the difference is immediate. Recorded work from the International Centre for Neuromorphic Systems, Western Sydney University.">
+<meta property="og:image" content="https://i.ytimg.com/vi/W5mUwBitFtg/maxresdefault.jpg">
+<meta property="og:image:alt" content="A conventional camera and an event camera pointed at the same scene, side by side">
+<meta property="og:url" content="https://synapticscotsman.github.io/webpage/icns-site/">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ResearchOrganization",
+  "name": "International Centre for Neuromorphic Systems",
+  "alternateName": "ICNS",
+  "parentOrganization": { "@type": "CollegeOrUniversity", "name": "Western Sydney University" },
+  "url": "https://synapticscotsman.github.io/webpage/icns-site/",
+  "sameAs": [
+    "https://www.westernsydney.edu.au/icns",
+    "https://www.youtube.com/channel/UC-fyHEMEM7pTczY-hN_VpBg",
+    "https://github.com/neuromorphicsystems"
+  ]
+}
+</script>
+
+
 <!--
   DESIGN AXIOM
   An event camera outputs nothing when nothing moves. A still frame is therefore a false
@@ -219,6 +247,8 @@
   .level h3{margin:0; font-size:1.06rem; font-weight:700; color:var(--white); line-height:1.3;
             border:0; padding:0; text-transform:none; letter-spacing:0}
   .level p{margin:0; font-size:.89rem}
+  .level .open-to{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.08em;
+                text-transform:uppercase; color:var(--viz-ref); margin-top:auto; padding-top:6px}
   .level .conf{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.08em;
                text-transform:uppercase; color:var(--viz-off); margin-top:auto; padding-top:6px}
   .level .act{margin-top:auto; padding-top:6px; font-size:.85rem; font-weight:600;
@@ -228,6 +258,22 @@
                 border-left:2px solid var(--plate-line); margin:0 0 var(--s7)}
   .topics-head{margin:0 0 var(--s6); font-size:1.05rem; font-weight:800; color:var(--white);
                text-transform:uppercase; letter-spacing:.01em; border:0; padding:0}
+
+  /* Tools: working software with outside users is the most credible capability
+     claim a research centre can make, and GitHub keeps it current for free. */
+  .tools{background:var(--plate-panel); border-block:1px solid var(--plate-line)}
+  .tool-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:var(--s5)}
+  .tool{display:flex; flex-direction:column; gap:8px; text-decoration:none;
+        background:var(--plate); border:1px solid var(--plate-line);
+        border-radius:var(--r2); padding:var(--s5);
+        transition:border-color .14s ease-out}
+  .tool:hover{border-color:var(--rose)}
+  .tool .lang{margin:0; font-family:var(--font-mono); font-size:.64rem; letter-spacing:.12em;
+              text-transform:uppercase; color:var(--muted)}
+  .tool h3{margin:0; font-family:var(--font-mono); font-size:1.02rem; font-weight:600;
+           color:var(--white); letter-spacing:-.01em}
+  .tool p{margin:0; font-size:.88rem; color:var(--plate-text)}
+  .tool:hover h3{color:var(--rose)}
 
   @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
@@ -246,6 +292,7 @@
     </a>
     <nav aria-label="Primary">
       <a href="#work">The work</a>
+      <a href="#tools">Tools &amp; data</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
       <a href="#study">Study</a>
       <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
@@ -487,6 +534,52 @@
   </div>
 </section>
 
+<section class="tools" id="tools">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Tools &amp; data</p>
+        <h2>Take it and use it</h2>
+      </div>
+      <a class="sec-link" href="https://github.com/neuromorphicsystems">All repositories &rarr;</a>
+    </div>
+    <p class="intro">The centre writes and maintains the software it uses, and publishes it openly. Several of these are depended on by groups elsewhere. If you want to try event-based vision without buying a camera, start with the simulator.</p>
+
+    <div class="tool-grid">
+      <a class="tool" href="https://github.com/neuromorphicsystems/IEBCS">
+        <p class="lang">Python</p>
+        <h3>IEBCS</h3>
+        <p>The centre&rsquo;s event-based camera simulator. Generate realistic event streams from conventional footage, so you can develop against the sensor before you own one.</p>
+      </a>
+      <a class="tool" href="https://github.com/neuromorphicsystems/neuromorphic-drivers">
+        <p class="lang">Rust &amp; Python</p>
+        <h3>neuromorphic-drivers</h3>
+        <p>Talk to event cameras in real time from Python or Rust, without the vendor stack getting in the way.</p>
+      </a>
+      <a class="tool" href="https://github.com/neuromorphicsystems/aedat">
+        <p class="lang">Rust</p>
+        <h3>aedat</h3>
+        <p>A fast decoder for AEDAT 4, the recording format most event-camera data arrives in.</p>
+      </a>
+      <a class="tool" href="https://github.com/neuromorphicsystems/astrometry">
+        <p class="lang">Python</p>
+        <h3>astrometry</h3>
+        <p>Turns a list of star positions into a pixel-to-sky transformation. The plate-solving step behind the sky-mapping footage above.</p>
+      </a>
+      <a class="tool" href="https://github.com/neuromorphicsystems/sgp4">
+        <p class="lang">Rust</p>
+        <h3>sgp4</h3>
+        <p>An implementation of the satellite propagation model used to predict where an orbiting object will be. The most widely used thing the centre publishes.</p>
+      </a>
+      <a class="tool" href="https://github.com/neuromorphicsystems/land">
+        <p class="lang">Dataset index</p>
+        <h3>land</h3>
+        <p>A maintained list of the neuromorphic datasets available anywhere, not only the centre&rsquo;s own. Where to start if you need data rather than hardware.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
 <section class="study" id="study">
   <div class="wrap">
     <div class="sec-head">
@@ -508,7 +601,7 @@
         <p class="lvl">Capstone</p>
         <h3>Final-year undergraduate project</h3>
         <p>A scoped slice of live work: one sensor, one dataset, one question, finished within the session. The cheapest way to find out whether research suits you, and several of ours have turned into masters places.</p>
-        <p class="conf" data-check="1">Confirm eligible degrees and session length.</p>
+        <p class="open-to">Open to any Western Sydney final-year engineering or computing student.</p>
       </div>
 
       <div class="level">
