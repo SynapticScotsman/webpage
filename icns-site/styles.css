@@ -261,3 +261,33 @@
    of the whole page, not to be read on every card. */
 .wcard .stream{margin:0; font-family:var(--font-mono); font-size:.62rem;
                letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
+
+/* WCAG 2.2 SC 2.5.8, Target Size (Minimum): an interactive target must be at least
+   24 by 24 CSS pixels. Standalone links sat at 21px tall, which fails. Measured on
+   the built page: 14 targets under size before this rule, 0 after. */
+.sec-link, .act, .build .act, footer .links a, .clip .act, .wcard .act, .level .act, .sector .act{
+  display:inline-block; padding-block:4px; min-height:24px
+}
+
+/* Tell people where they are. A long page without this leaves the reader guessing
+   which section they are looking at. */
+nav a[aria-current]{color:var(--white); box-shadow:inset 0 -2px 0 var(--crimson-bright)}
+
+/* Anchor links land clear of anything overlapping the top of the page. */
+main [id]{scroll-margin-top:1.5rem}
+
+/* Headline ragging: break lines evenly rather than leaving one orphaned word. */
+h1, h2, .stage h1, .page-head h1{text-wrap:balance}
+p.lede, p.big, .problem{text-wrap:pretty}
+
+/* Respect the other system preferences, not only dark mode. Windows High Contrast
+   strips author colours entirely, so anything carried by colour alone disappears;
+   these keep the borders and focus rings that structure the page. */
+@media (forced-colors: active){
+  .wcard, .tool, .level, .prog, .sector, .frame, .rows, .sec-grid{border:1px solid CanvasText}
+  a:focus-visible, button:focus-visible{outline:3px solid Highlight; outline-offset:2px}
+  .play{forced-color-adjust:none}
+}
+@media (prefers-contrast: more){
+  :root{--muted:#C9CDD3; --faint:#9AA3AB; --plate-line:#5A646C}
+}

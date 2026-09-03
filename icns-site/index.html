@@ -637,6 +637,29 @@ if (location.search.indexOf('edit') > -1) {
   });
 })();
 
+// Scrollspy. Marks the nav link for the section currently in view with
+// aria-current, which screen readers announce and the stylesheet underlines.
+// IntersectionObserver rather than a scroll handler, so it costs nothing per frame.
+(function () {
+  var links = {};
+  document.querySelectorAll('nav a[href^="#"]').forEach(function (a) {
+    links[a.getAttribute('href').slice(1)] = a;
+  });
+  var ids = Object.keys(links);
+  if (!ids.length || !('IntersectionObserver' in window)) { return; }
+  var seen = {};
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { seen[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+    var best = null, top = 0;
+    ids.forEach(function (id) { if ((seen[id] || 0) > top) { top = seen[id]; best = id; } });
+    ids.forEach(function (id) {
+      if (id === best) { links[id].setAttribute('aria-current', 'true'); }
+      else { links[id].removeAttribute('aria-current'); }
+    });
+  }, { threshold: [0, 0.25, 0.5, 0.75] });
+  ids.forEach(function (id) { var el = document.getElementById(id); if (el) io.observe(el); });
+})();
+
 // ============================================================================
 //  TOP BANNER
 //  Change BANNER to any id in CLIPS below. The poster, alt text, caption and
