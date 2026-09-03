@@ -87,3 +87,34 @@ originals if they can be found.
   fails this with its carousel; this page should not repeat that.
 - Falls back to the poster silently if the file is missing, broken, or if the
   browser refuses to autoplay it.
+
+## The current hero.mp4 is a placeholder
+
+It is cut from ICNS_Promo.mp4, which was supplied as a test. It works, and it shows
+the feature running, but a purpose-made clip would be better for three reasons that
+are worth knowing before shooting one.
+
+**The source is 1080x1080, square.** It was cut for social media. The hero is roughly
+2:1, so filling it means centre-cropping and throwing away the top and bottom
+thirds. Shoot or export widescreen and nothing is lost.
+
+**It carries overlay text.** Plot titles like "Ring Network Rapidly Learns Drill
+Specific Features", telemetry such as "NEAR-SPACE 33,310M", timecodes and
+dimension callouts. In a video panel those are the point. Behind a headline they
+are two sets of words fighting. The centre crop removes the lower-third captions,
+which is why the crop is 540px from the middle rather than a fit, but text higher
+in frame survives.
+
+**It cuts every two to three seconds.** A montage pulls the eye, which is right for
+a promo and wrong for a background whose job is to stay behind the headline.
+
+What to make instead: fifteen to twenty seconds, 1920x1080 or wider, no text of any
+kind, two or three long shots rather than ten short ones, and slow movement. The
+material already in the promo that suits this: the drill-bit event data, the thermal
+walk, the near-space descent, the star field. Encode with the recipe above.
+
+Source resolution of the supplied file, for reference:
+
+    1080x1080, 30fps, H.264, 20 Mbps, 33 s, no audio track, 80 MB
+
+Encoded for the background at 1152x576, 24fps, CRF 34: 1.75 MB.

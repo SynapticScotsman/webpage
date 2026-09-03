@@ -557,12 +557,13 @@
     toggle.hidden = true;
   });
 
-  ['media/hero.webm', 'media/hero.mp4'].forEach(function (src) {
-    var s = document.createElement('source');
-    s.src = src;
-    s.type = src.slice(-4) === 'webm' ? 'video/webm' : 'video/mp4';
-    video.appendChild(s);
-  });
+  // Only list files that exist. A source that 404s does not always fall through
+  // cleanly to the next one; the browser can sit at readyState 0 instead. If a
+  // smaller WebM is ever produced, add it ABOVE the mp4 line and not before.
+  var mp4 = document.createElement('source');
+  mp4.src = 'media/hero.mp4';
+  mp4.type = 'video/mp4';
+  video.appendChild(mp4);
   video.preload = 'auto';
   video.load();
 
