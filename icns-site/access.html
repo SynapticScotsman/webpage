@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Access and collaboration &middot; ICNS</title>
+<meta name="description" content="What you can get access to at the International Centre for Neuromorphic Systems, how engagements normally work, and how to start one.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap">
+<link rel="stylesheet" href="styles.css">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="International Centre for Neuromorphic Systems">
+<meta property="og:title" content="Access and collaboration">
+<meta property="og:description" content="Instruments you can use, ways to work together, and what it takes to start.">
+<meta property="og:image" content="https://i.ytimg.com/vi/W5mUwBitFtg/maxresdefault.jpg">
+<meta property="og:url" content="https://synapticscotsman.github.io/webpage/icns-site/access.html">
+<meta name="twitter:card" content="summary_large_image">
+
+<!--
+  CONTENT STATUS
+  Structure and framing are written; the commercial specifics are not mine to invent.
+  Everything marked data-check="1" needs a decision from the centre before this is
+  published: lead times, agreement types, what is chargeable, and who owns what.
+  Getting those four wrong in public is worse than leaving the page off entirely.
+-->
+
+<style>
+  /* Utility page. No hero footage: someone arriving here has already been convinced
+     and now wants to know what it takes. */
+  .page-head{background:var(--plate-deep); border-bottom:1px solid var(--plate-line);
+             padding:var(--s9) 0 var(--s8)}
+  .page-head h1{margin:14px 0 0; font-weight:800; text-transform:uppercase;
+                letter-spacing:-.017em; font-size:clamp(1.9rem,4vw,3rem);
+                line-height:1.06; color:var(--white); max-width:18ch}
+  .page-head h1 em{font-family:var(--font-accent); font-style:italic; font-weight:400;
+                   font-size:1.067em; color:var(--rose)}
+  .page-head .lede{max-width:60ch; margin:20px 0 0; font-size:1.05rem}
+
+  .rows{display:flex; flex-direction:column; gap:1px; background:var(--plate-line);
+        border:1px solid var(--plate-line); border-radius:var(--r2); overflow:hidden}
+  .row{background:var(--plate); padding:var(--s5) var(--s6);
+       display:grid; grid-template-columns:220px 1fr; gap:var(--s6); align-items:start}
+  .row .k{margin:0; font-weight:700; color:var(--white); font-size:1rem}
+  .row .k .state{display:block; margin-top:5px; font-family:var(--font-mono);
+                 font-size:.64rem; letter-spacing:.1em; text-transform:uppercase}
+  .row .state.now{color:var(--viz-ref)}
+  .row .state.soon{color:var(--viz-off)}
+  .row .state.open{color:var(--rose)}
+  .row p{margin:0; font-size:.93rem}
+  .row p + p{margin-top:10px}
+  .row .act{display:inline-block; margin-top:12px; font-size:.85rem; font-weight:600;
+            color:var(--rose); text-decoration:none}
+  .row .act:hover{text-decoration:underline; text-underline-offset:3px}
+  @media (max-width:760px){ .row{grid-template-columns:1fr; gap:10px} }
+
+  .ways{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s5)}
+  .way{background:var(--plate-panel); border:1px solid var(--plate-line);
+       border-radius:var(--r2); padding:var(--s5); display:flex; flex-direction:column; gap:9px}
+  .way:hover{border-color:#474D54}
+  .way .n{font-family:var(--font-mono); font-size:.64rem; letter-spacing:.12em;
+          text-transform:uppercase; color:var(--rose)}
+  .way h3{margin:0; font-size:1.05rem; font-weight:700; color:var(--white)}
+  .way p{margin:0; font-size:.89rem}
+  .way .best{margin-top:auto; padding-top:8px; font-size:.82rem; color:var(--muted);
+             font-style:italic}
+
+  .steps{counter-reset:step; display:flex; flex-direction:column; gap:var(--s5);
+         max-width:74ch; margin:0; padding:0; list-style:none}
+  .steps li{counter-increment:step; position:relative; padding-left:56px}
+  .steps li::before{content:counter(step); position:absolute; left:0; top:-2px;
+                    width:36px; height:36px; border-radius:50%;
+                    background:var(--crimson); color:#fff; display:grid;
+                    place-items:center; font-family:var(--font-mono);
+                    font-size:.85rem; font-weight:600}
+  .steps h3{margin:0 0 5px; font-size:1.02rem; font-weight:700; color:var(--white)}
+  .steps p{margin:0; font-size:.92rem}
+
+  .check{display:inline-block; font-family:var(--font-mono); font-size:.62rem;
+         letter-spacing:.1em; text-transform:uppercase; color:var(--viz-off);
+         border:1px solid var(--viz-off); border-radius:2px; padding:1px 6px;
+         margin-left:8px; vertical-align:2px}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header style="position:static; background:var(--plate); border-bottom:1px solid var(--plate-line)">
+  <div class="bar">
+    <a class="lockup" href="./" aria-label="Western Sydney University, International Centre for Neuromorphic Systems">
+      <svg class="shield" viewBox="0 0 100 125" aria-hidden="true"><path fill="currentColor" d="M0 0 H100 V68 C100 97 78 118 50 125 C22 118 0 97 0 68 Z"/></svg>
+      <span class="uni">Western Sydney<br>University</span>
+      <span class="centre">International Centre for<br>Neuromorphic Systems</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="./#work">The work</a>
+      <a href="./#tools">Tools &amp; data</a>
+      <a href="access.html" class="active">Access</a>
+      <a href="./#study">Study</a>
+      <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<div class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">For collaborators</p>
+    <h1>What you can <em>use</em>, and how</h1>
+    <p class="lede">Most people arrive here having seen the footage and wanting to know the practical part: whether they can get their hands on any of it, what it costs, and how long it takes. This page answers that as plainly as we can.</p>
+  </div>
+</div>
+
+<section id="instruments">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Instruments</p>
+        <h2>What there is</h2>
+      </div>
+    </div>
+
+    <div class="rows">
+
+      <div class="row">
+        <p class="k">Event cameras and the lab<span class="state now">Available now</span></p>
+        <div>
+          <p>Commercial and research event-based sensors, the recording rigs built around them, and the people who know how to get clean data out of them. This is the fastest way to find out whether the technology suits your problem, because the answer usually comes from one afternoon of recording rather than a study.</p>
+          <p>Bring the scene you care about. If it moves too fast, sits in awkward light, or has to be watched continuously on very little power, we can usually tell you inside a day whether an event sensor helps.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="k">Astrosite<span class="state now">Available, by arrangement</span></p>
+        <div>
+          <p>A mobile observatory in a shipping container: event-based telescopes that track satellites and debris in full daylight, where conventional optics saturate. It travels, so it can be deployed to a site rather than requiring you to come to Werrington.</p>
+          <p>Deployments are scheduled around existing commitments, so the useful first question is what you need observed and when, not how the instrument works.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="k">DeepSouth<span class="state soon">In build</span></p>
+        <div>
+          <p>The brain-scale spiking simulation machine is being built and is not yet in service. We are not taking access requests for it, and would rather say so than take your details and go quiet.</p>
+          <p>If large-scale spiking simulation is the reason you are here, tell us anyway and we will come back to you when it is running.</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <p class="k">Software and data<span class="state open">Open, no agreement needed</span></p>
+        <div>
+          <p>The centre's tools are published openly and need no permission, no agreement and no conversation. The camera simulator in particular lets you develop against an event sensor before you own one, which makes it the cheapest possible way to test an idea.</p>
+          <a class="act" href="./#tools">See the tools and data</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="ways" style="background:var(--plate-panel); border-block:1px solid var(--plate-line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Engagement</p>
+        <h2>Ways to work together</h2>
+      </div>
+    </div>
+    <p class="intro">Ordered roughly by how much commitment each one asks for. Most partnerships that end up large started at the top of this list.</p>
+
+    <div class="ways">
+
+      <div class="way">
+        <span class="n">01</span>
+        <h3>A conversation</h3>
+        <p>Describe the measurement problem. We tell you whether neuromorphic sensing genuinely helps, including when it does not. That answer is free and is often the whole engagement.</p>
+        <p class="best">Best when you are not yet sure this is your problem.</p>
+      </div>
+
+      <div class="way">
+        <span class="n">02</span>
+        <h3>A student project</h3>
+        <p>Sponsor or co-supervise a capstone, masters or doctoral project on your question. Cheap, low-risk, and you meet the people who might later join you.</p>
+        <p class="best">Best first commitment for most companies.</p>
+      </div>
+
+      <div class="way">
+        <span class="n">03</span>
+        <h3>A feasibility study</h3>
+        <p>A short scoped piece of work with a defined question and a written answer at the end. Typically recording in your environment and reporting what the data supports.</p>
+        <p class="best">Best when you need evidence for an internal decision.</p>
+      </div>
+
+      <div class="way">
+        <span class="n">04</span>
+        <h3>Contract research</h3>
+        <p>A funded programme against your requirement, with agreed milestones and deliverables.<span class="check" data-check="1">terms to confirm</span></p>
+        <p class="best">Best when the direction is settled and the work is real.</p>
+      </div>
+
+      <div class="way">
+        <span class="n">05</span>
+        <h3>A joint funding bid</h3>
+        <p>Going after external funding together, where a partner contribution unlocks a considerably larger programme than either side would run alone.<span class="check" data-check="1">schemes to confirm</span></p>
+        <p class="best">Best when the work is longer than one budget cycle.</p>
+      </div>
+
+      <div class="way">
+        <span class="n">06</span>
+        <h3>Hardware and licensing</h3>
+        <p>Prototype sensors, custom recording hardware, or licensing what the centre has already built.<span class="check" data-check="1">availability to confirm</span></p>
+        <p class="best">Best when you need the device, not the study.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Getting started</p>
+        <h2>How it actually begins</h2>
+      </div>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <h3>Write to the centre</h3>
+        <p>One email. Say what you need to see, how fast it moves, what light it sits in, and what power and connectivity you have where it lives. Those four facts decide almost everything, and they are usually enough for a first answer.</p>
+      </li>
+      <li>
+        <h3>A scoping conversation</h3>
+        <p>Half an hour, no agreement in place, no charge. We will say plainly if a conventional camera would do the job, because sending you away with the right answer is worth more to us than a project that disappoints.</p>
+      </li>
+      <li>
+        <h3>An agreement, if one is needed</h3>
+        <p>Confidentiality first if you are bringing something commercially sensitive, then whatever the work itself requires.<span class="check" data-check="1">standard agreements and typical lead time to confirm</span></p>
+      </li>
+      <li>
+        <h3>Something small and real</h3>
+        <p>A recording session, a student project, a short study. Something that produces evidence in months rather than years, so both sides learn whether a bigger programme is worth it.</p>
+      </li>
+    </ol>
+
+    <p style="margin-top:var(--s7)">
+      <a class="btn btn-primary" href="https://www.westernsydney.edu.au/icns/contact-us">Write to the centre</a>
+    </p>
+  </div>
+</section>
+
+<div class="build">
+  <div class="wrap">
+    <p class="eyebrow dim">A note on cost</p>
+    <h2>What this costs</h2>
+    <p>Conversations and scoping are free. Beyond that it depends entirely on what the work is, and quoting a rate card here that turned out to be wrong would waste your time and ours.<span class="check" data-check="1">confirm what the centre wants stated publicly about rates, intellectual property and student sponsorship costs</span></p>
+    <p>Ask, and you will get a straight answer rather than a proposal.</p>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <a class="lockup" href="./" aria-label="Western Sydney University, International Centre for Neuromorphic Systems">
+        <svg class="shield" viewBox="0 0 100 125" aria-hidden="true"><path fill="currentColor" d="M0 0 H100 V68 C100 97 78 118 50 125 C22 118 0 97 0 68 Z"/></svg>
+        <span class="uni">Western Sydney<br>University</span>
+        <span class="centre">International Centre for<br>Neuromorphic Systems</span>
+      </a>
+      <div class="links">
+        <div>
+          <span class="h">This site</span>
+          <a href="./#work">The work</a>
+          <a href="./#tools">Tools &amp; data</a>
+          <a href="./#study">Study</a>
+        </div>
+        <div>
+          <span class="h">Centre</span>
+          <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
+          <a href="https://www.westernsydney.edu.au/icns/news">News</a>
+          <a href="https://www.westernsydney.edu.au/icns">Official centre page</a>
+        </div>
+        <div>
+          <span class="h">Code</span>
+          <a href="https://github.com/neuromorphicsystems">GitHub</a>
+          <a href="https://www.youtube.com/channel/UC-fyHEMEM7pTczY-hN_VpBg">Footage</a>
+          <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
+        </div>
+      </div>
+      <p class="ack">Western Sydney University acknowledges the Darug, Dharawal, Eora and Wiradjuri peoples as the traditional custodians of the lands on which the University stands, and pays respect to Elders past and present.</p>
+    </div>
+    <p class="fine">Prototype. The structure and framing here are drafted; the commercial specifics are not. Everything marked as needing confirmation requires a decision from the centre before this page is published, because lead times, agreement types, chargeable work and intellectual property terms are worse wrong in public than absent.</p>
+  </div>
+</footer>
+
+</body>
+</html>
