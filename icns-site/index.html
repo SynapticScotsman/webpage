@@ -178,6 +178,15 @@
   .specs dd{margin:2px 0 0; font-size:.74rem; color:var(--crimson-tint)}
   @media (max-width:860px){ .facility .cols{grid-template-columns:1fr} }
 
+  /* In-build note: deliberately quieter than the work above it. */
+  .build{border-block:1px solid var(--plate-line); background:var(--plate-panel)}
+  .build .wrap{padding-block:var(--s7); max-width:1180px}
+  .build h2{margin:8px 0 0}
+  .build p{max-width:62ch; margin:12px 0 0; font-size:.95rem; color:var(--plate-text)}
+  .build .act{display:inline-block; margin-top:16px; font-size:.85rem; font-weight:600;
+              color:var(--rose); text-decoration:none}
+  .build .act:hover{text-decoration:underline; text-underline-offset:3px}
+
   @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
 </style>
@@ -195,7 +204,6 @@
     </a>
     <nav aria-label="Primary">
       <a href="#work">The work</a>
-      <a href="#deepsouth">DeepSouth</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
       <a href="https://www.westernsydney.edu.au/icns/research-projects/open-phd-projects">Study</a>
       <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
@@ -209,18 +217,18 @@
      single shot that needs no explanation: two brightness regimes, both resolved. -->
 <div class="stage" id="stage">
   <div class="plate-img">
-    <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg"
-         alt="The moon held stationary in a telescope's field of view on a cloudy night, recorded with an event-based camera"
+    <img id="heroPoster" src="https://i.ytimg.com/vi/W5mUwBitFtg/maxresdefault.jpg"
+         alt="A conventional camera and an event camera pointed at the same scene, side by side"
          width="1280" height="720" loading="eager">
   </div>
   <div class="scrim"></div>
   <div class="fg">
     <p class="eyebrow">International Centre for Neuromorphic Systems &middot; Western Sydney University</p>
     <h1>Sensors that report <em>change</em></h1>
-    <p class="lede">Every pixel decides for itself when something happened. Hold a telescope on the moon through cloud and the two separate on their own, because they cross the sensor at different speeds. No frames, no exposure to choose.</p>
+    <p class="lede" id="heroLede">Point a conventional camera and an event camera at the same scene and the difference is immediate. One waits for the shutter and hands back a picture. The other reports every change as it happens, pixel by pixel, in microseconds.</p>
     <div class="cta">
-      <button class="btn btn-primary" type="button" data-video="ctQHzDC61DU" data-target="stage"
-              aria-label="Play: seeing the moon through cloud with an event-based camera">
+      <button class="btn btn-primary" type="button" id="heroPlay" data-video="W5mUwBitFtg" data-target="stage"
+              aria-label="Play: side-by-side comparison of a conventional and a neuromorphic camera">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
         Play the footage
       </button>
@@ -286,6 +294,34 @@
           <p>A shipping container of event-based telescopes that tracks satellites in full daylight. The film introduces the collision problem and event-based sensing as an answer.</p>
         </article>
 
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/cIrf4mpPXOw/maxresdefault.jpg" alt="A rocket launch recorded simultaneously as conventional frames and as sensor events" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="cIrf4mpPXOw" aria-label="Play: rocket launch from a neuromorphic camera, events versus frames"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>A rocket launch, events against frames</h4>
+          <p>The same launch recorded both ways at once. The frame camera blows out around the plume; the event camera keeps the vehicle against it.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/vfVMfccaFII/maxresdefault.jpg" alt="Four hours of a rocket launch compressed into a hundred seconds of sensor events" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="vfVMfccaFII" aria-label="Play: four hours of a rocket launch in one minute forty"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Four hours in a hundred seconds</h4>
+          <p>Nothing is recorded while nothing moves, so hours of an empty pad cost almost no data. What survives is only the part where something happened.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/FXtr-rdNn5M/maxresdefault.jpg" alt="Neuromorphic cameras used to track objects in orbit" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="FXtr-rdNn5M" aria-label="Play: making space safer with neuromorphic cameras"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Making space safer</h4>
+          <p>Why tracking debris and satellites from the ground is getting harder, and what a sensor that only reports change does about it.</p>
+        </article>
+
         <article class="wcard plain">
           <p class="meta"><span class="live">On orbit since 2022</span></p>
           <h4>Falcon Neuro</h4>
@@ -317,6 +353,25 @@
           </div>
           <h4>Many sensors, one sensor</h4>
           <p>The high temporal resolution of event-based sensors lets several of them fuse seamlessly into a single larger sensor, covering a wider line without a stitching step.</p>
+        </article>
+
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/l-7oehpotqI/maxresdefault.jpg" alt="A robot playing table football, tracked with an event-based camera" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="l-7oehpotqI" aria-label="Play: Project Sensiball teaser"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>Sensiball</h4>
+          <p>A robot that tracks and returns a ball faster than a frame camera could see it. The same closed loop is what a fast line needs to catch a defect and act on it.</p>
+        </article>
+
+        <article class="wcard">
+          <div class="frame">
+            <img src="https://i.ytimg.com/vi/bTRM0jHKOsY/maxresdefault.jpg" alt="An explanation of what event-based sensing gives you over conventional imaging" width="1280" height="720" loading="lazy">
+            <button type="button" data-video="bTRM0jHKOsY" aria-label="Play: benefits of event-based neuromorphic sensing"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
+          </div>
+          <h4>What you gain, in two minutes</h4>
+          <p>Latency, dynamic range, power and data volume, stated plainly. The clip to send a colleague who asks why this is not just a faster camera.</p>
         </article>
 
         <article class="wcard">
@@ -386,29 +441,21 @@
       </div>
     </section>
 
-    <p class="note" data-check="1">Two further recordings are not shown. <em>Rocket launch from a neuromorphic camera: events versus frames</em> is the clearest side-by-side comparison the centre has, and its page currently returns a 404. A 2020 primer on neuromorphic engineering is linked from the footer instead.</p>
+    <p class="note">Footage comes from the centre&rsquo;s own channel. Two clips shown here are missing from the Western Sydney pages entirely, and the rocket comparison is linked there to a page that returns a 404. Worth fixing at the source as well as here.</p>
   </div>
 </section>
 
-<!-- DeepSouth stands alone deliberately: a facility other people can come and use is a
-     different kind of thing from a research result, and it is the largest single asset. -->
-<div class="facility" id="deepsouth">
+<!-- DeepSouth is not running yet, so it gets a short honest note rather than the
+     full-width facility band it had. Restore the band once it is commissioned. -->
+<div class="build" id="deepsouth">
   <div class="wrap">
-    <div class="cols">
-      <div>
-        <p class="eyebrow">The facility &middot; <span data-check="1">confirm status</span></p>
-        <h2>DeepSouth</h2>
-        <p>A supercomputer built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware and at a fraction of the power a conventional machine would need. Built here, and open to research collaborators.</p>
-        <a class="btn btn-light" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">Access and specifications</a>
-      </div>
-      <dl class="specs">
-        <div><dt>228 &times; 10<sup>12</sup></dt><dd>synaptic operations per second</dd></div>
-        <div><dt>Human scale</dt><dd>spiking network simulated</dd></div>
-        <div><dt>FPGA</dt><dd>reconfigurable commodity hardware</dd></div>
-        <div><dt>Open</dt><dd>to research collaborators</dd></div>
-      </dl>
-    </div>
+    <p class="eyebrow dim">In build</p>
+    <h2>DeepSouth</h2>
+    <p>A supercomputer designed to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware. It is being built here and is not yet in service; we will say so here when it is.</p>
+    <a class="act" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">Read the announcement</a>
   </div>
+</div>
+
 </div>
 
 </main>
@@ -435,6 +482,7 @@
         </div>
         <div>
           <span class="h">More</span>
+          <a href="#deepsouth">DeepSouth</a>
           <a href="https://www.westernsydney.edu.au/icns/news">News</a>
           <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
           <a href="https://www.westernsydney.edu.au/icns">Official centre page</a>
@@ -447,6 +495,72 @@
 </footer>
 
 <script>
+// ============================================================================
+//  TOP BANNER
+//  Change BANNER to any id in CLIPS below. The poster, alt text, caption and
+//  play button all follow from it. Nothing else needs editing.
+// ============================================================================
+var BANNER = 'W5mUwBitFtg';
+
+var CLIPS = {
+  // --- strong banner candidates -------------------------------------------
+  'W5mUwBitFtg': {
+    lede: 'Point a conventional camera and an event camera at the same scene and the difference is immediate. One waits for the shutter and hands back a picture. The other reports every change as it happens, pixel by pixel, in microseconds.',
+    alt:  'A conventional camera and an event camera pointed at the same scene, side by side',
+    label:'side-by-side comparison of a conventional and a neuromorphic camera'
+  },
+  'cIrf4mpPXOw': {
+    lede: 'The same rocket launch, recorded as frames and as events at once. The frame camera blows out around the plume. The event camera holds the vehicle against it, because every pixel sets its own threshold.',
+    alt:  'A rocket launch recorded simultaneously as conventional frames and as sensor events',
+    label:'rocket launch from a neuromorphic camera, events versus frames'
+  },
+  'vfVMfccaFII': {
+    lede: 'Four hours of a launch pad in a hundred seconds. Nothing is recorded while nothing moves, so the empty hours cost almost no data and only the event survives.',
+    alt:  'Four hours of a rocket launch compressed into a hundred seconds of sensor events',
+    label:'four hours of a rocket launch in one minute forty'
+  },
+  '5ct78VxCGlQ': {
+    lede: 'Both the lit limb and the eclipsed disc of the moon stay visible at once. A conventional sensor exposes for the bright part and loses the rest, because every pixel must share one exposure.',
+    alt:  'The moon during a total lunar eclipse, the lit limb and the shadowed disc both visible',
+    label:'full lunar eclipse through a neuromorphic event-based camera'
+  },
+  'ctQHzDC61DU': {
+    lede: 'Hold a telescope on the moon through cloud and the two separate on their own, because they cross the sensor at different speeds. No frames, no exposure to choose.',
+    alt:  'The moon held stationary in a telescope field of view on a cloudy night',
+    label:'seeing the moon through cloud with an event-based camera'
+  },
+  'FXtr-rdNn5M': {
+    lede: 'Tracking debris and satellites from the ground is getting harder as orbit fills up. A sensor that reports only change can watch in daylight, where conventional optics saturate.',
+    alt:  'Neuromorphic cameras used to track objects in orbit',
+    label:'making space safer with neuromorphic cameras'
+  },
+  'UAnSuj0zZ3Y': {
+    lede: 'Who works here, what is in the labs, and how the sensing, the silicon and the algorithms fit together.',
+    alt:  'Aerial view of the Werrington South campus where the centre is based',
+    label:'introduction to the International Centre for Neuromorphic Systems'
+  }
+  // Others on the channel, if you want one of them in the banner instead:
+  //   l-7oehpotqI  Project Sensiball teaser
+  //   bTRM0jHKOsY  Benefits of event-based neuromorphic sensing
+  //   yJI5soGkcsk  Seeing the world in a biology-inspired way
+  //   6jFbSyHTlOo  Researcher profile, Dr Imogen Jones
+  //   mNFVSwT1qj4  NeuroEng 2023
+  // Add an entry above with lede, alt and label, then set BANNER to its id.
+};
+
+// Apply the choice. The HTML already carries a working default, so a browser with
+// JavaScript disabled still gets a complete banner.
+(function () {
+  var c = CLIPS[BANNER];
+  if (!c) { return; }
+  var poster = document.getElementById('heroPoster');
+  var play   = document.getElementById('heroPlay');
+  var lede   = document.getElementById('heroLede');
+  if (poster) { poster.src = 'https://i.ytimg.com/vi/' + BANNER + '/maxresdefault.jpg'; poster.alt = c.alt; }
+  if (play)   { play.dataset.video = BANNER; play.setAttribute('aria-label', 'Play: ' + c.label); }
+  if (lede)   { lede.textContent = c.lede; }
+})();
+
 // YouTube answers with a 120x90 grey placeholder and HTTP 200 when maxresdefault is
 // absent, so onerror never fires. Check the decoded width and fall back to hqdefault,
 // which exists for every video. Covers any clip added later.
