@@ -78,10 +78,22 @@
      single shot that needs no explanation: two brightness regimes, both resolved. -->
 <div class="stage" id="stage">
   <div class="plate-img">
+    <!-- The poster is the whole background until media/hero.mp4 exists. Add the file
+         and this becomes a silent loop; remove it and the page is unchanged. The
+         script below decides whether loading it is appropriate at all. -->
+    <video id="heroVideo" poster="https://i.ytimg.com/vi/W5mUwBitFtg/maxresdefault.jpg"
+           muted loop playsinline preload="none"
+           aria-label="Background highlight reel of recorded work from the centre">
+    </video>
     <img id="heroPoster" src="https://i.ytimg.com/vi/W5mUwBitFtg/maxresdefault.jpg"
          alt="A conventional camera and an event camera pointed at the same scene, side by side"
          width="1280" height="720" loading="eager">
   </div>
+  <button class="motion-toggle" id="motionToggle" type="button" hidden
+          aria-label="Pause the background video">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+    <span>Pause</span>
+  </button>
   <div class="scrim"></div>
   <div class="fg">
     <p class="eyebrow">International Centre for Neuromorphic Systems &middot; Western Sydney University</p>
@@ -510,6 +522,59 @@
 </footer>
 
 <script>
+// ---------------------------------------------------------------------------
+//  BACKGROUND REEL
+//  Drop a silent loop at media/hero.mp4 (and optionally media/hero.webm) and the
+//  hero plays it behind the headline. With no file the poster stands alone and
+//  nothing below runs. See media/README.md for the encoding recipe.
+// ---------------------------------------------------------------------------
+(function () {
+  var video = document.getElementById('heroVideo');
+  var toggle = document.getElementById('motionToggle');
+  if (!video || !toggle) { return; }
+
+  // Reasons not to load several megabytes of decoration. Each of these is somebody
+  // paying for the page in motion sickness, mobile data, or battery.
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var narrow = matchMedia('(max-width: 900px)').matches;
+  var conn = navigator.connection || {};
+  var thrifty = conn.saveData === true || /2g/.test(conn.effectiveType || '');
+  if (reduced || narrow || thrifty) { return; }
+
+  // Only reveal the video once a frame is actually decodable, so a missing or
+  // broken file leaves the poster in place rather than flashing black.
+  video.addEventListener('loadeddata', function () {
+    video.classList.add('playing');
+    toggle.hidden = false;
+    video.play().catch(function () {
+      // Autoplay refused. Fall back to the poster rather than arguing with it.
+      video.classList.remove('playing');
+      toggle.hidden = true;
+    });
+  });
+  video.addEventListener('error', function () {
+    video.classList.remove('playing');
+    toggle.hidden = true;
+  });
+
+  ['media/hero.webm', 'media/hero.mp4'].forEach(function (src) {
+    var s = document.createElement('source');
+    s.src = src;
+    s.type = src.slice(-4) === 'webm' ? 'video/webm' : 'video/mp4';
+    video.appendChild(s);
+  });
+  video.preload = 'auto';
+  video.load();
+
+  // WCAG 2.2.2: anything moving for more than five seconds needs a way to stop it.
+  toggle.addEventListener('click', function () {
+    var paused = video.paused;
+    if (paused) { video.play(); } else { video.pause(); }
+    toggle.querySelector('span').textContent = paused ? 'Pause' : 'Play';
+    toggle.setAttribute('aria-label', (paused ? 'Pause' : 'Play') + ' the background video');
+  });
+})();
+
 // ============================================================================
 //  TOP BANNER
 //  Change BANNER to any id in CLIPS below. The poster, alt text, caption and
@@ -572,6 +637,8 @@ var CLIPS = {
   var play   = document.getElementById('heroPlay');
   var lede   = document.getElementById('heroLede');
   if (poster) { poster.src = 'https://i.ytimg.com/vi/' + BANNER + '/maxresdefault.jpg'; poster.alt = c.alt; }
+  var v = document.getElementById('heroVideo');
+  if (v) { v.poster = 'https://i.ytimg.com/vi/' + BANNER + '/maxresdefault.jpg'; }
   if (play)   { play.dataset.video = BANNER; play.setAttribute('aria-label', 'Play: ' + c.label); }
   if (lede)   { lede.textContent = c.lede; }
 })();
