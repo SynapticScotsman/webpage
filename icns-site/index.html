@@ -49,6 +49,14 @@
 -->
 
 <link rel="stylesheet" href="styles.css">
+<script data-editloader>
+// Visual edit mode: only fetched when ?edit is in the address, so a normal
+// visitor never downloads it. See EDITING.md.
+if (location.search.indexOf('edit') > -1) {
+  var e = document.createElement('script'); e.src = 'edit.js'; e.defer = true;
+  document.head.appendChild(e);
+}
+</script>
 </head>
 <body>
 

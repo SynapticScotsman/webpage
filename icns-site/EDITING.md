@@ -3,7 +3,31 @@
 Written for someone who is comfortable with words but does not want to learn HTML.
 You can do everything below in a web browser without installing anything.
 
-## The short version
+## The easiest way: edit the page itself
+
+Add `?edit` to the end of the address and the page becomes editable where it sits.
+
+    http://localhost:8901/?edit
+    https://synapticscotsman.github.io/webpage/icns-site/?edit
+
+Every piece of text gets a faint dashed outline. Click any of it and type. Changed
+blocks turn slightly green so you can see what you have touched. When you are done,
+press **Save a copy** and the browser puts a finished `index.html` in your downloads.
+Upload that file to GitHub, replacing the old one, and the site updates.
+
+Nothing else on the page can be broken this way. Only text is editable, so layout,
+colours, links and structure are untouchable. That is deliberate: the usual way a
+visual editor ruins a site is somebody dragging a box and silently breaking it for
+everyone on a phone.
+
+If you close the tab with unsaved changes the browser will stop you and ask.
+
+A normal visitor never sees any of this and never downloads the code for it. It only
+exists when `?edit` is in the address.
+
+---
+
+## The other way: edit the file directly
 
 Go to the repository on GitHub, open `icns-site/index.html`, click the pencil icon,
 change the words between the angle brackets, and press **Commit changes**. The site
