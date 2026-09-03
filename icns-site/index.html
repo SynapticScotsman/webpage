@@ -187,6 +187,27 @@
               color:var(--rose); text-decoration:none}
   .build .act:hover{text-decoration:underline; text-underline-offset:3px}
 
+  /* Doctoral study: a supervision offer, not a vacancy list. No counts, no dates,
+     nothing that has to be closed when a student starts. */
+  .study{border-top:1px solid var(--plate-line)}
+  .study-lead{max-width:70ch; margin-bottom:var(--s8)}
+  .study-lead .big{margin:0; font-size:clamp(1.1rem,1.9vw,1.35rem); line-height:1.4;
+                   color:var(--white); font-weight:700}
+  .study-lead p{margin:14px 0 0; font-size:.95rem}
+  .study-lead .aside{color:var(--muted); font-size:.88rem; padding-left:14px;
+                     border-left:2px solid var(--plate-line)}
+  .study-lead .btn{margin-top:24px}
+  .clusters{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:var(--s6)}
+  .cluster h3{margin:0 0 4px; font-size:1rem; font-weight:800; color:var(--white);
+              text-transform:uppercase; letter-spacing:.01em;
+              padding-top:14px; border-top:2px solid var(--crimson-bright)}
+  .cluster .note-sm{margin:2px 0 0; font-size:.8rem; color:var(--muted)}
+  .cluster ul{margin:12px 0 0; padding:0; list-style:none; display:flex;
+              flex-direction:column; gap:9px}
+  .cluster li{font-size:.89rem; padding-left:15px; position:relative; color:var(--plate-text)}
+  .cluster li::before{content:""; position:absolute; left:0; top:.62em;
+                      width:5px; height:5px; border-radius:50%; background:var(--rose)}
+
   @media (max-width:720px){ .bar{flex-direction:column; align-items:flex-start; gap:12px} section{padding:var(--s8) 0} }
   @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} *{transition:none !important} }
 </style>
@@ -205,7 +226,7 @@
     <nav aria-label="Primary">
       <a href="#work">The work</a>
       <a href="https://www.westernsydney.edu.au/icns/about/people/researchers">People</a>
-      <a href="https://www.westernsydney.edu.au/icns/research-projects/open-phd-projects">Study</a>
+      <a href="#study">Doctoral study</a>
       <a href="https://www.westernsydney.edu.au/icns/contact-us">Contact</a>
     </nav>
   </div>
@@ -445,6 +466,87 @@
   </div>
 </section>
 
+<section class="study" id="study">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <p class="eyebrow dim">Doctoral study</p>
+        <h2>Topics we supervise</h2>
+      </div>
+      <a class="sec-link" href="https://www.westernsydney.edu.au/icns/contact-us">Write to the centre &rarr;</a>
+    </div>
+
+    <div class="study-lead">
+      <p class="big">Recruitment here is continuous. There is no closing date and no application window.</p>
+      <p>These are directions we would supervise, not vacancies that open and close. If one of them interests you, send a page describing what you would want to do and who you would want to work with, and we will tell you honestly whether it fits. Scholarships are applied for alongside a project rather than before one.</p>
+      <p class="aside">The University also publishes a list of specific funded projects. It lags behind what we are actually supervising, so treat it as a sample rather than the full set.</p>
+      <a class="btn btn-primary" href="https://www.westernsydney.edu.au/icns/contact-us">Start a conversation</a>
+    </div>
+
+    <div class="clusters">
+
+      <div class="cluster">
+        <h3>Space &amp; defence</h3>
+        <ul>
+          <li>Astrometry with event-based vision sensors</li>
+          <li>Cold-start astrometry for high-precision airspace and space-object tracking</li>
+          <li>Bio-inspired sensors for space situational awareness</li>
+          <li>Event-based wavefront sensing</li>
+          <li>Enhanced maritime situational awareness with neuromorphic cameras</li>
+          <li>Acoustic aerial drone detection in visually obscured environments</li>
+          <li>Underwater acoustic drone detection using models of marine-mammal audition</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <h3>Industry &amp; manufacturing</h3>
+        <ul>
+          <li>Performance metrics for closed-loop event-based imaging systems</li>
+          <li>Neuromorphic cyber security at the edge</li>
+          <li>Control systems inspired by insect central pattern generators</li>
+          <li>Fault-tolerant distributed swarm intelligence with local learning</li>
+          <li>Neuromorphic computing in extreme environments</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <h3>Agriculture &amp; environment</h3>
+        <ul>
+          <li>Honey bee waggle dance detection</li>
+          <li>Low-power acoustic ecological monitoring in remote areas</li>
+          <li>Automatic evaluation of bushfire risk from acoustic scenes</li>
+          <li>Environmental situational awareness using vision sensors and inertial mapping</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <h3>Health &amp; assistive</h3>
+        <ul>
+          <li>Building a neuromorphic auditory pathway for sensing the surrounding environment</li>
+          <li>Automated child reading assessment and intervention</li>
+          <li>Tools for therapists monitoring speech progress in late talkers</li>
+        </ul>
+      </div>
+
+      <div class="cluster">
+        <h3>Sensors, chips &amp; computing</h3>
+        <p class="note-sm">Underpinning work, not tied to one application.</p>
+        <ul>
+          <li>Integrated circuit design for event-based vision sensors</li>
+          <li>A ferroelectric field-effect ultra-scaled chip for spiking neural networks</li>
+          <li>RISC-V instruction set extensions for neuromorphic computing</li>
+          <li>Event-based deep networks using minifloats</li>
+          <li>Physics-based encoding for spiking neural networks</li>
+          <li>Task-driven evaluation of large-scale spiking neural networks</li>
+          <li>Neuromorphic computational imaging</li>
+          <li>Spiking neural networks for real-time processing</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- DeepSouth is not running yet, so it gets a short honest note rather than the
      full-width facility band it had. Restore the band once it is commissioned. -->
 <div class="build" id="deepsouth">
@@ -478,7 +580,7 @@
         <div>
           <span class="h">Study</span>
           <a href="https://www.westernsydney.edu.au/icns/masters-program">Master's program</a>
-          <a href="https://www.westernsydney.edu.au/icns/research-projects/open-phd-projects">Open PhD projects</a>
+          <a href="#study">Doctoral study</a>
         </div>
         <div>
           <span class="h">More</span>
