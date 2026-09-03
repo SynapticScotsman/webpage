@@ -15,10 +15,26 @@ blocks turn slightly green so you can see what you have touched. When you are do
 press **Save a copy** and the browser puts a finished `index.html` in your downloads.
 Upload that file to GitHub, replacing the old one, and the site updates.
 
-Nothing else on the page can be broken this way. Only text is editable, so layout,
-colours, links and structure are untouchable. That is deliberate: the usual way a
-visual editor ruins a site is somebody dragging a box and silently breaking it for
-everyone on a phone.
+### Rearranging things
+
+Press **Layout** in the same toolbar and the page becomes rearrangeable. Every card
+gets a dashed green outline: drag it into a new position, or into a different sector
+entirely. Sections get arrows in their top-left corner to move up and down, and a
+hide button. Cards have a hide button too. Press Save and you get the rearranged page.
+
+Hidden things are not deleted, only marked hidden, so anything you hide can be
+brought back later by someone who is comfortable in the file.
+
+### What you cannot break
+
+You can move things and hide things. You cannot resize, reposition freely, or change
+spacing, colour or type. That is deliberate rather than a limitation I ran out of time
+on: freeform dragging is exactly how someone produces a page that looks right on their
+own monitor and is broken on a phone. Here the grid keeps deciding the geometry, so
+whatever you rearrange still works at every screen size.
+
+If you genuinely need freeform layout control, this is the wrong tool and the section
+below on Pinegrow is the right answer.
 
 If you close the tab with unsaved changes the browser will stop you and ask.
 

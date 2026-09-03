@@ -97,6 +97,9 @@
     // The loader stays. It is inert without ?edit in the address, and stripping it
     // would make edit mode one-use: save once and nobody can ever edit again.
 
+    // Layout mode adds its own chrome and marks hidden items; let it clean up.
+    if (window.__layoutCleanup) { window.__layoutCleanup(doc); }
+
     var html = '<!DOCTYPE html>\n' + doc.outerHTML + '\n';
     var blob = new Blob([html], { type: 'text/html' });
     var a = document.createElement('a');
@@ -112,6 +115,6 @@
   });
 
   window.addEventListener('beforeunload', function (e) {
-    if (edited) { e.preventDefault(); e.returnValue = ''; }
+    if (edited || window.__layoutEdited) { e.preventDefault(); e.returnValue = ''; }
   });
 })();
