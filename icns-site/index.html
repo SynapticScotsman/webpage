@@ -97,8 +97,8 @@
   <div class="scrim"></div>
   <div class="fg">
     <p class="eyebrow">International Centre for Neuromorphic Systems &middot; Western Sydney University</p>
-    <h1>Sensors that report <em>change</em></h1>
-    <p class="lede" id="heroLede">Point a conventional camera and an event camera at the same scene and the difference is immediate. One waits for the shutter and hands back a picture. The other reports every change as it happens, pixel by pixel, in microseconds.</p>
+    <h1>Nothing fires until something <em>changes</em></h1>
+    <p class="lede" id="heroLede">A pixel in a silicon retina reports only when its own light changes. A neuron in a spiking network fires only when its input does. Same principle, sensor to processor, and the reason both are fast and cost so little power.</p>
     <div class="cta">
       <button class="btn btn-primary" type="button" id="heroPlay" data-video="W5mUwBitFtg" data-target="stage"
               aria-label="Play: side-by-side comparison of a conventional and a neuromorphic camera">
@@ -112,9 +112,25 @@
 
 <div class="thesis">
   <div class="wrap">
-    <div class="cols">
-      <p class="big">An event camera produces nothing at all when nothing moves. Which makes a still photograph the <em>wrong</em> way to show this work.</p>
-      <p class="sub">The centre studies biological brains and engineers their advantages into hardware: sensors that report change instead of capturing frames, processors that compute in spikes, and the algorithms between them. The output is temporal, so the recordings below are the work itself rather than illustrations of it.</p>
+    <p class="big">Brains do not process a scene. They react to the parts of it that <em>changed</em>.</p>
+    <p class="sub">Copy that idea into hardware and you get sensors that stay quiet until something moves, processors that compute only where the signal is, and learning that happens on the device rather than in a data centre. The centre works on all three, and they are the three streams the research is organised into.</p>
+
+    <div class="streams">
+      <div class="stream-item">
+        <p class="n">01</p>
+        <h2>Perception</h2>
+        <p>Sensors modelled on biological ones. Silicon retinas that work across an enormous range of light, and the equivalent for hearing, where a model of the cochlea picks a sound out of a noisy landscape.</p>
+      </div>
+      <div class="stream-item">
+        <p class="n">02</p>
+        <h2>Processing</h2>
+        <p>Processors that mimic the way the brain handles information: spiking networks in silicon, custom chips, instruction sets built for them, and simulation at scale.</p>
+      </div>
+      <div class="stream-item">
+        <p class="n">03</p>
+        <h2>Principles</h2>
+        <p>The algorithms in between. How you learn from a sparse stream of events, on a small power budget, often while the platform itself is moving.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -143,6 +159,7 @@
             <img src="https://i.ytimg.com/vi/rZHrqh5Sc3c/maxresdefault.jpg" alt="A star map being generated continuously as stars cross the telescope's field of view" width="1280" height="720" loading="lazy">
             <button type="button" data-video="rZHrqh5Sc3c" aria-label="Play: simultaneous sky mapping and satellite tracking"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception &middot; Principles</p>
           <h4>Simultaneous sky mapping and satellite tracking</h4>
           <p>A star map builds continuously from the stars passing through the field of view. Their positions then reveal the motion of the telescope itself.</p>
         </article>
@@ -153,6 +170,7 @@
             <button type="button" data-video="5ct78VxCGlQ" aria-label="Play: full lunar eclipse through a neuromorphic event-based camera"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
           <p class="meta"><span class="dt">26 May 2021</span></p>
+          <p class="stream">Perception</p>
           <h4>A full lunar eclipse, both halves at once</h4>
           <p>The illuminated and the eclipsed portions stay clear together. A conventional sensor exposes for the brighter lit area and loses the rest, because every pixel must share one exposure.</p>
         </article>
@@ -163,6 +181,7 @@
             <button type="button" data-video="16-4hnFgWkM" aria-label="Play: Astrosite, space situational awareness and event-based sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
           <p class="meta"><span class="arch">Archive &middot; 2020</span></p>
+          <p class="stream">Perception</p>
           <h4>Astrosite</h4>
           <p>A shipping container of event-based telescopes that tracks satellites in full daylight. The film introduces the collision problem and event-based sensing as an answer.</p>
         </article>
@@ -173,6 +192,7 @@
             <img src="https://i.ytimg.com/vi/cIrf4mpPXOw/maxresdefault.jpg" alt="A rocket launch recorded simultaneously as conventional frames and as sensor events" width="1280" height="720" loading="lazy">
             <button type="button" data-video="cIrf4mpPXOw" aria-label="Play: rocket launch from a neuromorphic camera, events versus frames"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>A rocket launch, events against frames</h4>
           <p>The same launch recorded both ways at once. The frame camera blows out around the plume; the event camera keeps the vehicle against it.</p>
         </article>
@@ -182,6 +202,7 @@
             <img src="https://i.ytimg.com/vi/vfVMfccaFII/maxresdefault.jpg" alt="Four hours of a rocket launch compressed into a hundred seconds of sensor events" width="1280" height="720" loading="lazy">
             <button type="button" data-video="vfVMfccaFII" aria-label="Play: four hours of a rocket launch in one minute forty"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>Four hours in a hundred seconds</h4>
           <p>Nothing is recorded while nothing moves, so hours of an empty pad cost almost no data. What survives is only the part where something happened.</p>
         </article>
@@ -191,12 +212,23 @@
             <img src="https://i.ytimg.com/vi/FXtr-rdNn5M/maxresdefault.jpg" alt="Neuromorphic cameras used to track objects in orbit" width="1280" height="720" loading="lazy">
             <button type="button" data-video="FXtr-rdNn5M" aria-label="Play: making space safer with neuromorphic cameras"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>Making space safer</h4>
           <p>Why tracking debris and satellites from the ground is getting harder, and what a sensor that only reports change does about it.</p>
         </article>
 
+
+        <article class="wcard plain">
+          <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <p class="stream">Perception</p>
+          <h4>Hearing what you cannot see</h4>
+          <p>Not everything neuromorphic is a camera. A model of biological hearing picks an aerial drone out of a cluttered soundscape when smoke, foliage or darkness has taken vision away, and the underwater equivalent borrows from how marine mammals listen.</p>
+          <a class="act" href="#study">Doctoral topics in this area</a>
+        </article>
+
         <article class="wcard plain">
           <p class="meta"><span class="live">On orbit since 2022</span></p>
+          <p class="stream">Perception</p>
           <h4>Falcon Neuro</h4>
           <p>Event cameras operating on the International Space Station, built with the United States Air Force Academy, watching lightning and upper-atmosphere sprites from orbit.</p>
           <a class="act" href="https://www.westernsydney.edu.au/icns/news/biology-inspired-cameras-on-the-international-space-station">About Falcon Neuro</a>
@@ -210,11 +242,21 @@
       <p class="problem">Inspection and monitoring beyond frame rate: fast lines, vibration, faults that appear between frames. Capability established, seeking first industry partners. <a href="access.html">What you can get access to &rarr;</a></p>
       <div class="work-grid">
 
+
+        <article class="wcard plain">
+          <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <p class="stream">Processing</p>
+          <h4>Silicon that spikes</h4>
+          <p>The processor side of the centre, which produces no footage and half the research. Spiking networks on chip, integrated circuit design for event sensors, and instruction set extensions that let a conventional core carry neuromorphic work.</p>
+          <a class="act" href="#study">Doctoral topics in this area</a>
+        </article>
+
         <article class="wcard">
           <div class="frame">
             <img src="https://i.ytimg.com/vi/goAtEGKRU1w/maxresdefault.jpg" alt="A moving scene in which near and far objects separate by how fast they cross the frame" width="1280" height="720" loading="lazy">
             <button type="button" data-video="goAtEGKRU1w" aria-label="Play: image segregation by relative motion"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Principles</p>
           <h4>Separating a scene by motion alone</h4>
           <p>Objects close to you cross the frame faster than distant ones when you are moving, as in a car or a train. That difference alone pulls them apart, with no recognition step.</p>
         </article>
@@ -224,6 +266,7 @@
             <img src="https://i.ytimg.com/vi/Ws1DN_KvbH8/maxresdefault.jpg" alt="Several event-based sensor streams combined into a single wider field of view" width="1280" height="720" loading="lazy">
             <button type="button" data-video="Ws1DN_KvbH8" aria-label="Play: fusion of multiple sensors"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>Many sensors, one sensor</h4>
           <p>The high temporal resolution of event-based sensors lets several of them fuse seamlessly into a single larger sensor, covering a wider line without a stitching step.</p>
         </article>
@@ -234,6 +277,7 @@
             <img src="https://i.ytimg.com/vi/l-7oehpotqI/maxresdefault.jpg" alt="A robot playing table football, tracked with an event-based camera" width="1280" height="720" loading="lazy">
             <button type="button" data-video="l-7oehpotqI" aria-label="Play: Project Sensiball teaser"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Principles</p>
           <h4>Sensiball</h4>
           <p>A robot that tracks and returns a ball faster than a frame camera could see it. The same closed loop is what a fast line needs to catch a defect and act on it.</p>
         </article>
@@ -243,6 +287,7 @@
             <img src="https://i.ytimg.com/vi/bTRM0jHKOsY/maxresdefault.jpg" alt="An explanation of what event-based sensing gives you over conventional imaging" width="1280" height="720" loading="lazy">
             <button type="button" data-video="bTRM0jHKOsY" aria-label="Play: benefits of event-based neuromorphic sensing"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>What you gain, in two minutes</h4>
           <p>Latency, dynamic range, power and data volume, stated plainly. The clip to send a colleague who asks why this is not just a faster camera.</p>
         </article>
@@ -252,6 +297,7 @@
             <img src="https://i.ytimg.com/vi/Aoj2g_qeG2I/maxresdefault.jpg" alt="Raw sensor events from a drone flight rendered on a decaying time surface" width="1280" height="720" loading="lazy">
             <button type="button" data-video="Aoj2g_qeG2I" aria-label="Play: self organising maps on a flying drone"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Principles</p>
           <h4>Learning onboard, in flight</h4>
           <p>Recorded from a drone over Telluride, Colorado. Raw events are rendered on an exponentially decaying time surface, with the map learned on the platform rather than off it.</p>
         </article>
@@ -269,12 +315,14 @@
             <img src="https://i.ytimg.com/vi/ctQHzDC61DU/maxresdefault.jpg" alt="The moon held stationary in a telescope's field of view on a cloudy night" width="1280" height="720" loading="lazy">
             <button type="button" data-video="ctQHzDC61DU" aria-label="Play: seeing the moon through cloud"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Principles</p>
           <h4>Separating what moves from what drifts</h4>
           <p>The telescope holds the moon still on a cloudy night and the cloud separates from it by velocity alone. The same separation finds an insect against moving vegetation.</p>
         </article>
 
         <article class="wcard plain">
           <p class="meta"><span class="live">In the field, New South Wales</span></p>
+          <p class="stream">Perception &middot; Principles</p>
           <h4>Counting what moves</h4>
           <p>Picking a bee out of moving foliage by how it moves rather than how bright it is, at wingbeat rates a frame camera cannot resolve. The same method finds a pest in a greenhouse.</p>
           <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the sensing method</a>
@@ -282,6 +330,7 @@
 
         <article class="wcard plain">
           <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <p class="stream">Perception</p>
           <h4>Acoustic monitoring in remote areas</h4>
           <p>Low-power acoustic sensing for ecological survey, including automated koala detection and bushfire risk assessed from the sound of a landscape.</p>
           <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the programme</a>
@@ -300,12 +349,14 @@
             <img src="https://i.ytimg.com/vi/sRHC9C25CNs/maxresdefault.jpg" alt="Output of a cochlear model responding to music" width="1280" height="720" loading="lazy">
             <button type="button" data-video="sRHC9C25CNs" aria-label="Play: modelling the human auditory system"><span class="play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></button>
           </div>
+          <p class="stream">Perception</p>
           <h4>Modelling the human auditory system</h4>
           <p>The CAR-FAC cochlear model responding to &ldquo;54-46&rdquo; by Toots and the Maytals, the band often credited with naming reggae.</p>
         </article>
 
         <article class="wcard plain">
           <p class="meta"><span class="todo" data-check="1">Confirm status</span></p>
+          <p class="stream">Principles</p>
           <h4>Speech and reading assessment</h4>
           <p>Automated tools for assessing children&rsquo;s reading and for tracking speech progress in late talkers, built on the same auditory modelling.</p>
           <a class="act" href="https://www.westernsydney.edu.au/icns/research-projects/current-projects">About the programme</a>
@@ -475,7 +526,7 @@
      full-width facility band it had. Restore the band once it is commissioned. -->
 <div class="build" id="deepsouth">
   <div class="wrap">
-    <p class="eyebrow dim">In build</p>
+    <p class="eyebrow dim">Processing &middot; in build</p>
     <h2>DeepSouth</h2>
     <p>A supercomputer designed to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware. It is being built here and is not yet in service; we will say so here when it is.</p>
     <a class="act" href="https://www.westernsydney.edu.au/icns/news/icns-to-build-brain-scale-supercomputer">Read the announcement</a>
@@ -586,7 +637,7 @@ var BANNER = 'W5mUwBitFtg';
 var CLIPS = {
   // --- strong banner candidates -------------------------------------------
   'W5mUwBitFtg': {
-    lede: 'Point a conventional camera and an event camera at the same scene and the difference is immediate. One waits for the shutter and hands back a picture. The other reports every change as it happens, pixel by pixel, in microseconds.',
+    lede: 'A pixel in a silicon retina reports only when its own light changes. A neuron in a spiking network fires only when its input does. Same principle, sensor to processor, and the reason both are fast and cost so little power.',
     alt:  'A conventional camera and an event camera pointed at the same scene, side by side',
     label:'side-by-side comparison of a conventional and a neuromorphic camera'
   },

@@ -246,3 +246,18 @@
 .motion-toggle[hidden]{display:none}
 .motion-toggle:hover{background:rgba(5,7,10,.9); border-color:var(--white)}
 .motion-toggle svg{width:11px; height:11px; fill:currentColor}
+
+/* The three research streams, stated once under the hero. This is a spine, not a
+   second grouping: sector still organises the work below, stream is only a facet. */
+.streams{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+         gap:var(--s6); margin-top:var(--s8)}
+.stream-item .n{margin:0 0 10px; font-family:var(--font-mono); font-size:.66rem;
+                letter-spacing:.14em; color:var(--rose)}
+.stream-item h2{margin:0 0 8px; font-size:1.15rem; letter-spacing:.01em;
+                padding-top:12px; border-top:2px solid var(--crimson-bright)}
+.stream-item p{margin:0; font-size:.9rem; color:var(--plate-text)}
+
+/* Stream tag on a work card. Deliberately quiet: it is there to show the balance
+   of the whole page, not to be read on every card. */
+.wcard .stream{margin:0; font-family:var(--font-mono); font-size:.62rem;
+               letter-spacing:.14em; text-transform:uppercase; color:var(--faint)}
