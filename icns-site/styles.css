@@ -291,3 +291,22 @@ p.lede, p.big, .problem{text-wrap:pretty}
 @media (prefers-contrast: more){
   :root{--muted:#C9CDD3; --faint:#9AA3AB; --plate-line:#5A646C}
 }
+
+/* Progressive disclosure per sector. Nineteen cards made a wall four screens deep.
+   The first three in each sector stay visible; the rest sit behind a native
+   <details>, which is keyboard operable, announced correctly, and needs no script.
+   Measured: work section 4.2 page-screens before, see commit for after. */
+.more{grid-column:1 / -1; margin-top:calc(var(--s5) * -1)}
+.more > summary{
+  cursor:pointer; list-style:none; display:inline-flex; align-items:center; gap:9px;
+  font-family:var(--font-mono); font-size:.68rem; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--rose);
+  padding:10px 14px; min-height:24px;
+  border:1px solid var(--plate-line); border-radius:var(--r1);
+}
+.more > summary::-webkit-details-marker{display:none}
+.more > summary:hover{border-color:var(--rose)}
+.more > summary::after{content:"+"; font-size:1rem; line-height:1}
+.more[open] > summary::after{content:"2"}
+.more[open] > summary{margin-bottom:var(--s5)}
+.more .work-grid{margin:0}
