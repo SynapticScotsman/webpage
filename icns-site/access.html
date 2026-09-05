@@ -87,6 +87,9 @@
 if (location.search.indexOf('edit') > -1) {
   ['edit.js', 'layout.js'].forEach(function (src) {
     var e = document.createElement('script'); e.src = src; e.defer = true;
+    // Marked so Save strips it from the copy. Unmarked, both scripts were saved
+    // into the page, and edit.js has no ?edit guard, so every visitor got the bar.
+    e.dataset.editorchrome = '1';
     document.head.appendChild(e);
   });
 }

@@ -83,7 +83,10 @@
 
     // Strip everything this mode and the page runtime added, so the saved file is
     // the authored page plus the new words, not a snapshot of a running browser.
-    doc.querySelectorAll('#editBar, #editStyle').forEach(function (n) { n.remove(); });
+    // data-editorchrome marks anything the editor injected that must not be saved:
+    // the loader's two <script> tags and layout mode's drag handles. Stripped here,
+    // not only in __layoutCleanup, so the scripts go even if layout.js never loaded.
+    doc.querySelectorAll('#editBar, #editStyle, [data-editorchrome]').forEach(function (n) { n.remove(); });
     doc.querySelectorAll('[data-editable]').forEach(function (n) {
       n.removeAttribute('contenteditable');
       n.removeAttribute('data-editable');
