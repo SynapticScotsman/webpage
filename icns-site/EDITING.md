@@ -15,6 +15,22 @@ blocks turn slightly green so you can see what you have touched. When you are do
 press **Save a copy** and the browser puts a finished `index.html` in your downloads.
 Upload that file to GitHub, replacing the old one, and the site updates.
 
+Save writes your changes into the page's own file text, so the lines you did not
+touch come back exactly as they were. The toolbar says "saves into the source" when
+that is working. If it says "fallback save" instead (the page was opened straight
+from a folder rather than a web address, or you are offline), Save still works but
+hands back the browser's copy of the page, which rewrites some markup it never
+authored.
+
+**Copy for chat.** Click a block on the page, press **Copy for chat**, and paste
+into a conversation with Claude or any other assistant. What you paste is the
+file name, the line numbers, and the exact source of that block, so "make this
+shorter" points at one thing and nothing else.
+
+Add `&selftest` to the address (`?edit&selftest`) and the toolbar reports whether
+the built-in checks pass: a save with no edits is the file itself, one edited
+heading changes one line, one moved card moves one block.
+
 ### Rearranging things
 
 Press **Layout** in the same toolbar and the page becomes rearrangeable. Every card
