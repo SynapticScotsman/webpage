@@ -78,12 +78,34 @@
     location.search = '';
   });
 
+  // The saved file is the page's own source with the edits written into it
+  // (splice.js), so nothing that was not touched changes. splice.js installs
+  // __spliceSave only once it has fetched the source and matched it to the page;
+  // until then, or when it cannot (file://, offline), fall back to serialising
+  // the DOM, which keeps the content but rewrites markup it never authored:
+  // measured 50 of 778 lines on a save with no edits.
   bar.querySelector('.save').addEventListener('click', function () {
+    var html = null, why = null;
+    if (window.__spliceSave) {
+      try { html = window.__spliceSave(); }
+      catch (e) { why = e.message; console.warn('source save failed, saving the DOM copy instead:', why); }
+    } else {
+      why = window.__spliceError || 'source not ready yet';
+    }
+    if (html == null) html = serialise();
+    download(html, location.pathname.split('/').pop() || 'index.html');
+    edited = false;
+    // Say so when the copy is the DOM's version rather than the file's. A silent
+    // downgrade is the failure this mode exists to avoid.
+    bar.querySelector('.count').textContent = why ? 'saved the fallback copy (' + why + ')' : 'saved to your downloads';
+  });
+
+  function serialise() {
     var doc = document.documentElement.cloneNode(true);
 
     // Strip everything this mode and the page runtime added, so the saved file is
     // the authored page plus the new words, not a snapshot of a running browser.
-    doc.querySelectorAll('#editBar, #editStyle').forEach(function (n) { n.remove(); });
+    doc.querySelectorAll('#editBar, #editStyle, #spliceStyle').forEach(function (n) { n.remove(); });
     doc.querySelectorAll('[data-editable]').forEach(function (n) {
       n.removeAttribute('contenteditable');
       n.removeAttribute('data-editable');
@@ -100,19 +122,19 @@
     // Layout mode adds its own chrome and marks hidden items; let it clean up.
     if (window.__layoutCleanup) { window.__layoutCleanup(doc); }
 
-    var html = '<!DOCTYPE html>\n' + doc.outerHTML + '\n';
+    return '<!DOCTYPE html>\n' + doc.outerHTML + '\n';
+  }
+
+  function download(html, name) {
     var blob = new Blob([html], { type: 'text/html' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'index.html';
+    a.download = name;
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-
-    edited = false;
-    bar.querySelector('.count').textContent = 'saved to your downloads';
-  });
+  }
 
   window.addEventListener('beforeunload', function (e) {
     if (edited || window.__layoutEdited) { e.preventDefault(); e.returnValue = ''; }

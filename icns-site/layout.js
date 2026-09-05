@@ -18,6 +18,7 @@
   'use strict';
 
   var CARD = '.wcard, .tool, .clip, .way, .level, .cluster, .prog, .sector, .stream-item';
+  window.__layoutCards = CARD; // splice.js's self-test moves one of these
   var on = false;
   var dragged = null;
 
