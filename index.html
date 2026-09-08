@@ -49,9 +49,13 @@
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        /* Browser default bold on <strong> is 700, the one weight the type
-           system no longer uses. 500 is the emphasis step everywhere else. */
-        strong, b { font-weight:500; }
+        /* <strong> renders at 700, the one weight this page no longer loads, so
+           the browser synthesises it. Tailwind's preflight sets b,strong to
+           `bolder` and the CDN injects that stylesheet at runtime, i.e. AFTER
+           this block - at equal specificity (0,0,1) the later rule won and a
+           bare `strong, b` selector did nothing. `body strong` is 0,0,2, so it
+           wins on specificity regardless of injection order. */
+        body strong, body b { font-weight:500; }
         body { background:#141412; color:white; overflow-x:hidden; font-family:'IBM Plex Sans',sans-serif; cursor:crosshair; }
         ::selection { background:#E0445E; color:#141412; }
 
