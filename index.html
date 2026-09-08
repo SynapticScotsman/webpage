@@ -268,6 +268,17 @@
     <!-- legibility vignette: sits over the feed + HUD, under the text -->
     <div id="hero-vignette" class="absolute inset-0 z-[5] pointer-events-none" style="transition:opacity .3s;background:radial-gradient(ellipse 60% 42% at 50% 48%, rgba(0,0,0,.72) 0%, rgba(0,0,0,.35) 50%, transparent 75%), linear-gradient(to top, rgba(0,0,0,.85) 0%, transparent 22%)"></div>
 
+    <!-- Hero-to-page dissolve, the one element that carries breakerindustries.com's
+         video hero: a single bottom gradient resolving to the page ground. Without
+         it the stage ends on a hard step, and here that step is doubled because
+         #hero-sticky is bg-black (#000) while the page ground is #141412. This is
+         NOT the blur scrim removed earlier - no backdrop-filter, nothing behind the
+         text block. It only closes the bottom edge, and doubles as the legibility
+         floor under the identity and CTA. Breaker runs .64 alpha by 38% height;
+         this is lighter because the map has content down there to keep readable. -->
+    <div id="hero-dissolve" class="absolute inset-x-0 bottom-0 h-1/3 z-[6] pointer-events-none" aria-hidden="true"
+         style="background:linear-gradient(to top,#141412 0%,rgba(20,20,18,.72) 22%,rgba(20,20,18,0) 100%)"></div>
+
     <div id="hero-copy" class="relative z-10 text-center px-6 max-w-5xl w-full flex flex-col items-center pointer-events-none" style="transform:translateY(7vh)">
         <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.5rem,6vw,3.5rem)">
             <span class="ask-line">How do <span class="text-cyan-400">you</span></span><span class="ask-line">see the world?</span>
