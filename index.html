@@ -83,6 +83,19 @@
                    font-weight:500; text-transform:uppercase; letter-spacing:.08em;
                    color:#E0445E; }
 
+        /* Motion, borrowed from afterflow.dev: ONE easing curve for the whole
+           page. Fast out, long settle. Sharing one curve is what makes
+           unrelated transitions read as a single hand. */
+        :root { --ease: cubic-bezier(.16, 1, .3, 1); }
+        .reveal { opacity:0; transform:translateY(18px);
+                  transition:opacity .7s var(--ease), transform .7s var(--ease); }
+        .reveal.in { opacity:1; transform:none; }
+        /* Without this the whole page below the hero is invisible with JS off,
+           because nothing would ever add .in. */
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity:1; transform:none; transition:none; }
+        }
+
         /* Scroll rails: the hero stage catches you at its start and at the
            fully-formed map, so the transform is hard to skip past by accident.
            `proximity` (not `mandatory`) keeps it a nudge, never a trap. */
@@ -201,7 +214,7 @@
 
 <!-- The chrome starts hidden so it never flashes before the hero; without
      scripting nothing would ever bring it back, so hand it straight over. -->
-<noscript><style>.chrome-hidden{transform:none;opacity:1;pointer-events:auto}</style></noscript>
+<noscript><style>.reveal{opacity:1;transform:none}.chrome-hidden{transform:none;opacity:1;pointer-events:auto}</style></noscript>
 
 <!-- Progress Bar -->
 <div id="progress-shell" class="site-chrome chrome-hidden fixed top-0 left-0 w-full h-1 z-50 bg-slate-900" aria-hidden="true">
@@ -301,7 +314,7 @@
 <main id="main-content">
 
 <!-- 01 · SEEING → PERCEPTION -->
-<section id="about" class="py-28 md:py-36 px-6 max-w-3xl mx-auto" aria-labelledby="about-heading">
+<section id="about" class="py-28 px-6 max-w-3xl mx-auto" aria-labelledby="about-heading">
     <p class="font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-cyan-400 mb-6">Perception</p>
     <h2 id="about-heading" class="ask">How do <span class="text-cyan-400">you</span> see the world?</h2>
 
@@ -313,7 +326,7 @@
 </section>
 
 <!-- 02 · MAPPING → COGNITION -->
-<section id="cognition" class="py-28 md:py-36 px-6 max-w-3xl mx-auto border-t border-white/5" aria-labelledby="cognition-heading">
+<section id="cognition" class="py-28 px-6 max-w-3xl mx-auto border-t border-white/5" aria-labelledby="cognition-heading">
     <p class="font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-cyan-400 mb-6">Cognition</p>
     <h2 id="cognition-heading" class="ask">How do <span class="text-cyan-400">you</span> remember it?</h2>
 
@@ -325,7 +338,7 @@
 </section>
 
 <!-- THE HINGE -->
-<section class="pb-24 px-6 max-w-3xl mx-auto text-center" aria-label="What this research is">
+<section class="py-28 px-6 max-w-3xl mx-auto text-center" aria-label="What this research is">
     <p class="text-xl md:text-3xl font-light text-slate-300 leading-snug">
         Perception <span class="text-cyan-400 font-normal">&amp;</span> Cognition — the work is the part in between:
         <span class="text-white">turning what changed into what you know.</span>
@@ -336,7 +349,7 @@
 </section>
 
 <!-- EXPLORE -->
-<section id="explore" class="pb-20 px-6 max-w-3xl mx-auto" aria-labelledby="explore-heading">
+<section id="explore" class="py-28 px-6 max-w-3xl mx-auto" aria-labelledby="explore-heading">
     <h2 id="explore-heading" class="sr-only">Explore the cognitive map</h2>
     <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
         <span class="project-tag">Interactive · Deep dive</span>
@@ -347,7 +360,7 @@
 </section>
 
 <!-- FEATURED PROJECTS -->
-<section id="projects" class="py-24 px-6 max-w-7xl mx-auto" aria-labelledby="projects-heading">
+<section id="projects" class="py-28 px-6 max-w-7xl mx-auto" aria-labelledby="projects-heading">
     <div class="text-center mb-16">
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Projects · Things you can try</p>
         <h2 id="projects-heading" class="text-4xl font-light tracking-[-0.03em]">Featured projects</h2>
@@ -379,7 +392,7 @@
 </section>
 
 <!-- INTERACTIVE RESEARCH HUB -->
-<section id="exhibits" class="py-24 px-6 max-w-7xl mx-auto space-y-12" aria-labelledby="exhibits-heading">
+<section id="exhibits" class="py-28 px-6 max-w-7xl mx-auto space-y-12" aria-labelledby="exhibits-heading">
     <div class="text-center mb-20">
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Exhibits · Live demonstrations of core mechanisms</p>
         <h2 id="exhibits-heading" class="text-4xl font-light tracking-[-0.03em]">Interactive research hub</h2>
@@ -585,7 +598,7 @@
 </section>
 
 <!-- VIDEO — lazy-loaded -->
-<section class="py-24 bg-slate-900 border-y border-white/5 relative overflow-hidden mt-20" aria-labelledby="video-heading">
+<section class="py-28 bg-slate-900 border-y border-white/5 relative overflow-hidden" aria-labelledby="video-heading">
     <div class="absolute inset-0" style="background:radial-gradient(circle at center,rgba(224,68,94,.08) 0%,transparent 70%);" aria-hidden="true"></div>
     <div class="max-w-6xl mx-auto px-6 relative z-10">
         <div class="text-center mb-12">
@@ -605,7 +618,7 @@
 </section>
 
 <!-- PUBLICATIONS -->
-<section id="publications" class="py-32 px-6 max-w-7xl mx-auto border-t border-white/5" aria-labelledby="pubs-heading">
+<section id="publications" class="py-28 px-6 max-w-7xl mx-auto border-t border-white/5" aria-labelledby="pubs-heading">
     <div class="text-center mb-12">
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Outputs · Peer-reviewed publications</p>
         <h2 id="pubs-heading" class="text-4xl font-light tracking-[-0.03em]">Research archives</h2>
@@ -637,7 +650,7 @@
 </section>
 
 <!-- PARTNERS -->
-<section class="py-24 border-y border-white/5" style="background:rgba(255,255,255,.03)" aria-labelledby="partners-heading">
+<section class="py-28 border-y border-white/5" style="background:rgba(255,255,255,.03)" aria-labelledby="partners-heading">
     <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
             <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Network · Supported by leading institutions</p>
@@ -659,7 +672,7 @@
 </section>
 
 <!-- CTA -->
-<section id="contact" class="py-32 text-center px-6" style="background:#A20C32;color:#f4f1ea" aria-labelledby="contact-heading">
+<section id="contact" class="py-28 text-center px-6" style="background:#A20C32;color:#f4f1ea" aria-labelledby="contact-heading">
     <h2 id="contact-heading" class="text-5xl md:text-7xl font-light mb-8 tracking-[-0.03em]er">Work with me</h2>
     <p class="text-lg md:text-2xl font-medium mb-12 max-w-2xl mx-auto" style="opacity:.8">Looking to collaborate on neuro-symbolic AI or apply these frameworks to real-world edge robotics?</p>
     <a href="mailto:p.kirkland@westernsydney.edu.au" class="inline-flex items-center gap-3 px-10 py-5 bg-black text-white font-medium uppercase tracking-[0.08em] text-sm rounded-full hover:scale-105 hover:shadow-2xl transition-all">
@@ -1935,6 +1948,39 @@ class BaseVector {
   window.addEventListener('resize', () => { if(explorer.vocab) renderAll(); }, { passive: true });
   initVocab();
 })();
+
+    /* Reveal on entry, not on scroll offset. Entry-based means nothing fights
+       the scrollbar and there is no scroll-jacking; unobserving after the
+       first hit means an element never re-animates on the way back up. */
+    (function () {
+        var targets = document.querySelectorAll('main > section:not(#hero-scroll) > *');
+        if (!('IntersectionObserver' in window)) return;   /* .in never needed: noscript rule holds them visible */
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+                if (!e.isIntersecting) return;
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+            });
+        }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+        targets.forEach(function (el, i) {
+            /* Zero-height elements (sr-only headings) can never satisfy an
+               intersection, so they would sit at opacity 0 for good. They are
+               visually hidden anyway - just leave them alone. */
+            if (!el.offsetHeight) return;
+            el.classList.add('reveal');
+            /* A browser restoring scroll position, or a deep link to #contact,
+               lands with earlier sections already above the viewport. Those
+               never intersect, so without this they stay invisible for good. */
+            if (el.getBoundingClientRect().top < window.innerHeight) {
+                el.classList.add('in');
+                return;
+            }
+            /* A short stagger inside a section, capped so a long list never
+               leaves its tail hanging behind the scroll. */
+            el.style.transitionDelay = Math.min(i % 6, 5) * 60 + 'ms';
+            io.observe(el);
+        });
+    })();
 </script>
 
 </body>
