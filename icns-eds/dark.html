@@ -1,0 +1,444 @@
+<title>ICNS in EDS blocks - dark</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&family=Open+Sans:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+  /* Western Sydney Edge Delivery Services tokens, read from /styles/styles.css on
+     3 September 2026. Palette, type scale, button colour and the section and card
+     variants below are theirs. Nothing here needs a developer: every dark surface
+     is a Style value an author types into a Section Metadata table, and every card
+     colour is a variant typed into the block header.
+
+     Type substitution only: production loads Gotham Narrow and Chronicle Text,
+     which are licensed. Archivo Narrow and Georgia stand in at similar widths. */
+  :root{
+    --wsu-crimson:#903; --wsu-white:#fff; --wsu-black:#262223; --wsu-orange:#ff5c5e;
+    --wsu-red:#ed0033; --wsu-crimson-15:#f0d7d6; --wsu-off-white:#f2f2f2;
+    --wsu-lightest-gray:#eaebea; --wsu-light-gray:#c4c2c3;
+    --wsu-mid-gray:#898687; --wsu-dark-gray:#3a3537;
+    --body-font:'Archivo Narrow','Arial Narrow',arial,sans-serif;
+    --serif-font:Georgia,'Times New Roman',serif;
+    --h-xxl:48px; --h-xl:32px; --h-m:20px;
+    --ann:#5bc8d8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0; background:var(--wsu-black); color:var(--wsu-white);
+       font-family:var(--body-font); font-size:16px; line-height:1.55}
+  img{max-width:100%; display:block}
+
+  /* preview chrome, not part of the page */
+  .note{background:#0d0d0d; color:#fff; padding:14px 20px; font-size:13px; display:flex;
+        gap:16px; align-items:center; flex-wrap:wrap; position:sticky; top:0; z-index:50;
+        border-bottom:1px solid #333; font-family:'Open Sans',sans-serif}
+  .note b{color:var(--wsu-orange)}
+  .note button{font:600 11px/1 ui-monospace,Consolas,monospace; letter-spacing:.1em;
+               text-transform:uppercase; cursor:pointer; padding:7px 12px; border-radius:3px;
+               border:1px solid #555; background:transparent; color:#fff; margin-left:auto}
+  .note button:hover{border-color:var(--wsu-orange); color:var(--wsu-orange)}
+  .ann{font:600 11px/1.5 ui-monospace,Consolas,monospace; letter-spacing:.07em;
+       text-transform:uppercase; color:var(--ann); border-left:3px solid var(--ann);
+       padding:5px 0 5px 10px; margin:0 0 18px; white-space:pre-line}
+  body.hide-ann .ann{display:none}
+
+  /* --- SECTION STYLE VARIANTS, all authored via Section Metadata --- */
+  .section{padding:56px 32px}
+  .section > .in{max-width:1440px; margin:0 auto}
+  .section.bg-black{background:var(--wsu-black); color:#fff}
+  .section.bg-dark-gray{background:var(--wsu-dark-gray); color:#fff}
+  .section.bg-crimson{background:var(--wsu-crimson); color:#fff}
+  .section h2{font-size:var(--h-xl); margin:0 0 8px; line-height:1.15; font-weight:700}
+  .section p.lead{margin:0 0 28px; font-size:18px; max-width:70ch; color:rgba(255,255,255,.78)}
+
+  /* site chrome */
+  header.site{background:#0d0d0d; border-bottom:1px solid #3a3537}
+  header.site .in{max-width:1440px; margin:0 auto; padding:16px 32px; display:flex;
+                  align-items:center; justify-content:space-between; gap:24px; flex-wrap:wrap}
+  .brand{display:flex; align-items:center; gap:14px}
+  .shield{width:26px; height:32.5px; color:#fff; flex:none}
+  .brand .n{font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase; line-height:1.25}
+  .brand .c{border-left:1px solid #5a5557; padding-left:14px; font-weight:700; font-size:15px; line-height:1.25}
+  nav.site{display:flex; gap:20px; font-size:15px; font-weight:600}
+  nav.site a{color:#fff; text-decoration:none}
+  nav.site a:hover{color:var(--wsu-orange)}
+
+  /* carousel block */
+  .carousel{display:grid; grid-template-columns:1fr 1fr; min-height:440px}
+  .carousel .pic{background:#05070a; position:relative; overflow:hidden}
+  .carousel .pic canvas{position:absolute; inset:0; width:100%; height:100%}
+  .carousel .body{padding:48px 40px; display:flex; flex-direction:column; justify-content:center}
+  .carousel h1{font-size:var(--h-xxl); line-height:1.05; margin:0 0 16px; font-weight:700}
+  .carousel h1 em{font-family:var(--serif-font); font-style:italic; font-weight:400; color:var(--wsu-crimson-15)}
+  .carousel p{margin:0 0 24px; font-size:18px; max-width:46ch; color:rgba(255,255,255,.82)}
+  @media (max-width:800px){ .carousel{grid-template-columns:1fr} }
+
+  .button{display:inline-block; background:var(--wsu-orange); color:var(--wsu-black);
+          font-weight:700; text-decoration:none; padding:13px 26px; border-radius:2px;
+          font-size:15px; align-self:flex-start}
+  .button:hover{background:#d45a4e; color:#fff}
+  .button.outline{background:transparent; border:2px solid currentColor; color:inherit}
+  .button.outline:hover{background:#fff; color:var(--wsu-crimson)}
+
+  /* embed block */
+  .embed{position:relative; aspect-ratio:16/9; background:#05070a; overflow:hidden; max-width:1040px; margin:0 auto}
+  .embed canvas{position:absolute; inset:0; width:100%; height:100%}
+  .embed .play{position:absolute; inset:0; display:grid; place-items:center}
+  .embed .play span{width:74px; height:74px; border-radius:50%; background:var(--wsu-red); display:grid; place-items:center}
+  .embed .play svg{width:26px; height:26px; margin-left:4px; fill:#fff}
+  .embed figcaption{position:absolute; left:0; right:0; bottom:0; padding:10px 16px;
+                    background:linear-gradient(transparent,rgba(0,0,0,.9)); color:#fff;
+                    font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+
+  /* cards block */
+  .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px;
+         margin:0; padding:0}
+  .cards > li{list-style:none; display:flex; flex-direction:column}
+  .cards .img{aspect-ratio:16/9; position:relative; overflow:hidden; background:#05070a}
+  .cards .img canvas{position:absolute; inset:0; width:100%; height:100%}
+  .cards .img .ph{position:absolute; inset:0; display:grid; place-items:center; text-align:center;
+                  font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+                  color:var(--wsu-mid-gray); padding:12px}
+  .cards .body{padding:22px; display:flex; flex-direction:column; gap:9px; flex:1}
+  .cards h3{margin:0; font-size:var(--h-m); line-height:1.25}
+  .cards p{margin:0; font-size:15px}
+  .cards .meta{margin:0; font:600 10px/1.4 ui-monospace,Consolas,monospace;
+               letter-spacing:.12em; text-transform:uppercase; opacity:.6}
+  .cards .button, .cards a.more{margin-top:auto}
+  .cards a.more{color:var(--wsu-orange); text-decoration:none; font-weight:700; font-size:14px; padding-top:4px}
+  .cards a.more:hover{text-decoration:underline}
+
+  .cards.cards-crimson > li{background:var(--wsu-crimson); color:#fff}
+  .cards.cards-crimson .img{background:#7a0029}
+  .cards.cards-black > li{background:#111; color:#fff}
+  .cards.cards-dark-grey > li{background:var(--wsu-dark-gray); color:#fff}
+
+  .cards.cards-horizontal{grid-template-columns:1fr; gap:2px}
+  .cards.cards-horizontal > li{flex-direction:row; align-items:stretch}
+  .cards.cards-horizontal .img{width:38%; flex:none; aspect-ratio:auto; min-height:132px}
+  .cards.cards-horizontal .body{padding:18px 24px}
+  .cards.cards-horizontal.cards-image-small .img{width:18%; min-height:96px}
+  @media (max-width:700px){
+    .cards.cards-horizontal > li{flex-direction:column}
+    .cards.cards-horizontal .img,
+    .cards.cards-horizontal.cards-image-small .img{width:100%; aspect-ratio:16/9}
+  }
+
+  /* columns block */
+  .columns{display:grid; gap:32px}
+  .columns.c3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+  .columns.c2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+  .columns h3{margin:0 0 8px; font-size:var(--h-m)}
+  .columns p{margin:0 0 10px; font-size:15px; color:rgba(255,255,255,.8)}
+  .columns ul{margin:0; padding-left:18px; font-size:15px; display:flex; flex-direction:column; gap:6px; color:rgba(255,255,255,.8)}
+
+  /* table block */
+  table.tbl{width:100%; border-collapse:collapse; font-size:15px}
+  table.tbl td{padding:16px 20px 16px 0; vertical-align:top; border-bottom:1px solid rgba(255,255,255,.22)}
+  table.tbl td:first-child{width:250px; font-weight:700}
+  table.tbl .state{display:block; font:600 11px/1.4 ui-monospace,Consolas,monospace;
+                   letter-spacing:.09em; text-transform:uppercase; margin-top:5px; color:#8fe3d4}
+  table.tbl .state.check{color:#ffc08a}
+  @media (max-width:700px){ table.tbl td, table.tbl td:first-child{display:block; width:auto; border:0; padding-bottom:4px} }
+
+  footer.site{background:#0d0d0d; padding:40px 32px; border-top:1px solid #3a3537}
+  footer.site .in{max-width:1440px; margin:0 auto; display:flex; gap:40px; flex-wrap:wrap; justify-content:space-between}
+  footer.site .ack{max-width:52ch; font-family:var(--serif-font); font-size:14px; color:#a9a5a6}
+  @media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+</style>
+
+<div class="note">
+  <span><b>Dark.</b> Every dark surface is a Style typed into a Section Metadata table; every card colour is a variant typed into the block header. Both already exist in the Western Sydney project. <a href="light.html" style="color:#ff5c5e">See the light version</a></span>
+  <button type="button" id="t">Hide block labels</button>
+</div>
+
+<header class="site">
+  <div class="in">
+    <div class="brand">
+      <svg class="shield" viewBox="0 0 100 125" aria-hidden="true"><path fill="currentColor" d="M0 0 H100 V68 C100 97 78 118 50 125 C22 118 0 97 0 68 Z"/></svg>
+      <span class="n">Western Sydney<br>University</span>
+      <span class="c">International Centre for<br>Neuromorphic Systems</span>
+    </div>
+    <nav class="site"><a href="#work">The work</a><a href="#study">Study</a><a href="#tools">Tools</a><a href="#contact">Contact</a></nav>
+  </div>
+</header>
+
+<main>
+
+<div class="section bg-black" style="padding:0">
+  <div class="in" style="padding:32px 32px 0"><p class="ann">Section Metadata → Style: bg-black
+Carousel — one row</p></div>
+  <div class="carousel">
+    <div class="pic"><canvas data-fig="sky" aria-hidden="true"></canvas></div>
+    <div class="body">
+      <h1>Nothing fires until something <em>changes</em></h1>
+      <p>A pixel in a silicon retina reports only when its own light changes. A neuron in a spiking network fires only when its input does. Same principle, sensor to processor, and the reason both are fast and cost so little power.</p>
+      <a class="button" href="#work">See the recorded work</a>
+    </div>
+  </div>
+</div>
+
+<div class="section bg-black">
+  <div class="in">
+    <p class="ann">Embed — a YouTube link. Thumbnail and play button, player loads on click.</p>
+    <figure class="embed" style="margin:0 auto">
+      <canvas data-fig="rocket" aria-hidden="true"></canvas>
+      <div class="play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      <figcaption>A rocket launch, events against frames &middot; the clip that explains the technology</figcaption>
+    </figure>
+  </div>
+</div>
+
+<div class="section bg-dark-gray">
+  <div class="in">
+    <p class="ann">Cards (btn-outline, cards-crimson)</p>
+    <h2>Three things we built</h2>
+    <ul class="cards cards-crimson">
+      <li>
+        <div class="img"><canvas data-fig="sprite" aria-hidden="true"></canvas></div>
+        <div class="body">
+          <p class="meta">Perception &middot; on orbit since 2022</p>
+          <h3>Falcon Neuro</h3>
+          <p>Event cameras operating on the International Space Station, built with the United States Air Force Academy, watching lightning and upper-atmosphere sprites from orbit.</p>
+          <a class="button outline" href="#">About Falcon Neuro</a>
+        </div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="spikes" aria-hidden="true"></canvas></div>
+        <div class="body">
+          <p class="meta">Processing &middot; confirm status</p>
+          <h3>DeepSouth</h3>
+          <p>Built to simulate spiking neural networks at the scale of the human brain, on reconfigurable commodity hardware at a fraction of conventional power.</p>
+          <a class="button outline" href="#">About DeepSouth</a>
+        </div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="stars" aria-hidden="true"></canvas></div>
+        <div class="body">
+          <p class="meta">Perception</p>
+          <h3>Astrosite</h3>
+          <p>A shipping container of event-based telescopes that tracks satellites in full daylight, where conventional optics saturate and lose the target.</p>
+          <a class="button outline" href="#">Astrosite footage</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section bg-black" id="work">
+  <div class="in">
+    <p class="ann">Section Metadata → Style: bg-black
+Cards (cards-horizontal, cards-black)</p>
+    <h2>Space &amp; defence</h2>
+    <p class="lead">Tracking in daylight, from orbit, or through obscured air, where optical systems saturate or lose the target.</p>
+    <ul class="cards cards-horizontal cards-black">
+      <li>
+        <div class="img"><canvas data-fig="rocket" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Perception</p><h3>A rocket launch, events against frames</h3><p>The same launch recorded both ways at once. The frame camera blows out around the plume; the event camera keeps the detail.</p><a class="more" href="#">Watch</a></div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="stars" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Perception &middot; Principles</p><h3>Simultaneous sky mapping and satellite tracking</h3><p>A star map builds continuously from the stars passing through the field of view. Their positions then reveal the motion of the telescope itself.</p><a class="more" href="#">Watch</a></div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="eclipse" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Perception</p><h3>A full lunar eclipse, both halves at once</h3><p>The illuminated and the eclipsed portions stay clear together. A conventional sensor exposes for the brighter lit area and loses the rest.</p><a class="more" href="#">Watch</a></div>
+      </li>
+      <li>
+        <div class="img"><div class="ph">Acoustic drone detection<br>image needed</div></div>
+        <div class="body"><p class="meta">Perception</p><h3>Hearing what you cannot see</h3><p>Not everything neuromorphic is a camera. A model of biological hearing picks an aerial drone out of a cluttered soundscape when vision is gone.</p><a class="more" href="#study">Doctoral topics</a></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section bg-dark-gray">
+  <div class="in">
+    <p class="ann">Section Metadata → Style: bg-dark-gray
+Cards (cards-horizontal, cards-dark-grey)</p>
+    <h2>Industry &amp; manufacturing</h2>
+    <p class="lead">Inspection and monitoring beyond frame rate: fast lines, vibration, faults that appear between frames. Capability established, seeking first industry partners.</p>
+    <ul class="cards cards-horizontal cards-dark-grey">
+      <li>
+        <div class="img"><div class="ph">Drill-bit event data<br>from the promo reel</div></div>
+        <div class="body"><p class="meta">Processing</p><h3>Silicon that spikes</h3><p>The processor side of the centre, which produces no footage and half the research. Spiking networks on chip, and instruction sets built for them.</p><a class="more" href="#study">Doctoral topics</a></div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="clutter" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Principles</p><h3>Separating a scene by motion alone</h3><p>Objects close to you cross the frame faster than distant ones when you are moving. That difference alone pulls them apart, with no recognition step.</p><a class="more" href="#">Watch</a></div>
+      </li>
+      <li>
+        <div class="img"><canvas data-fig="clutter" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Principles</p><h3>Sensiball</h3><p>A robot that tracks and returns a ball faster than a frame camera could see it. The same closed loop is what an inspection line needs.</p><a class="more" href="#">Watch</a></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section bg-black">
+  <div class="in">
+    <h2>Agriculture &amp; environment</h2>
+    <p class="lead">Counting and classifying living things in cluttered outdoor scenes, on battery, with no network.</p>
+    <ul class="cards cards-horizontal cards-black">
+      <li>
+        <div class="img"><canvas data-fig="eclipse" aria-hidden="true"></canvas></div>
+        <div class="body"><p class="meta">Principles</p><h3>Separating what moves from what drifts</h3><p>The telescope holds the moon still on a cloudy night and the cloud separates from it by velocity alone. The same separation finds an insect against moving vegetation.</p><a class="more" href="#">Watch</a></div>
+      </li>
+      <li>
+        <div class="img"><div class="ph">Bee against foliage<br>image needed</div></div>
+        <div class="body"><p class="meta">Perception &middot; Principles</p><h3>Counting what moves</h3><p>Picking a bee out of moving foliage by how it moves rather than how bright it is, at wingbeat rates a frame camera cannot resolve.</p><a class="more" href="#study">Doctoral topics</a></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section bg-dark-gray" id="study">
+  <div class="in">
+    <p class="ann">Columns — three across, then two</p>
+    <h2>Work with us on this</h2>
+    <p class="lead">Recruitment is continuous. No closing date, no application window. These are directions we would supervise, not vacancies that open and close.</p>
+    <div class="columns c3">
+      <div><h3>Capstone</h3><p>A scoped slice of live work, finished within the session. Open to any Western Sydney final-year engineering or computing student.</p></div>
+      <div><h3>Masters</h3><p>Master of Applied Neuromorphic Engineering, spanning engineering, computer science, neuroscience and mathematics.</p></div>
+      <div><h3>Doctorate</h3><p>One direction taken the whole way. Scholarships are applied for alongside a project, so start with the topic and the supervisor.</p></div>
+    </div>
+    <div class="columns c2" style="margin-top:34px">
+      <div><h3>Space &amp; defence</h3><ul><li>Astrometry with event-based vision sensors</li><li>Bio-inspired sensors for space situational awareness</li><li>Acoustic aerial drone detection</li></ul></div>
+      <div><h3>Sensors, chips &amp; computing</h3><ul><li>Integrated circuit design for event sensors</li><li>RISC-V instruction set extensions</li><li>Physics-based encoding for spiking networks</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<div class="section bg-black" id="tools">
+  <div class="in">
+    <p class="ann">Cards (cards-horizontal, cards-image-small, cards-black)</p>
+    <h2>Take it and use it</h2>
+    <p class="lead">The centre writes and publishes the software it uses. Several are depended on by groups elsewhere.</p>
+    <ul class="cards cards-horizontal cards-image-small cards-black">
+      <li><div class="img"><div class="ph">IEBCS</div></div><div class="body"><h3>IEBCS</h3><p>The centre's event-based camera simulator. Develop against the sensor before you own one.</p><a class="more" href="#">On GitHub</a></div></li>
+      <li><div class="img"><div class="ph">land</div></div><div class="body"><h3>land</h3><p>A maintained index of the neuromorphic datasets available anywhere, not only the centre's own.</p><a class="more" href="#">On GitHub</a></div></li>
+    </ul>
+  </div>
+</div>
+
+<div class="section bg-crimson" id="contact">
+  <div class="in">
+    <p class="ann" style="color:#ffd9c9; border-color:#ffd9c9">Section Metadata → Style: bg-crimson
+Table (dynamic-width, no-border, two-column-table)</p>
+    <h2>Bring us a measurement problem</h2>
+    <p class="lead" style="color:#f7dcd8">Tell us what you need to see, how fast it moves, what light it sits in, and what power you have where it lives. Those four facts decide almost everything.</p>
+    <table class="tbl">
+      <tr><td>Event cameras and the lab<span class="state">Available now</span></td><td>Sensors, the recording rigs around them, and the people who get clean data out of them. The answer usually comes from one afternoon of recording rather than a study.</td></tr>
+      <tr><td>Astrosite<span class="state">By arrangement</span></td><td>A mobile observatory that travels to a site. The useful first question is what you need observed and when.</td></tr>
+      <tr><td>DeepSouth<span class="state check">Confirm status</span></td><td>Say plainly whether access requests are open. If it is not in service, saying so beats collecting details and going quiet.</td></tr>
+      <tr><td>Software and data<span class="state">Open, no agreement</span></td><td>Published openly, needing no permission and no conversation.</td></tr>
+    </table>
+  </div>
+</div>
+
+</main>
+
+<footer class="site">
+  <div class="in">
+    <div class="brand">
+      <svg class="shield" viewBox="0 0 100 125" aria-hidden="true"><path fill="currentColor" d="M0 0 H100 V68 C100 97 78 118 50 125 C22 118 0 97 0 68 Z"/></svg>
+      <span class="n">Western Sydney<br>University</span>
+    </div>
+    <p class="ack">Western Sydney University acknowledges the Darug, Dharawal, Eora and Wiradjuri peoples as the traditional custodians of the lands on which the University stands, and pays respect to Elders past and present.</p>
+  </div>
+</footer>
+
+<script>
+// Figures are drawn rather than fetched: artifact pages cannot load external
+// images. Blue for ON events, amber for OFF, magenta for a tracked target, which
+// is the convention used across all the ICNS mocks in this project.
+(function () {
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ON = '#3B9BFF', OFF = '#FF8C42', TARGET = '#FF3DA6';
+  document.querySelectorAll('canvas[data-fig]').forEach(function (cv) {
+    var kind = cv.dataset.fig, ctx = cv.getContext('2d');
+    function draw(t) {
+      var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2);
+      var w = Math.round(r.width), h = Math.round(r.height);
+      if (!w || !h) return;
+      if (cv.width !== w * dpr || cv.height !== h * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = '#05070A'; ctx.fillRect(0, 0, w, h);
+      if (kind === 'sky' || kind === 'stars') {
+        for (var i = 0; i < Math.round(w * h / 900); i++) {
+          ctx.globalAlpha = .2 + .6 * Math.abs(Math.sin(i + t / 900));
+          ctx.fillStyle = i % 3 ? ON : OFF;
+          ctx.fillRect((i * 97.3) % w, (i * 53.7) % h, 1.6, 1.6);
+        }
+        var px = (t * .02) % (w + 60) - 30;
+        for (var k = 0; k < 26; k++) {
+          ctx.globalAlpha = (1 - k / 26) * .8; ctx.fillStyle = TARGET;
+          ctx.fillRect(px - k * 4, h * .35 + Math.sin(t / 1400) * h * .12, 2, 2);
+        }
+      } else if (kind === 'eclipse') {
+        var cx = w * .5, cy = h * .5, rad = Math.min(w, h) * .32;
+        for (var a = 0; a < 900; a++) {
+          var ang = a * .12 + t / 3000, rr = rad + Math.sin(a * 3.1) * 2;
+          ctx.globalAlpha = .25 + .55 * Math.abs(Math.sin(a + t / 700));
+          ctx.fillStyle = (Math.cos(ang) > -.25) ? ON : OFF;
+          ctx.fillRect(cx + Math.cos(ang) * rr, cy + Math.sin(ang) * rr, 1.8, 1.8);
+        }
+      } else if (kind === 'rocket') {
+        /* frames on the left blowing out, events on the right holding detail */
+        ctx.fillStyle = '#111'; ctx.fillRect(0, 0, w / 2, h);
+        var g = ctx.createRadialGradient(w * .25, h * .6, 2, w * .25, h * .6, h * .5);
+        g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, w / 2, h);
+        for (var e = 0; e < 460; e++) {
+          var ex = w * .5 + ((e * 37.7) % (w * .5));
+          var ey = (e * 53.3) % h;
+          var d = Math.abs(ey - h * .6) / h;
+          ctx.globalAlpha = Math.max(0, .75 - d * 1.5);
+          ctx.fillStyle = e % 2 ? ON : OFF;
+          ctx.fillRect(ex + Math.sin(t / 600 + e) * 2, ey, 1.7, 1.7);
+        }
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(w / 2 - 1, 0, 2, h);
+      } else if (kind === 'spikes') {
+        for (var n = 0; n < 16; n++) {
+          var yy = 8 + n * (h - 16) / 16;
+          ctx.globalAlpha = 1; ctx.fillStyle = '#1C242C'; ctx.fillRect(6, yy, w - 12, 1);
+          for (var s = 0; s < 8; s++) {
+            var sx = 6 + ((n * 13.7 * (s + 1) * 31 + t * .02) % (w - 12));
+            ctx.fillStyle = n % 5 === 0 ? TARGET : '#7CE0C0';
+            ctx.globalAlpha = .8; ctx.fillRect(sx, yy - 3, 1.6, 7);
+          }
+        }
+      } else if (kind === 'sprite') {
+        var base = h * .78;
+        for (var b2 = 0; b2 < 120; b2++) {
+          ctx.globalAlpha = .2 + (b2 % 6) / 9; ctx.fillStyle = b2 % 3 ? ON : OFF;
+          ctx.fillRect((b2 * 61.7) % w, base + Math.sin(b2 + t / 1200) * 4, 1.6, 1.6);
+        }
+        for (var f = 0; f < 3; f++) {
+          var fx = w * (.25 + f * .25), life = ((t / 1300) + f * .4) % 1;
+          for (var y2 = base; y2 > base - life * h * .6; y2 -= 4) {
+            ctx.globalAlpha = (1 - life) * .85; ctx.fillStyle = f === 1 ? '#9A7BFF' : TARGET;
+            ctx.fillRect(fx + Math.sin(y2 * .09 + f) * 6, y2, 2, 2.4);
+          }
+        }
+      } else {
+        for (var c = 0; c < 260; c++) {
+          ctx.globalAlpha = .12 + (c % 5) / 12; ctx.fillStyle = OFF;
+          ctx.fillRect((c * 89.3) % w + Math.sin(t / 900 + c) * 3, (c * 53.7) % h, 1.5, 1.5);
+        }
+        var tx = (t * .03) % (w + 40) - 20;
+        for (var q = 0; q < 14; q++) {
+          ctx.globalAlpha = (1 - q / 14) * .85; ctx.fillStyle = TARGET;
+          ctx.fillRect(tx - q * 5, h * .5 + Math.sin(t / 700 - q * .3) * h * .18, 2.4, 2.4);
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    function loop(t) { draw(t); if (!reduced) requestAnimationFrame(loop); }
+    requestAnimationFrame(loop);
+  });
+
+  var b = document.getElementById('t');
+  b.addEventListener('click', function () {
+    document.body.classList.toggle('hide-ann');
+    b.textContent = document.body.classList.contains('hide-ann') ? 'Show block labels' : 'Hide block labels';
+  });
+})();
+</script>
