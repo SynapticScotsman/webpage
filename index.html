@@ -173,9 +173,33 @@
         .partner-icon { color:#334155; transition:color .3s ease; }
 
         /* Project cards */
-        .project-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; padding:1.5rem; transition:all .3s ease; display:flex; flex-direction:column; gap:.75rem; }
-        .project-card:hover { border-color:rgba(224,68,94,.3); background:rgba(224,68,94,.04); transform:translateY(-2px); }
-        .project-tag { font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:#E0445E; background:rgba(224,68,94,.1); display:inline-block; padding:.2rem .5rem; border-radius:3px; width:fit-content; }
+        /* Card cells, measured off afterflow.dev's feature grid rather than
+           guessed: 26px padding, a .32-alpha wash rather than a lit surface,
+           heading 16.6px/400, body 14px. */
+        .project-card { background:rgba(10,10,9,.32); border:1px solid rgba(242,240,234,.14); padding:26px;
+                        transition:background .3s var(--ease), border-color .3s var(--ease);
+                        display:flex; flex-direction:column; gap:.75rem; }
+        /* No lift on hover. A card that rises off the page is the stock
+           card reflex; neither reference does it. Light the surface instead. */
+        .project-card:hover { border-color:rgba(224,68,94,.35); background:rgba(224,68,94,.05); }
+
+        /* In a grid the cells share their edges instead of floating apart:
+           gap is 0, the wrapper draws top+left, each cell draws right+bottom,
+           so no hairline is ever doubled and three projects read as one matrix.
+           Afterflow's cells carry exactly this (border-width 0 1px 1px 0), and
+           it is what stops a grid looking like three cards adrift. Radius has
+           to be 0 for it - flush cells cannot have rounded corners. */
+        .project-grid { display:grid; gap:0;
+                        border-top:1px solid rgba(242,240,234,.14);
+                        border-left:1px solid rgba(242,240,234,.14); }
+        .project-grid > .project-card { border-width:0 1px 1px 0; }
+
+        /* Was a filled pill: red text on a red wash with a 3px radius. Neither
+           reference has a single filled label anywhere - every uppercase label
+           on both is plain text on the page ground. Muted rather than red too,
+           so the one accent per card lands on the link, the actionable part. */
+        .project-tag { font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+                       font-weight:500; color:#8a8a86; }
 
         /* Exhibits */
         .exhibit-card { background:rgba(255,255,255,.02); border:1px solid rgba(255,255,255,.05); border-radius:1rem; }
@@ -368,7 +392,7 @@
     <h2 id="explore-heading" class="sr-only">Explore the cognitive map</h2>
     <a href="cognitive_map.html" class="project-card hover:no-underline" aria-label="Cognitive map of the research programme">
         <span class="project-tag">Interactive · Deep dive</span>
-        <h3 class="text-lg font-medium tracking-tight text-white">The cognitive map, live</h3>
+        <h3 class="text-[17px] font-normal tracking-[-0.016em] text-white">The cognitive map, live</h3>
         <p class="text-sm text-slate-400 leading-relaxed">An interactive atlas of the research programme — event vision, VSA memory, and active perception, each with a demo you can drive.</p>
         <span class="text-xs text-cyan-400 font-medium uppercase tracking-[0.08em] mt-auto pt-2 border-t border-white/5">Open the atlas →</span>
     </a>
@@ -380,25 +404,25 @@
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Projects · Things you can try</p>
         <h2 id="projects-heading" class="text-4xl font-light tracking-[-0.03em]">Featured projects</h2>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="project-grid grid-cols-1 md:grid-cols-3">
 
         <article class="project-card" aria-labelledby="proj1-title">
             <span class="project-tag">Event Vision · Log-Polar</span>
-            <h3 id="proj1-title" class="text-lg font-medium tracking-tight">Log-Polar Equivariant Features</h3>
+            <h3 id="proj1-title" class="text-[17px] font-normal tracking-[-0.016em]">Log-Polar Equivariant Features</h3>
             <p class="text-sm text-slate-400 leading-relaxed">Extracting rotation- and scale-equivariant features from asynchronous event streams via log-polar filtering, enabling robust ego-motion estimation under heavy camera spin and forward translation.</p>
             <a href="demos/log-polar/index.html" class="text-xs text-cyan-400 font-medium uppercase tracking-[0.08em] hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Live Demo →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj2-title">
             <span class="project-tag">VSA · Cognitive Mapping</span>
-            <h3 id="proj2-title" class="text-lg font-medium tracking-tight">VSA Cognitive Mapping</h3>
+            <h3 id="proj2-title" class="text-[17px] font-normal tracking-[-0.016em]">VSA Cognitive Mapping</h3>
             <p class="text-sm text-slate-400 leading-relaxed">Binding log-polar event features into superposed hypervectors (FHRR) to build compact, queryable spatial maps on edge hardware — bridging continuous neuromorphic perception with discrete symbolic reasoning.</p>
             <a href="#vsa-explorer" class="text-xs text-cyan-400 font-medium uppercase tracking-[0.08em] hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">Try the VSA Explorer →</a>
         </article>
 
         <article class="project-card" aria-labelledby="proj3-title">
             <span class="project-tag">Uncertainty · Active Sensing</span>
-            <h3 id="proj3-title" class="text-lg font-medium tracking-tight">Uncertainty-Driven Active Perception</h3>
+            <h3 id="proj3-title" class="text-[17px] font-normal tracking-[-0.016em]">Uncertainty-Driven Active Perception</h3>
             <p class="text-sm text-slate-400 leading-relaxed">A continuous epistemic uncertainty monitor over VSA resonance directs the robot's attention — triggering SPAD or LiDAR fallback only when the scene exceeds ambiguity thresholds, realising sense-less-understand-more efficiency.</p>
             <a href="#exhibits" class="text-xs text-cyan-400 font-medium uppercase tracking-[0.08em] hover:text-white transition-colors mt-auto pt-2 border-t border-white/5">See Active Fallback →</a>
         </article>
