@@ -26,7 +26,7 @@ Review of westernsydney.edu.au/icns, 24 August 2026. Every broken link below was
 
 ## Design and usability
 
-- The homepage banner is a rotating carousel that plays automatically and has no pause button. That fails WCAG, the web accessibility standard the university's own web policy commits to. Three of its four slides are never seen by most visitors.
+- The homepage banner is a carousel holding four slides. It does not rotate on its own, so it is not the accessibility failure reported in an earlier version of this list; the problem is simpler. Three of the four slides are only reached by someone who chooses to click through, and almost nobody does, so three of the centre's four headline messages go unread.
 - Card text cuts off mid-word, "...the scale of the human b..." and "pioneerin...", above nine identical "READ MORE" buttons that never say where they lead.
 - The homepage has no main heading, heading levels skip, and there is no skip-to-content link for keyboard users.
 - The site search box has no label and its button has no accessible name. A screen reader announces nothing useful for either.
