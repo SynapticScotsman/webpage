@@ -948,34 +948,102 @@ function smooth01(v, a, b) {
     const WORLD_DEPTH = 100;
     const upVec = new THREE.Vector3(0, 1, 0);
 
-    /* One edge's worth of events. Shared by the box and the swept shapes so the
-       ON/OFF physics is written once and cannot drift between them. */
+    /* One edge's worth of events, generated from the IMAGE motion rather than
+       from the world geometry. Shared by every shape so the physics is written
+       once and cannot drift between them.
+
+       The camera translates forward, so the world streams toward +z and the
+       optical flow runs radially outward from the focus of expansion, which
+       sits straight ahead. Writing X,Y,Z for a point relative to the camera and
+       depth = -Z, the image coordinates are u = X/depth, v = Y/depth. Moving
+       the camera gives dZ/dt = V with dX = dY = 0, so
+
+           du/dt = X*V/Z^2,   dv/dt = Y*V/Z^2
+
+       which is a positive multiple of (X, Y). Two things follow, and the
+       previous version modelled neither:
+
+       1. Flow DIRECTION at any point is just normalize(X, Y).
+       2. Flow SPEED is V * r_image / depth, so it grows with distance from the
+          centre of frame and falls with depth.
+
+       What is still asserted rather than derived: the leading edge is always
+       ON. Real polarity depends on whether the object is brighter than what it
+       covers, so a dark building against a lighter sky would invert this. */
+    const CAM = new THREE.Vector3(0, 3, 0);   // eye height, mid-road
+
+    /* Event rate knobs, read in the animation loop. EV_RATE_P is the exponent
+       on depth: 1 is the physical value, and at 1 the far half of a 100-unit
+       world goes almost silent, which is true of a real sensor but leaves the
+       scene thin. 0.7 compresses that contrast while keeping the near/far
+       ordering. EV_RATE_K sets where the cut falls; at these values a roadside
+       house holds roughly 90 percent of its points at 10 units, 73 at 40 and
+       42 at 90, and a point close to the focus of expansion holds under 10
+       regardless of depth, which is the behaviour that matters. */
+    const EV_RATE_P = 0.7, EV_RATE_K = 1.2;
+
+    /* An edge lying along the flow slides along itself and generates almost
+       nothing (the aperture problem). Floor it rather than zeroing: a real edge
+       is never perfectly straight and the sensor has noise, so a wholly silent
+       edge is as wrong as a uniformly loud one. NORM keeps the total point
+       count near its old value - mean |sin| over random orientations is 2/pi,
+       so the mean factor is FLOOR + (1-FLOOR)*2/pi and NORM is its reciprocal. */
+    const AP_FLOOR = 0.15, AP_NORM = 1 / (AP_FLOOR + (1 - AP_FLOOR) * 2 / Math.PI);
+
     function emitEdge(v1, v2, density) {
-        {
-            const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density));
-            const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
-            const perp = new THREE.Vector3();
-            if (Math.abs(dir.y) > .99) perp.set(1, 0, 0);
-            else perp.crossVectors(upVec, dir).normalize();
-            const SEP = 0.12;
-            for (let k = 0; k < n; k++) {
-                const t = Math.random();
-                const isOn = (k % 2) === 0; // half tight blue leading edge, half orange tail
-                const side = isOn ? SEP : -SEP;
-                /* Apparent motion is +z (world streams past the camera).
-                   ON  = blue,   brightness rising at the leading edge — tight band.
-                   OFF = orange, brightness falling behind it — a longer decaying tail. */
-                const decay = Math.pow(Math.random(), .6);
-                const tail = isOn ? .12 : -decay * 2.2;
-                const fade = isOn ? 1 : 1 - decay * .55;   // tail dims as it ages
-                edgePoints.push(
-                    v1.x + (v2.x - v1.x) * t + perp.x * side * .35 + (Math.random() - .5) * .06,
-                    v1.y + (v2.y - v1.y) * t + perp.y * side * .35 + (Math.random() - .5) * .06,
-                    v1.z + (v2.z - v1.z) * t + perp.z * side * .35 + tail + (Math.random() - .5) * .06
-                );
-                if (isOn) edgeColors.push(.23, .61, 1.0);
-                else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
-            }
+        const mx = (v1.x + v2.x) / 2 - CAM.x,
+              my = (v1.y + v2.y) / 2 - CAM.y,
+              mz = (v1.z + v2.z) / 2 - CAM.z;
+        const depth = Math.max(1, -mz);
+
+        const fr = Math.hypot(mx, my) || 1e-6;         // flow direction, normalised
+        const fu = mx / fr, fv = my / fr;
+
+        const dx = v2.x - v1.x, dy = v2.y - v1.y, dz = v2.z - v1.z;
+        let eu = depth * dx + mx * dz,                 // d/ds of u = X/depth
+            ev = depth * dy + my * dz;
+        const er = Math.hypot(eu, ev) || 1e-6;
+        eu /= er; ev /= er;
+
+        const aperture = AP_FLOOR + (1 - AP_FLOOR) * Math.abs(eu * fv - ev * fu);
+
+        const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density * aperture * AP_NORM));
+        const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
+        const perp = new THREE.Vector3();
+        if (Math.abs(dir.y) > .99) perp.set(1, 0, 0);
+        else perp.crossVectors(upVec, dir).normalize();
+        const SEP = 0.12;
+
+        /* Age offsets are applied as a radial scale about the focus of
+           expansion AT THE POINT'S OWN DEPTH, not as a shift in world z.
+           Offsetting in z used to push the tail 2.2 units back, which buried it
+           inside the wall that produced it and, on a silhouette edge, left it
+           hanging in open air behind the object. Scaling X,Y instead reproduces
+           the same inward image smear while keeping every event on the surface
+           that emitted it. Dividing by depth preserves the old behaviour that
+           near objects smear further, which is correct: image speed goes as
+           1/depth. */
+        const TAIL_K = 2.2, LEAD_K = 0.12;
+
+        for (let k = 0; k < n; k++) {
+            const t = Math.random();
+            const isOn = (k % 2) === 0;    // half the tight blue band, half the orange tail
+            const side = isOn ? SEP : -SEP;
+            const decay = Math.pow(Math.random(), .6);
+            /* ON leads, so it sits slightly outward; OFF trails inward and dims
+               with age. a > 0 pulls toward the focus of expansion. */
+            const a    = isOn ? -LEAD_K / depth : (decay * TAIL_K) / depth;
+            const fade = isOn ? 1 : 1 - decay * .55;
+
+            const px = v1.x + dx * t + perp.x * side * .35 + (Math.random() - .5) * .06,
+                  py = v1.y + dy * t + perp.y * side * .35 + (Math.random() - .5) * .06,
+                  pz = v1.z + dz * t + perp.z * side * .35 + (Math.random() - .5) * .06;
+
+            edgePoints.push(CAM.x + (px - CAM.x) * (1 - a),
+                            CAM.y + (py - CAM.y) * (1 - a),
+                            pz);
+            if (isOn) edgeColors.push(.23, .61, 1.0);
+            else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
         }
     }
 
@@ -1421,6 +1489,22 @@ function smooth01(v, a, b) {
             /* events flicker only while they are events; a bound map is stable */
             if (flatten < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60;
             if (i >= noiseStart && stagger[i] * 3.34 < flatten) cz = 60;
+            /* Event RATE follows image speed, which under forward translation
+               is V * r_image / depth. Both terms matter and neither could be
+               baked in at build time: a point's depth changes continuously as
+               the world wraps past, and its eccentricity changes with it. So
+               the rate is applied here, by parking a share of the points the
+               same way the flicker above does.
+
+               EV_RATE_P is the exponent on depth. The physical value is 1;
+               dropping it below that compresses the near/far contrast, because
+               the true relation empties the far half of a 100-unit world almost
+               completely. Set it to 1 to see what the sensor would really do. */
+            if (flatten < .5 && i < noiseStart) {
+                const ex = cx - CAM.x, ey = cy - CAM.y, dep = Math.max(6, -cz);
+                const speed = Math.hypot(ex, ey) / Math.pow(dep, EV_RATE_P);
+                if (speed * EV_RATE_K < ((i * 31 + evFrame * 17) % 128) / 128) cz = 60;
+            }
             posArray[i3] = cx; posArray[i3+1] = cy; posArray[i3+2] = cz;
         }
         geo.attributes.position.needsUpdate = true;
