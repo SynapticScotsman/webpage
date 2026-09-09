@@ -100,6 +100,24 @@
             .reveal { opacity:1; transform:none; transition:none; }
         }
 
+        /* Mechanism diagrams. Afterflow carries its explanation in 35 inline
+           SVGs and keeps its prose short as a result; this page had one
+           non-icon SVG and was doing the same job in paragraphs. Figures sit
+           between the turn and the landing: the turn asks, the figure shows,
+           the landing names it. No library - plain SVG, and the entry fade is
+           the page's existing .reveal, so nothing new animates. */
+        .diagram { margin:0 0 2.75rem; }
+        .diagram svg { width:100%; height:auto; display:block; overflow:visible; }
+        .dg-label { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+                    letter-spacing:.08em; fill:#b4b2a9; }
+        .dg-sub   { font-family:'JetBrains Mono',monospace; font-size:10px;
+                    letter-spacing:.08em; fill:#6f6e6a; }
+        /* Afterflow puts a plain-prose caption under every figure saying what
+           it just showed. Sized to match theirs (14px, muted) so the figure
+           reads as part of the argument rather than decoration. */
+        .dg-cap   { font-size:14px; line-height:1.65; color:#8a8a86; max-width:56ch;
+                    margin-top:1rem; }
+
         /* Scroll rails: the hero stage catches you at its start and at the
            fully-formed map, so the transform is hard to skip past by accident.
            `proximity` (not `mandatory`) keeps it a nudge, never a trap. */
@@ -360,6 +378,29 @@
     <p class="beat-obvious">You might say: with your eyes.</p>
     <p class="beat">But your eyes don't record the world. You respond to <em class="text-white not-italic font-medium">change</em>. You move your attention. You discard almost everything you are given — and from those incomplete signals your brain builds a model good enough to act on.</p>
     <p class="beat-turn">So what happens if we build machines that meet the same problem the same way?</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-labelledby="dg-perc-t dg-perc-d">
+  <title id="dg-perc-t">Frame capture versus event capture of the same moving edge</title>
+  <desc id="dg-perc-d">A frame camera re-reads its whole pixel grid four times on a fixed
+clock, resending mostly identical data. An event sensor emits only where brightness changed:
+a tight blue leading edge and a longer orange trailing smear, continuously rather than on a clock.</desc>
+  <defs><pattern id="px" width="7" height="7" patternUnits="userSpaceOnUse">
+    <circle cx="3.5" cy="3.5" r="1" fill="#33322f"/></pattern></defs>
+  <g stroke-width="1"><rect x="96" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="110" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="142" y1="97" x2="142" y2="105" stroke="#5c5b57"/><rect x="233" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="265" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="279" y1="97" x2="279" y2="105" stroke="#5c5b57"/><rect x="371" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="419" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="417" y1="97" x2="417" y2="105" stroke="#5c5b57"/><rect x="508" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="574" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="554" y1="97" x2="554" y2="105" stroke="#5c5b57"/></g>
+  <g fill="#FF8C42"><circle cx="103" cy="176" r="1.5"/><circle cx="104" cy="174" r="1.5"/><circle cx="103" cy="162" r="1.5"/><circle cx="94" cy="187" r="1.5"/><circle cx="91" cy="161" r="1.5"/><circle cx="94" cy="169" r="1.5"/><circle cx="113" cy="163" r="1.5"/><circle cx="109" cy="187" r="1.5"/><circle cx="127" cy="166" r="1.5"/><circle cx="111" cy="174" r="1.5"/><circle cx="121" cy="179" r="1.5"/><circle cx="117" cy="169" r="1.5"/><circle cx="121" cy="169" r="1.5"/><circle cx="115" cy="163" r="1.5"/><circle cx="130" cy="185" r="1.5"/><circle cx="137" cy="176" r="1.5"/><circle cx="134" cy="179" r="1.5"/><circle cx="137" cy="175" r="1.5"/><circle cx="130" cy="191" r="1.5"/><circle cx="140" cy="182" r="1.5"/><circle cx="155" cy="182" r="1.5"/><circle cx="164" cy="175" r="1.5"/><circle cx="160" cy="163" r="1.5"/><circle cx="163" cy="185" r="1.5"/><circle cx="162" cy="189" r="1.5"/><circle cx="155" cy="188" r="1.5"/><circle cx="169" cy="173" r="1.5"/><circle cx="167" cy="189" r="1.5"/><circle cx="173" cy="168" r="1.5"/><circle cx="189" cy="173" r="1.5"/><circle cx="179" cy="178" r="1.5"/><circle cx="163" cy="182" r="1.5"/><circle cx="177" cy="186" r="1.5"/><circle cx="190" cy="173" r="1.5"/><circle cx="198" cy="181" r="1.5"/><circle cx="199" cy="161" r="1.5"/><circle cx="210" cy="171" r="1.5"/><circle cx="212" cy="189" r="1.5"/><circle cx="196" cy="164" r="1.5"/><circle cx="206" cy="171" r="1.5"/><circle cx="223" cy="162" r="1.5"/><circle cx="216" cy="168" r="1.5"/><circle cx="203" cy="164" r="1.5"/><circle cx="224" cy="191" r="1.5"/><circle cx="214" cy="183" r="1.5"/><circle cx="230" cy="171" r="1.5"/><circle cx="232" cy="185" r="1.5"/><circle cx="223" cy="185" r="1.5"/><circle cx="227" cy="184" r="1.5"/><circle cx="243" cy="177" r="1.5"/><circle cx="239" cy="160" r="1.5"/><circle cx="248" cy="169" r="1.5"/><circle cx="235" cy="171" r="1.5"/><circle cx="255" cy="167" r="1.5"/><circle cx="256" cy="166" r="1.5"/><circle cx="244" cy="190" r="1.5"/><circle cx="248" cy="186" r="1.5"/><circle cx="253" cy="175" r="1.5"/><circle cx="268" cy="186" r="1.5"/><circle cx="264" cy="186" r="1.5"/><circle cx="282" cy="164" r="1.5"/><circle cx="261" cy="186" r="1.5"/><circle cx="281" cy="187" r="1.5"/><circle cx="259" cy="181" r="1.5"/><circle cx="283" cy="191" r="1.5"/><circle cx="285" cy="189" r="1.5"/><circle cx="275" cy="166" r="1.5"/><circle cx="290" cy="169" r="1.5"/><circle cx="299" cy="175" r="1.5"/><circle cx="293" cy="190" r="1.5"/><circle cx="298" cy="190" r="1.5"/><circle cx="295" cy="177" r="1.5"/><circle cx="316" cy="175" r="1.5"/><circle cx="301" cy="178" r="1.5"/><circle cx="312" cy="177" r="1.5"/><circle cx="306" cy="186" r="1.5"/><circle cx="318" cy="185" r="1.5"/><circle cx="308" cy="174" r="1.5"/><circle cx="316" cy="176" r="1.5"/><circle cx="319" cy="183" r="1.5"/><circle cx="320" cy="168" r="1.5"/><circle cx="330" cy="191" r="1.5"/><circle cx="322" cy="164" r="1.5"/><circle cx="342" cy="174" r="1.5"/><circle cx="353" cy="183" r="1.5"/><circle cx="339" cy="164" r="1.5"/><circle cx="333" cy="192" r="1.5"/><circle cx="351" cy="191" r="1.5"/><circle cx="355" cy="171" r="1.5"/><circle cx="364" cy="170" r="1.5"/><circle cx="350" cy="160" r="1.5"/><circle cx="354" cy="174" r="1.5"/><circle cx="360" cy="192" r="1.5"/><circle cx="378" cy="168" r="1.5"/><circle cx="380" cy="185" r="1.5"/><circle cx="374" cy="163" r="1.5"/><circle cx="378" cy="183" r="1.5"/><circle cx="391" cy="161" r="1.5"/><circle cx="374" cy="173" r="1.5"/><circle cx="391" cy="191" r="1.5"/><circle cx="393" cy="171" r="1.5"/><circle cx="390" cy="191" r="1.5"/><circle cx="398" cy="163" r="1.5"/><circle cx="391" cy="167" r="1.5"/><circle cx="396" cy="169" r="1.5"/><circle cx="403" cy="165" r="1.5"/><circle cx="408" cy="160" r="1.5"/><circle cx="410" cy="160" r="1.5"/><circle cx="407" cy="174" r="1.5"/><circle cx="416" cy="187" r="1.5"/><circle cx="418" cy="176" r="1.5"/><circle cx="410" cy="192" r="1.5"/><circle cx="440" cy="163" r="1.5"/><circle cx="439" cy="184" r="1.5"/><circle cx="434" cy="165" r="1.5"/><circle cx="439" cy="188" r="1.5"/><circle cx="449" cy="174" r="1.5"/><circle cx="446" cy="192" r="1.5"/><circle cx="427" cy="178" r="1.5"/><circle cx="446" cy="192" r="1.5"/><circle cx="460" cy="176" r="1.5"/><circle cx="465" cy="168" r="1.5"/><circle cx="463" cy="173" r="1.5"/><circle cx="464" cy="160" r="1.5"/><circle cx="458" cy="189" r="1.5"/><circle cx="466" cy="170" r="1.5"/><circle cx="450" cy="164" r="1.5"/><circle cx="457" cy="181" r="1.5"/><circle cx="485" cy="177" r="1.5"/><circle cx="475" cy="187" r="1.5"/><circle cx="467" cy="187" r="1.5"/><circle cx="473" cy="189" r="1.5"/><circle cx="498" cy="187" r="1.5"/><circle cx="486" cy="180" r="1.5"/><circle cx="484" cy="182" r="1.5"/><circle cx="488" cy="159" r="1.5"/><circle cx="493" cy="168" r="1.5"/><circle cx="511" cy="168" r="1.5"/><circle cx="493" cy="166" r="1.5"/><circle cx="493" cy="192" r="1.5"/><circle cx="508" cy="162" r="1.5"/><circle cx="521" cy="168" r="1.5"/><circle cx="505" cy="169" r="1.5"/><circle cx="510" cy="159" r="1.5"/><circle cx="523" cy="175" r="1.5"/><circle cx="524" cy="163" r="1.5"/><circle cx="513" cy="166" r="1.5"/><circle cx="511" cy="191" r="1.5"/><circle cx="543" cy="191" r="1.5"/><circle cx="543" cy="179" r="1.5"/><circle cx="545" cy="177" r="1.5"/><circle cx="523" cy="164" r="1.5"/></g>
+  <g fill="#3B9BFF"><circle cx="107" cy="163" r="1.7"/><circle cx="108" cy="160" r="1.7"/><circle cx="108" cy="171" r="1.7"/><circle cx="119" cy="165" r="1.7"/><circle cx="120" cy="193" r="1.7"/><circle cx="120" cy="172" r="1.7"/><circle cx="131" cy="179" r="1.7"/><circle cx="132" cy="171" r="1.7"/><circle cx="132" cy="159" r="1.7"/><circle cx="145" cy="184" r="1.7"/><circle cx="143" cy="179" r="1.7"/><circle cx="144" cy="190" r="1.7"/><circle cx="155" cy="182" r="1.7"/><circle cx="157" cy="179" r="1.7"/><circle cx="157" cy="169" r="1.7"/><circle cx="167" cy="184" r="1.7"/><circle cx="168" cy="195" r="1.7"/><circle cx="169" cy="168" r="1.7"/><circle cx="179" cy="166" r="1.7"/><circle cx="180" cy="190" r="1.7"/><circle cx="179" cy="174" r="1.7"/><circle cx="193" cy="163" r="1.7"/><circle cx="191" cy="166" r="1.7"/><circle cx="191" cy="175" r="1.7"/><circle cx="204" cy="180" r="1.7"/><circle cx="205" cy="159" r="1.7"/><circle cx="205" cy="187" r="1.7"/><circle cx="215" cy="163" r="1.7"/><circle cx="216" cy="159" r="1.7"/><circle cx="215" cy="163" r="1.7"/><circle cx="228" cy="162" r="1.7"/><circle cx="229" cy="195" r="1.7"/><circle cx="228" cy="175" r="1.7"/><circle cx="240" cy="163" r="1.7"/><circle cx="240" cy="158" r="1.7"/><circle cx="240" cy="194" r="1.7"/><circle cx="251" cy="165" r="1.7"/><circle cx="253" cy="194" r="1.7"/><circle cx="253" cy="188" r="1.7"/><circle cx="263" cy="183" r="1.7"/><circle cx="265" cy="174" r="1.7"/><circle cx="265" cy="195" r="1.7"/><circle cx="277" cy="175" r="1.7"/><circle cx="276" cy="187" r="1.7"/><circle cx="275" cy="182" r="1.7"/><circle cx="289" cy="172" r="1.7"/><circle cx="288" cy="193" r="1.7"/><circle cx="289" cy="163" r="1.7"/><circle cx="300" cy="178" r="1.7"/><circle cx="299" cy="158" r="1.7"/><circle cx="301" cy="182" r="1.7"/><circle cx="311" cy="179" r="1.7"/><circle cx="311" cy="173" r="1.7"/><circle cx="311" cy="192" r="1.7"/><circle cx="324" cy="158" r="1.7"/><circle cx="324" cy="164" r="1.7"/><circle cx="323" cy="187" r="1.7"/><circle cx="335" cy="178" r="1.7"/><circle cx="335" cy="168" r="1.7"/><circle cx="337" cy="176" r="1.7"/><circle cx="348" cy="177" r="1.7"/><circle cx="348" cy="193" r="1.7"/><circle cx="349" cy="190" r="1.7"/><circle cx="359" cy="166" r="1.7"/><circle cx="359" cy="182" r="1.7"/><circle cx="361" cy="191" r="1.7"/><circle cx="372" cy="176" r="1.7"/><circle cx="373" cy="189" r="1.7"/><circle cx="371" cy="173" r="1.7"/><circle cx="383" cy="170" r="1.7"/><circle cx="384" cy="176" r="1.7"/><circle cx="383" cy="194" r="1.7"/><circle cx="396" cy="192" r="1.7"/><circle cx="397" cy="167" r="1.7"/><circle cx="395" cy="192" r="1.7"/><circle cx="408" cy="187" r="1.7"/><circle cx="407" cy="190" r="1.7"/><circle cx="407" cy="190" r="1.7"/><circle cx="419" cy="163" r="1.7"/><circle cx="419" cy="165" r="1.7"/><circle cx="419" cy="169" r="1.7"/><circle cx="433" cy="178" r="1.7"/><circle cx="431" cy="175" r="1.7"/><circle cx="433" cy="161" r="1.7"/><circle cx="444" cy="189" r="1.7"/><circle cx="445" cy="181" r="1.7"/><circle cx="444" cy="170" r="1.7"/><circle cx="457" cy="182" r="1.7"/><circle cx="455" cy="166" r="1.7"/><circle cx="455" cy="174" r="1.7"/><circle cx="467" cy="171" r="1.7"/><circle cx="467" cy="172" r="1.7"/><circle cx="468" cy="176" r="1.7"/><circle cx="479" cy="166" r="1.7"/><circle cx="480" cy="177" r="1.7"/><circle cx="481" cy="182" r="1.7"/><circle cx="491" cy="189" r="1.7"/><circle cx="493" cy="181" r="1.7"/><circle cx="493" cy="188" r="1.7"/><circle cx="505" cy="183" r="1.7"/><circle cx="503" cy="158" r="1.7"/><circle cx="503" cy="171" r="1.7"/><circle cx="517" cy="185" r="1.7"/><circle cx="516" cy="177" r="1.7"/><circle cx="516" cy="160" r="1.7"/><circle cx="528" cy="172" r="1.7"/><circle cx="528" cy="183" r="1.7"/><circle cx="529" cy="180" r="1.7"/><circle cx="539" cy="167" r="1.7"/><circle cx="541" cy="183" r="1.7"/><circle cx="541" cy="168" r="1.7"/><circle cx="551" cy="174" r="1.7"/><circle cx="553" cy="194" r="1.7"/><circle cx="552" cy="167" r="1.7"/></g>
+  <text x="0" y="27" class="dg-label">FRAME</text>
+  <text x="0" y="41" class="dg-sub">on a clock</text>
+  <text x="0" y="150" class="dg-label">EVENTS</text>
+  <text x="0" y="164" class="dg-sub">on change</text>
+  <line x1="96" y1="216" x2="600" y2="216" stroke="#3a3937"/>
+  <text x="96" y="234" class="dg-sub">time &#8594;</text>
+</svg>
+<figcaption class="dg-cap">Same edge, same interval. The frame camera resends every pixel whether
+or not it changed. The sensor below reports only the change, and reports it as it happens rather
+than on a clock &mdash; blue where brightness rose, orange where it fell.</figcaption>
+</figure>
 
     <p class="landing">→ Neuromorphic perception</p>
 </section>
@@ -661,6 +702,7 @@
     <div class="text-center mb-12">
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Outputs · Peer-reviewed publications</p>
         <h2 id="pubs-heading" class="text-4xl font-light tracking-[-0.03em]">Research archives</h2>
+        <p class="dg-cap" style="margin:1.25rem auto 0">Four peer-reviewed papers, 2022 to 2025, across spiking networks, event-driven imaging and single-photon sensing. Search by title, venue, year or topic &mdash; every entry links to the publisher&rsquo;s own record, and Cite pulls the reference from the DOI rather than shipping a hand-typed one.</p>
     </div>
 
     <div class="pub-finder mb-10">
@@ -906,39 +948,171 @@ function smooth01(v, a, b) {
     const WORLD_DEPTH = 100;
     const upVec = new THREE.Vector3(0, 1, 0);
 
+    /* One edge's worth of events, generated from the IMAGE motion rather than
+       from the world geometry. Shared by every shape so the physics is written
+       once and cannot drift between them.
+
+       The camera translates forward, so the world streams toward +z and the
+       optical flow runs radially outward from the focus of expansion, which
+       sits straight ahead. Writing X,Y,Z for a point relative to the camera and
+       depth = -Z, the image coordinates are u = X/depth, v = Y/depth. Moving
+       the camera gives dZ/dt = V with dX = dY = 0, so
+
+           du/dt = X*V/Z^2,   dv/dt = Y*V/Z^2
+
+       which is a positive multiple of (X, Y). Two things follow, and the
+       previous version modelled neither:
+
+       1. Flow DIRECTION at any point is just normalize(X, Y).
+       2. Flow SPEED is V * r_image / depth, so it grows with distance from the
+          centre of frame and falls with depth.
+
+       What is still asserted rather than derived: the leading edge is always
+       ON. Real polarity depends on whether the object is brighter than what it
+       covers, so a dark building against a lighter sky would invert this. */
+    const CAM = new THREE.Vector3(0, 3, 0);   // eye height, mid-road
+
+    /* Event rate knobs, read in the animation loop. EV_RATE_P is the exponent
+       on depth: 1 is the physical value, and at 1 the far half of a 100-unit
+       world goes almost silent, which is true of a real sensor but leaves the
+       scene thin. 0.7 compresses that contrast while keeping the near/far
+       ordering. EV_RATE_K sets where the cut falls; at these values a roadside
+       house holds roughly 90 percent of its points at 10 units, 73 at 40 and
+       42 at 90, and a point close to the focus of expansion holds under 10
+       regardless of depth, which is the behaviour that matters. */
+    const EV_RATE_P = 0.7, EV_RATE_K = 1.2;
+
+    /* An edge lying along the flow slides along itself and generates almost
+       nothing (the aperture problem). Floor it rather than zeroing: a real edge
+       is never perfectly straight and the sensor has noise, so a wholly silent
+       edge is as wrong as a uniformly loud one. NORM keeps the total point
+       count near its old value - mean |sin| over random orientations is 2/pi,
+       so the mean factor is FLOOR + (1-FLOOR)*2/pi and NORM is its reciprocal. */
+    const AP_FLOOR = 0.15, AP_NORM = 1 / (AP_FLOOR + (1 - AP_FLOOR) * 2 / Math.PI);
+
+    function emitEdge(v1, v2, density) {
+        const mx = (v1.x + v2.x) / 2 - CAM.x,
+              my = (v1.y + v2.y) / 2 - CAM.y,
+              mz = (v1.z + v2.z) / 2 - CAM.z;
+        const depth = Math.max(1, -mz);
+
+        const fr = Math.hypot(mx, my) || 1e-6;         // flow direction, normalised
+        const fu = mx / fr, fv = my / fr;
+
+        const dx = v2.x - v1.x, dy = v2.y - v1.y, dz = v2.z - v1.z;
+        let eu = depth * dx + mx * dz,                 // d/ds of u = X/depth
+            ev = depth * dy + my * dz;
+        const er = Math.hypot(eu, ev) || 1e-6;
+        eu /= er; ev /= er;
+
+        const aperture = AP_FLOOR + (1 - AP_FLOOR) * Math.abs(eu * fv - ev * fu);
+
+        const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density * aperture * AP_NORM));
+        const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
+        const perp = new THREE.Vector3();
+        if (Math.abs(dir.y) > .99) perp.set(1, 0, 0);
+        else perp.crossVectors(upVec, dir).normalize();
+        const SEP = 0.12;
+
+        /* Age offsets are applied as a radial scale about the focus of
+           expansion AT THE POINT'S OWN DEPTH, not as a shift in world z.
+           Offsetting in z used to push the tail 2.2 units back, which buried it
+           inside the wall that produced it and, on a silhouette edge, left it
+           hanging in open air behind the object. Scaling X,Y instead reproduces
+           the same inward image smear while keeping every event on the surface
+           that emitted it. Dividing by depth preserves the old behaviour that
+           near objects smear further, which is correct: image speed goes as
+           1/depth. */
+        const TAIL_K = 2.2, LEAD_K = 0.12;
+
+        for (let k = 0; k < n; k++) {
+            const t = Math.random();
+            const isOn = (k % 2) === 0;    // half the tight blue band, half the orange tail
+            const side = isOn ? SEP : -SEP;
+            const decay = Math.pow(Math.random(), .6);
+            /* ON leads, so it sits slightly outward; OFF trails inward and dims
+               with age. a > 0 pulls toward the focus of expansion. */
+            const a    = isOn ? -LEAD_K / depth : (decay * TAIL_K) / depth;
+            const fade = isOn ? 1 : 1 - decay * .55;
+
+            const px = v1.x + dx * t + perp.x * side * .35 + (Math.random() - .5) * .06,
+                  py = v1.y + dy * t + perp.y * side * .35 + (Math.random() - .5) * .06,
+                  pz = v1.z + dz * t + perp.z * side * .35 + (Math.random() - .5) * .06;
+
+            edgePoints.push(CAM.x + (px - CAM.x) * (1 - a),
+                            CAM.y + (py - CAM.y) * (1 - a),
+                            pz);
+            if (isOn) edgeColors.push(.23, .61, 1.0);
+            else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
+        }
+    }
+
+    /* Hidden-edge cull, driven by the mesh's own triangles.
+
+       An event sensor reports brightness change on surfaces facing it. It
+       cannot report the far side of an opaque object, so emitting every edge
+       of a shape - which is what EdgesGeometry gives you - draws a see-through
+       wireframe rather than a scene. The points material sets depthWrite:false
+       and nothing in the scene is opaque, so nothing occludes anything.
+
+       The cull has to happen here rather than through a depth pre-pass. The
+       OFF tail is offset in world z, so it trails *into* the object it belongs
+       to; a depth test would delete exactly the orange trails that carry the
+       effect. (That z offset is worth keeping: with the world streaming toward
+       the camera, greater depth projects nearer the vanishing point, so a
+       depth offset reads as a radially inward image smear, which is what
+       forward translation actually produces.)
+
+       EdgesGeometry is still what decides which edges are real - it drops the
+       diagonals inside coplanar triangle pairs, which a naive walk over
+       triangle edges would draw as spokes across every quad face. This only
+       decides which of those real edges are *visible*: keep an edge when both
+       its endpoints sit on one triangle that faces the camera. That set is the
+       front faces plus the silhouette, which is what you actually see. */
+    const _camAt = new THREE.Vector3(), _n = new THREE.Vector3(),
+          _e1 = new THREE.Vector3(), _e2 = new THREE.Vector3(), _cen = new THREE.Vector3();
+
     function addShapeEdges(geo, ox, oy, oz, rotY, density) {
         geo.rotateY(rotY); geo.translate(ox, oy, oz);
+
+        /* Representative viewpoint: eye height, mid-road, 25 units back along
+           the street. The world streams toward +z and wraps before passing the
+           camera, so every shape is seen from in front for its whole life and
+           these signs hold the entire time. */
+        _camAt.set(0, 3, oz + 25);
+
+        const tri = geo.toNonIndexed();
+        const p = tri.attributes.position.array;
+        const front = [];                      // flat [ax,ay,az, bx..., cx...] per kept triangle
+        for (let i = 0; i < p.length; i += 9) {
+            _e1.set(p[i+3]-p[i], p[i+4]-p[i+1], p[i+5]-p[i+2]);
+            _e2.set(p[i+6]-p[i], p[i+7]-p[i+1], p[i+8]-p[i+2]);
+            _n.crossVectors(_e1, _e2);         // CCW winding gives the outward normal
+            _cen.set((p[i]+p[i+3]+p[i+6])/3, (p[i+1]+p[i+4]+p[i+7])/3, (p[i+2]+p[i+5]+p[i+8])/3);
+            if (_n.dot(_cen.subVectors(_camAt, _cen)) > 0) front.push(p.slice(i, i + 9));
+        }
+
+        const EPS = 1e-3;
+        const onTri = (f, x, y, z) => {
+            for (let k = 0; k < 9; k += 3)
+                if (Math.abs(f[k]-x) < EPS && Math.abs(f[k+1]-y) < EPS && Math.abs(f[k+2]-z) < EPS) return true;
+            return false;
+        };
+
         const edges = new THREE.EdgesGeometry(geo);
         const arr = edges.attributes.position.array;
         for (let j = 0; j < arr.length; j += 6) {
-            const v1 = new THREE.Vector3(arr[j], arr[j+1], arr[j+2]);
-            const v2 = new THREE.Vector3(arr[j+3], arr[j+4], arr[j+5]);
-            const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density));
-            const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
-            const perp = new THREE.Vector3();
-            if (Math.abs(dir.y) > .99) perp.set(1, 0, 0);
-            else perp.crossVectors(upVec, dir).normalize();
-            const SEP = 0.12;
-            for (let k = 0; k < n; k++) {
-                const t = Math.random();
-                const isOn = (k % 2) === 0; // half tight blue leading edge, half orange tail
-                const side = isOn ? SEP : -SEP;
-                /* Apparent motion is +z (world streams past the camera).
-                   ON  = blue,   brightness rising at the leading edge — tight band.
-                   OFF = orange, brightness falling behind it — a longer decaying tail. */
-                const decay = Math.pow(Math.random(), .6);
-                const tail = isOn ? .12 : -decay * 2.2;
-                const fade = isOn ? 1 : 1 - decay * .55;   // tail dims as it ages
-                edgePoints.push(
-                    v1.x + (v2.x - v1.x) * t + perp.x * side * .35 + (Math.random() - .5) * .06,
-                    v1.y + (v2.y - v1.y) * t + perp.y * side * .35 + (Math.random() - .5) * .06,
-                    v1.z + (v2.z - v1.z) * t + perp.z * side * .35 + tail + (Math.random() - .5) * .06
-                );
-                if (isOn) edgeColors.push(.23, .61, 1.0);
-                else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
+            let visible = false;
+            for (const f of front) {
+                if (onTri(f, arr[j], arr[j+1], arr[j+2]) && onTri(f, arr[j+3], arr[j+4], arr[j+5])) {
+                    visible = true; break;
+                }
             }
+            if (!visible) continue;
+            emitEdge(new THREE.Vector3(arr[j],   arr[j+1], arr[j+2]),
+                     new THREE.Vector3(arr[j+3], arr[j+4], arr[j+5]), density);
         }
-        geo.dispose(); edges.dispose();
+        geo.dispose(); tri.dispose(); edges.dispose();
     }
 
     const nameSeq = { house: 0, vehicle: 0, sign: 0, tower: 0 };
@@ -1315,6 +1489,22 @@ function smooth01(v, a, b) {
             /* events flicker only while they are events; a bound map is stable */
             if (flatten < .5 && ((i * 7 + evFrame) % 9) < 2) cz = 60;
             if (i >= noiseStart && stagger[i] * 3.34 < flatten) cz = 60;
+            /* Event RATE follows image speed, which under forward translation
+               is V * r_image / depth. Both terms matter and neither could be
+               baked in at build time: a point's depth changes continuously as
+               the world wraps past, and its eccentricity changes with it. So
+               the rate is applied here, by parking a share of the points the
+               same way the flicker above does.
+
+               EV_RATE_P is the exponent on depth. The physical value is 1;
+               dropping it below that compresses the near/far contrast, because
+               the true relation empties the far half of a 100-unit world almost
+               completely. Set it to 1 to see what the sensor would really do. */
+            if (flatten < .5 && i < noiseStart) {
+                const ex = cx - CAM.x, ey = cy - CAM.y, dep = Math.max(6, -cz);
+                const speed = Math.hypot(ex, ey) / Math.pow(dep, EV_RATE_P);
+                if (speed * EV_RATE_K < ((i * 31 + evFrame * 17) % 128) / 128) cz = 60;
+            }
             posArray[i3] = cx; posArray[i3+1] = cy; posArray[i3+2] = cz;
         }
         geo.attributes.position.needsUpdate = true;
