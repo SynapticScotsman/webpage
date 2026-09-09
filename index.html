@@ -100,6 +100,24 @@
             .reveal { opacity:1; transform:none; transition:none; }
         }
 
+        /* Mechanism diagrams. Afterflow carries its explanation in 35 inline
+           SVGs and keeps its prose short as a result; this page had one
+           non-icon SVG and was doing the same job in paragraphs. Figures sit
+           between the turn and the landing: the turn asks, the figure shows,
+           the landing names it. No library - plain SVG, and the entry fade is
+           the page's existing .reveal, so nothing new animates. */
+        .diagram { margin:0 0 2.75rem; }
+        .diagram svg { width:100%; height:auto; display:block; overflow:visible; }
+        .dg-label { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500;
+                    letter-spacing:.08em; fill:#b4b2a9; }
+        .dg-sub   { font-family:'JetBrains Mono',monospace; font-size:10px;
+                    letter-spacing:.08em; fill:#6f6e6a; }
+        /* Afterflow puts a plain-prose caption under every figure saying what
+           it just showed. Sized to match theirs (14px, muted) so the figure
+           reads as part of the argument rather than decoration. */
+        .dg-cap   { font-size:14px; line-height:1.65; color:#8a8a86; max-width:56ch;
+                    margin-top:1rem; }
+
         /* Scroll rails: the hero stage catches you at its start and at the
            fully-formed map, so the transform is hard to skip past by accident.
            `proximity` (not `mandatory`) keeps it a nudge, never a trap. */
@@ -360,6 +378,29 @@
     <p class="beat-obvious">You might say: with your eyes.</p>
     <p class="beat">But your eyes don't record the world. You respond to <em class="text-white not-italic font-medium">change</em>. You move your attention. You discard almost everything you are given — and from those incomplete signals your brain builds a model good enough to act on.</p>
     <p class="beat-turn">So what happens if we build machines that meet the same problem the same way?</p>
+
+<figure class="diagram">
+<svg viewBox="0 0 640 250" role="img" aria-labelledby="dg-perc-t dg-perc-d">
+  <title id="dg-perc-t">Frame capture versus event capture of the same moving edge</title>
+  <desc id="dg-perc-d">A frame camera re-reads its whole pixel grid four times on a fixed
+clock, resending mostly identical data. An event sensor emits only where brightness changed:
+a tight blue leading edge and a longer orange trailing smear, continuously rather than on a clock.</desc>
+  <defs><pattern id="px" width="7" height="7" patternUnits="userSpaceOnUse">
+    <circle cx="3.5" cy="3.5" r="1" fill="#33322f"/></pattern></defs>
+  <g stroke-width="1"><rect x="96" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="110" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="142" y1="97" x2="142" y2="105" stroke="#5c5b57"/><rect x="233" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="265" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="279" y1="97" x2="279" y2="105" stroke="#5c5b57"/><rect x="371" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="419" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="417" y1="97" x2="417" y2="105" stroke="#5c5b57"/><rect x="508" y="39" width="92" height="54" fill="url(#px)" stroke="#3a3937"/><rect x="574" y="47" width="10" height="38" fill="#d3d1c7" opacity=".85"/><line x1="554" y1="97" x2="554" y2="105" stroke="#5c5b57"/></g>
+  <g fill="#FF8C42"><circle cx="103" cy="176" r="1.5"/><circle cx="104" cy="174" r="1.5"/><circle cx="103" cy="162" r="1.5"/><circle cx="94" cy="187" r="1.5"/><circle cx="91" cy="161" r="1.5"/><circle cx="94" cy="169" r="1.5"/><circle cx="113" cy="163" r="1.5"/><circle cx="109" cy="187" r="1.5"/><circle cx="127" cy="166" r="1.5"/><circle cx="111" cy="174" r="1.5"/><circle cx="121" cy="179" r="1.5"/><circle cx="117" cy="169" r="1.5"/><circle cx="121" cy="169" r="1.5"/><circle cx="115" cy="163" r="1.5"/><circle cx="130" cy="185" r="1.5"/><circle cx="137" cy="176" r="1.5"/><circle cx="134" cy="179" r="1.5"/><circle cx="137" cy="175" r="1.5"/><circle cx="130" cy="191" r="1.5"/><circle cx="140" cy="182" r="1.5"/><circle cx="155" cy="182" r="1.5"/><circle cx="164" cy="175" r="1.5"/><circle cx="160" cy="163" r="1.5"/><circle cx="163" cy="185" r="1.5"/><circle cx="162" cy="189" r="1.5"/><circle cx="155" cy="188" r="1.5"/><circle cx="169" cy="173" r="1.5"/><circle cx="167" cy="189" r="1.5"/><circle cx="173" cy="168" r="1.5"/><circle cx="189" cy="173" r="1.5"/><circle cx="179" cy="178" r="1.5"/><circle cx="163" cy="182" r="1.5"/><circle cx="177" cy="186" r="1.5"/><circle cx="190" cy="173" r="1.5"/><circle cx="198" cy="181" r="1.5"/><circle cx="199" cy="161" r="1.5"/><circle cx="210" cy="171" r="1.5"/><circle cx="212" cy="189" r="1.5"/><circle cx="196" cy="164" r="1.5"/><circle cx="206" cy="171" r="1.5"/><circle cx="223" cy="162" r="1.5"/><circle cx="216" cy="168" r="1.5"/><circle cx="203" cy="164" r="1.5"/><circle cx="224" cy="191" r="1.5"/><circle cx="214" cy="183" r="1.5"/><circle cx="230" cy="171" r="1.5"/><circle cx="232" cy="185" r="1.5"/><circle cx="223" cy="185" r="1.5"/><circle cx="227" cy="184" r="1.5"/><circle cx="243" cy="177" r="1.5"/><circle cx="239" cy="160" r="1.5"/><circle cx="248" cy="169" r="1.5"/><circle cx="235" cy="171" r="1.5"/><circle cx="255" cy="167" r="1.5"/><circle cx="256" cy="166" r="1.5"/><circle cx="244" cy="190" r="1.5"/><circle cx="248" cy="186" r="1.5"/><circle cx="253" cy="175" r="1.5"/><circle cx="268" cy="186" r="1.5"/><circle cx="264" cy="186" r="1.5"/><circle cx="282" cy="164" r="1.5"/><circle cx="261" cy="186" r="1.5"/><circle cx="281" cy="187" r="1.5"/><circle cx="259" cy="181" r="1.5"/><circle cx="283" cy="191" r="1.5"/><circle cx="285" cy="189" r="1.5"/><circle cx="275" cy="166" r="1.5"/><circle cx="290" cy="169" r="1.5"/><circle cx="299" cy="175" r="1.5"/><circle cx="293" cy="190" r="1.5"/><circle cx="298" cy="190" r="1.5"/><circle cx="295" cy="177" r="1.5"/><circle cx="316" cy="175" r="1.5"/><circle cx="301" cy="178" r="1.5"/><circle cx="312" cy="177" r="1.5"/><circle cx="306" cy="186" r="1.5"/><circle cx="318" cy="185" r="1.5"/><circle cx="308" cy="174" r="1.5"/><circle cx="316" cy="176" r="1.5"/><circle cx="319" cy="183" r="1.5"/><circle cx="320" cy="168" r="1.5"/><circle cx="330" cy="191" r="1.5"/><circle cx="322" cy="164" r="1.5"/><circle cx="342" cy="174" r="1.5"/><circle cx="353" cy="183" r="1.5"/><circle cx="339" cy="164" r="1.5"/><circle cx="333" cy="192" r="1.5"/><circle cx="351" cy="191" r="1.5"/><circle cx="355" cy="171" r="1.5"/><circle cx="364" cy="170" r="1.5"/><circle cx="350" cy="160" r="1.5"/><circle cx="354" cy="174" r="1.5"/><circle cx="360" cy="192" r="1.5"/><circle cx="378" cy="168" r="1.5"/><circle cx="380" cy="185" r="1.5"/><circle cx="374" cy="163" r="1.5"/><circle cx="378" cy="183" r="1.5"/><circle cx="391" cy="161" r="1.5"/><circle cx="374" cy="173" r="1.5"/><circle cx="391" cy="191" r="1.5"/><circle cx="393" cy="171" r="1.5"/><circle cx="390" cy="191" r="1.5"/><circle cx="398" cy="163" r="1.5"/><circle cx="391" cy="167" r="1.5"/><circle cx="396" cy="169" r="1.5"/><circle cx="403" cy="165" r="1.5"/><circle cx="408" cy="160" r="1.5"/><circle cx="410" cy="160" r="1.5"/><circle cx="407" cy="174" r="1.5"/><circle cx="416" cy="187" r="1.5"/><circle cx="418" cy="176" r="1.5"/><circle cx="410" cy="192" r="1.5"/><circle cx="440" cy="163" r="1.5"/><circle cx="439" cy="184" r="1.5"/><circle cx="434" cy="165" r="1.5"/><circle cx="439" cy="188" r="1.5"/><circle cx="449" cy="174" r="1.5"/><circle cx="446" cy="192" r="1.5"/><circle cx="427" cy="178" r="1.5"/><circle cx="446" cy="192" r="1.5"/><circle cx="460" cy="176" r="1.5"/><circle cx="465" cy="168" r="1.5"/><circle cx="463" cy="173" r="1.5"/><circle cx="464" cy="160" r="1.5"/><circle cx="458" cy="189" r="1.5"/><circle cx="466" cy="170" r="1.5"/><circle cx="450" cy="164" r="1.5"/><circle cx="457" cy="181" r="1.5"/><circle cx="485" cy="177" r="1.5"/><circle cx="475" cy="187" r="1.5"/><circle cx="467" cy="187" r="1.5"/><circle cx="473" cy="189" r="1.5"/><circle cx="498" cy="187" r="1.5"/><circle cx="486" cy="180" r="1.5"/><circle cx="484" cy="182" r="1.5"/><circle cx="488" cy="159" r="1.5"/><circle cx="493" cy="168" r="1.5"/><circle cx="511" cy="168" r="1.5"/><circle cx="493" cy="166" r="1.5"/><circle cx="493" cy="192" r="1.5"/><circle cx="508" cy="162" r="1.5"/><circle cx="521" cy="168" r="1.5"/><circle cx="505" cy="169" r="1.5"/><circle cx="510" cy="159" r="1.5"/><circle cx="523" cy="175" r="1.5"/><circle cx="524" cy="163" r="1.5"/><circle cx="513" cy="166" r="1.5"/><circle cx="511" cy="191" r="1.5"/><circle cx="543" cy="191" r="1.5"/><circle cx="543" cy="179" r="1.5"/><circle cx="545" cy="177" r="1.5"/><circle cx="523" cy="164" r="1.5"/></g>
+  <g fill="#3B9BFF"><circle cx="107" cy="163" r="1.7"/><circle cx="108" cy="160" r="1.7"/><circle cx="108" cy="171" r="1.7"/><circle cx="119" cy="165" r="1.7"/><circle cx="120" cy="193" r="1.7"/><circle cx="120" cy="172" r="1.7"/><circle cx="131" cy="179" r="1.7"/><circle cx="132" cy="171" r="1.7"/><circle cx="132" cy="159" r="1.7"/><circle cx="145" cy="184" r="1.7"/><circle cx="143" cy="179" r="1.7"/><circle cx="144" cy="190" r="1.7"/><circle cx="155" cy="182" r="1.7"/><circle cx="157" cy="179" r="1.7"/><circle cx="157" cy="169" r="1.7"/><circle cx="167" cy="184" r="1.7"/><circle cx="168" cy="195" r="1.7"/><circle cx="169" cy="168" r="1.7"/><circle cx="179" cy="166" r="1.7"/><circle cx="180" cy="190" r="1.7"/><circle cx="179" cy="174" r="1.7"/><circle cx="193" cy="163" r="1.7"/><circle cx="191" cy="166" r="1.7"/><circle cx="191" cy="175" r="1.7"/><circle cx="204" cy="180" r="1.7"/><circle cx="205" cy="159" r="1.7"/><circle cx="205" cy="187" r="1.7"/><circle cx="215" cy="163" r="1.7"/><circle cx="216" cy="159" r="1.7"/><circle cx="215" cy="163" r="1.7"/><circle cx="228" cy="162" r="1.7"/><circle cx="229" cy="195" r="1.7"/><circle cx="228" cy="175" r="1.7"/><circle cx="240" cy="163" r="1.7"/><circle cx="240" cy="158" r="1.7"/><circle cx="240" cy="194" r="1.7"/><circle cx="251" cy="165" r="1.7"/><circle cx="253" cy="194" r="1.7"/><circle cx="253" cy="188" r="1.7"/><circle cx="263" cy="183" r="1.7"/><circle cx="265" cy="174" r="1.7"/><circle cx="265" cy="195" r="1.7"/><circle cx="277" cy="175" r="1.7"/><circle cx="276" cy="187" r="1.7"/><circle cx="275" cy="182" r="1.7"/><circle cx="289" cy="172" r="1.7"/><circle cx="288" cy="193" r="1.7"/><circle cx="289" cy="163" r="1.7"/><circle cx="300" cy="178" r="1.7"/><circle cx="299" cy="158" r="1.7"/><circle cx="301" cy="182" r="1.7"/><circle cx="311" cy="179" r="1.7"/><circle cx="311" cy="173" r="1.7"/><circle cx="311" cy="192" r="1.7"/><circle cx="324" cy="158" r="1.7"/><circle cx="324" cy="164" r="1.7"/><circle cx="323" cy="187" r="1.7"/><circle cx="335" cy="178" r="1.7"/><circle cx="335" cy="168" r="1.7"/><circle cx="337" cy="176" r="1.7"/><circle cx="348" cy="177" r="1.7"/><circle cx="348" cy="193" r="1.7"/><circle cx="349" cy="190" r="1.7"/><circle cx="359" cy="166" r="1.7"/><circle cx="359" cy="182" r="1.7"/><circle cx="361" cy="191" r="1.7"/><circle cx="372" cy="176" r="1.7"/><circle cx="373" cy="189" r="1.7"/><circle cx="371" cy="173" r="1.7"/><circle cx="383" cy="170" r="1.7"/><circle cx="384" cy="176" r="1.7"/><circle cx="383" cy="194" r="1.7"/><circle cx="396" cy="192" r="1.7"/><circle cx="397" cy="167" r="1.7"/><circle cx="395" cy="192" r="1.7"/><circle cx="408" cy="187" r="1.7"/><circle cx="407" cy="190" r="1.7"/><circle cx="407" cy="190" r="1.7"/><circle cx="419" cy="163" r="1.7"/><circle cx="419" cy="165" r="1.7"/><circle cx="419" cy="169" r="1.7"/><circle cx="433" cy="178" r="1.7"/><circle cx="431" cy="175" r="1.7"/><circle cx="433" cy="161" r="1.7"/><circle cx="444" cy="189" r="1.7"/><circle cx="445" cy="181" r="1.7"/><circle cx="444" cy="170" r="1.7"/><circle cx="457" cy="182" r="1.7"/><circle cx="455" cy="166" r="1.7"/><circle cx="455" cy="174" r="1.7"/><circle cx="467" cy="171" r="1.7"/><circle cx="467" cy="172" r="1.7"/><circle cx="468" cy="176" r="1.7"/><circle cx="479" cy="166" r="1.7"/><circle cx="480" cy="177" r="1.7"/><circle cx="481" cy="182" r="1.7"/><circle cx="491" cy="189" r="1.7"/><circle cx="493" cy="181" r="1.7"/><circle cx="493" cy="188" r="1.7"/><circle cx="505" cy="183" r="1.7"/><circle cx="503" cy="158" r="1.7"/><circle cx="503" cy="171" r="1.7"/><circle cx="517" cy="185" r="1.7"/><circle cx="516" cy="177" r="1.7"/><circle cx="516" cy="160" r="1.7"/><circle cx="528" cy="172" r="1.7"/><circle cx="528" cy="183" r="1.7"/><circle cx="529" cy="180" r="1.7"/><circle cx="539" cy="167" r="1.7"/><circle cx="541" cy="183" r="1.7"/><circle cx="541" cy="168" r="1.7"/><circle cx="551" cy="174" r="1.7"/><circle cx="553" cy="194" r="1.7"/><circle cx="552" cy="167" r="1.7"/></g>
+  <text x="0" y="27" class="dg-label">FRAME</text>
+  <text x="0" y="41" class="dg-sub">on a clock</text>
+  <text x="0" y="150" class="dg-label">EVENTS</text>
+  <text x="0" y="164" class="dg-sub">on change</text>
+  <line x1="96" y1="216" x2="600" y2="216" stroke="#3a3937"/>
+  <text x="96" y="234" class="dg-sub">time &#8594;</text>
+</svg>
+<figcaption class="dg-cap">Same edge, same interval. The frame camera resends every pixel whether
+or not it changed. The sensor below reports only the change, and reports it as it happens rather
+than on a clock &mdash; blue where brightness rose, orange where it fell.</figcaption>
+</figure>
 
     <p class="landing">→ Neuromorphic perception</p>
 </section>
@@ -661,6 +702,7 @@
     <div class="text-center mb-12">
         <p class="font-mono text-[11px] font-medium text-cyan-400 uppercase tracking-[0.08em] mb-3">Outputs · Peer-reviewed publications</p>
         <h2 id="pubs-heading" class="text-4xl font-light tracking-[-0.03em]">Research archives</h2>
+        <p class="dg-cap" style="margin:1.25rem auto 0">Four peer-reviewed papers, 2022 to 2025, across spiking networks, event-driven imaging and single-photon sensing. Search by title, venue, year or topic &mdash; every entry links to the publisher&rsquo;s own record, and Cite pulls the reference from the DOI rather than shipping a hand-typed one.</p>
     </div>
 
     <div class="pub-finder mb-10">
@@ -906,13 +948,10 @@ function smooth01(v, a, b) {
     const WORLD_DEPTH = 100;
     const upVec = new THREE.Vector3(0, 1, 0);
 
-    function addShapeEdges(geo, ox, oy, oz, rotY, density) {
-        geo.rotateY(rotY); geo.translate(ox, oy, oz);
-        const edges = new THREE.EdgesGeometry(geo);
-        const arr = edges.attributes.position.array;
-        for (let j = 0; j < arr.length; j += 6) {
-            const v1 = new THREE.Vector3(arr[j], arr[j+1], arr[j+2]);
-            const v2 = new THREE.Vector3(arr[j+3], arr[j+4], arr[j+5]);
+    /* One edge's worth of events. Shared by the box and the swept shapes so the
+       ON/OFF physics is written once and cannot drift between them. */
+    function emitEdge(v1, v2, density) {
+        {
             const n = Math.max(1, Math.floor(v1.distanceTo(v2) * density));
             const dir = new THREE.Vector3().subVectors(v2, v1).normalize();
             const perp = new THREE.Vector3();
@@ -938,38 +977,95 @@ function smooth01(v, a, b) {
                 else      edgeColors.push(1.0 * fade, .55 * fade, .26 * fade);
             }
         }
+    }
+
+    /* Swept shapes (the pyramid roofs, the sign posts) still go through
+       EdgesGeometry. Their hidden edges are a far smaller artefact than a
+       box's, and they carry no shared-face adjacency to cull against. */
+    function addShapeEdges(geo, ox, oy, oz, rotY, density) {
+        geo.rotateY(rotY); geo.translate(ox, oy, oz);
+        const edges = new THREE.EdgesGeometry(geo);
+        const arr = edges.attributes.position.array;
+        for (let j = 0; j < arr.length; j += 6) {
+            emitEdge(new THREE.Vector3(arr[j],   arr[j+1], arr[j+2]),
+                     new THREE.Vector3(arr[j+3], arr[j+4], arr[j+5]), density);
+        }
         geo.dispose(); edges.dispose();
+    }
+
+    /* Boxes emit only the edges you could actually see.
+       An event camera reports brightness change on surfaces facing it. It has
+       no way to report the far side of an opaque wall, so drawing all twelve
+       edges of a box - which is what EdgesGeometry gives you - renders a
+       see-through wireframe rather than a scene. The points material also sets
+       depthWrite:false and there is nothing opaque in the scene, so nothing was
+       occluding anything.
+
+       Culling has to happen here rather than via a depth pre-pass, because the
+       OFF tail is offset in world z: it trails *into* the object it belongs to.
+       A depth test would have deleted exactly the orange trails that are the
+       point of the effect.
+
+       Every call site passes rotY 0, so the boxes are axis-aligned and face
+       visibility is a sign test. A face is visible when the camera is on its
+       outward side; an edge survives when at least one of its two adjoining
+       faces is visible, which is precisely the silhouette-plus-front-faces set.
+       For a roadside house that culls 5 of 12 edges: the three across the back
+       face, and the two on the outward flank. */
+    function addBoxEdges(w, h, d, ox, oy, oz, density) {
+        const c    = [ox, oy, oz];
+        const half = [w / 2, h / 2, d / 2];
+        /* Representative viewpoint: eye height, mid-road, 25 units back along
+           the street. The world streams toward +z and wraps before passing the
+           camera, so each box is viewed from in front for its whole life and
+           these signs stay correct the entire time. */
+        const cam = [0, 3, oz + 25];
+        // vis[axis][0] = the -axis face, vis[axis][1] = the +axis face
+        const vis = [0, 1, 2].map(a => [-1, 1].map(sgn =>
+            (cam[a] - (c[a] + sgn * half[a])) * sgn > 0));
+
+        for (let a = 0; a < 3; a++) {          // axis this edge runs along
+            const b = (a + 1) % 3, e = (a + 2) % 3;
+            for (const sb of [-1, 1]) for (const se of [-1, 1]) {
+                if (!vis[b][(sb + 1) / 2] && !vis[e][(se + 1) / 2]) continue;  // both faces hidden
+                const p1 = [0, 0, 0], p2 = [0, 0, 0];
+                p1[a] = c[a] - half[a];  p2[a] = c[a] + half[a];
+                p1[b] = p2[b] = c[b] + sb * half[b];
+                p1[e] = p2[e] = c[e] + se * half[e];
+                emitEdge(new THREE.Vector3(...p1), new THREE.Vector3(...p2), density);
+            }
+        }
     }
 
     const nameSeq = { house: 0, vehicle: 0, sign: 0, tower: 0 };
     const pad = n => (n < 10 ? '0' : '') + n;
     for (let z = 0; z > -WORLD_DEPTH; z -= 15) {
         if (Math.random() > .2) {
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    -8, 1.5, z,     0,           30);
+            addBoxEdges(4, 3, 4,    -8, 1.5, z,     30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), -8, 4,   z,     Math.PI / 4, 30);
             targetCenters.push({ pos: new THREE.Vector3(-8, 2, z), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .2) {
-            addShapeEdges(new THREE.BoxGeometry(4, 3, 4),    8, 1.5, z + 5, 0,           30);
+            addBoxEdges(4, 3, 4,    8, 1.5, z + 5, 30);
             addShapeEdges(new THREE.ConeGeometry(3.5, 2, 4), 8, 4,   z + 5, Math.PI / 4, 30);
             targetCenters.push({ pos: new THREE.Vector3(8, 2, z + 5), type: 'HOUSE', name: 'house_' + pad(++nameSeq.house) });
         }
         if (Math.random() > .4) {
             const cx = (Math.random() > .5 ? -3 : 3), cz = z + (Math.random() - .5) * 5;
-            addShapeEdges(new THREE.BoxGeometry(2, .8, 4),   cx, .4,  cz,      0, 36);
-            addShapeEdges(new THREE.BoxGeometry(1.6, .8, 2), cx, 1.2, cz - .2, 0, 36);
+            addBoxEdges(2, .8, 4,   cx, .4,  cz,      36);
+            addBoxEdges(1.6, .8, 2, cx, 1.2, cz - .2, 36);
             targetCenters.push({ pos: new THREE.Vector3(cx, 1, cz), type: 'VEHICLE', name: 'vehicle_' + pad(++nameSeq.vehicle) });
         }
         if (Math.random() > .5) {
             const sx = (Math.random() > .5 ? -5.5 : 5.5), sz = z + 7;
             addShapeEdges(new THREE.CylinderGeometry(.05, .05, 4, 6), sx, 2,   sz, 0, 20);
-            addShapeEdges(new THREE.BoxGeometry(1.5, 1, .1),          sx, 4.5, sz, 0, 20);
+            addBoxEdges(1.5, 1, .1,                                   sx, 4.5, sz, 20);
             targetCenters.push({ pos: new THREE.Vector3(sx, 4.5, sz), type: 'SIGNAGE', name: 'sign_' + pad(++nameSeq.sign) });
         }
         /* outer landmarks: sparse, and they give the plan view its width */
         if (Math.random() > .45) {
             const ox = (Math.random() > .5 ? -1 : 1) * (16 + Math.random() * 6), oz = z + 3;
-            addShapeEdges(new THREE.BoxGeometry(3, 5, 3), ox, 2.5, oz, 0, 16);
+            addBoxEdges(3, 5, 3, ox, 2.5, oz, 16);
             targetCenters.push({ pos: new THREE.Vector3(ox, 2.5, oz), type: 'TOWER', name: 'tower_' + pad(++nameSeq.tower) });
         }
     }
