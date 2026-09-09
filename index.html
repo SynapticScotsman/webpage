@@ -329,6 +329,12 @@
         <h1 id="hero-heading" class="hero-beat-1 text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] select-none drop-shadow-2xl" style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.5rem,6vw,3.5rem)">
             <span class="ask-line">How do <span class="text-cyan-400">you</span></span><span class="ask-line">see the world?</span>
         </h1>
+        <!-- Act two is opt-in. A deliberate click starts it; scrolling past is
+             always available and never blocked, so the hero cannot become an
+             obstacle between a visitor and the research. -->
+        <button id="exp-start" class="hero-beat-2 pointer-events-auto mt-8 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-cyan-400 border border-cyan-400/40 px-4 py-2.5 hover:bg-cyan-400/10 transition-colors">
+            Give the robot a memory →
+        </button>
     </div>
     <!-- The tag never leaves. Neuromorphic stays lit throughout; only the
          second half hands over from Perception to Cognition as you scroll. -->
@@ -362,6 +368,45 @@
         <h2 class="text-5xl md:text-7xl lg:text-[5.5rem] font-normal tracking-tight text-white leading-[1.08] drop-shadow-2xl" style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.5rem,6vw,3.5rem)">
             <span class="ask-line">How do <span class="text-cyan-400">you</span></span><span class="ask-line">remember it?</span>
         </h2>
+    </div>
+
+    <!-- ── ACT TWO: find the car after it disappears ──────────────────────
+         The prompt sits top-centre so it never covers the map the visitor has
+         to click. The panel sits bottom-left, where the legend already lives,
+         so the two never occupy the same corner. -->
+    <div id="exp-ui" class="absolute inset-0 z-20 pointer-events-none" style="display:none">
+        <div id="exp-prompt" class="absolute left-1/2 -translate-x-1/2 top-20 md:top-24 text-center px-6 max-w-md" style="transition:opacity .35s">
+            <div id="exp-step" class="font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-cyan-400"></div>
+            <div id="exp-ask" class="mt-2 text-xl md:text-2xl font-light text-white" style="text-wrap:balance"></div>
+            <div id="exp-hint" class="mt-2 font-mono text-[11px] uppercase tracking-[0.08em] text-slate-400"></div>
+        </div>
+
+        <div id="exp-panel" class="absolute left-6 md:left-10 bottom-10 md:bottom-14 w-[16rem] font-mono" style="display:none;background:rgba(20,20,18,.9);border:1px solid rgba(224,68,94,.42);padding:14px">
+            <div class="text-[11px] font-medium uppercase tracking-[0.08em]" style="color:#F27A8C">Retrieval</div>
+            <dl id="exp-stats" class="mt-2.5 space-y-1.5 text-[11px] text-slate-400"></dl>
+            <div id="exp-verdict" class="mt-3 pt-3 text-[11px] leading-relaxed" style="border-top:1px solid rgba(242,240,234,.14)"></div>
+            <div class="mt-3 flex flex-col gap-2">
+                <button id="exp-more" class="pointer-events-auto text-[11px] font-medium uppercase tracking-[0.08em] text-cyan-400 border border-cyan-400/40 px-3 py-2 hover:bg-cyan-400/10 transition-colors">Add more memories</button>
+                <button id="exp-how" class="pointer-events-auto text-[11px] uppercase tracking-[0.08em] text-slate-500 hover:text-slate-300 transition-colors text-left">Show how it works</button>
+            </div>
+            <!-- The street is invented. The retrieval is not. Saying so here,
+                 next to the numbers, is where the distinction actually matters. -->
+            <div class="mt-3 text-[11px] leading-relaxed text-slate-500">Synthetic street. The retrieval is real FHRR, run in your browser.</div>
+        </div>
+
+        <div id="exp-how-panel" class="absolute right-6 md:right-10 bottom-10 md:bottom-14 w-[19rem] font-mono text-[11px] leading-relaxed text-slate-400" style="display:none;background:rgba(20,20,18,.94);border:1px solid rgba(242,240,234,.14);padding:14px">
+            <div class="font-medium uppercase tracking-[0.08em] text-slate-300">How it works</div>
+            <p class="mt-2.5">Every object is a vector of <span id="hw-d" class="text-white"></span> phases. A place is a vector too, built by raising two axis vectors to the power of the coordinate:</p>
+            <p class="mt-2 text-white">S(x,z) = e<sup>i(x·θx + z·θz)</sup></p>
+            <p class="mt-2">Binding adds phases, so an object at a place is one vector. The whole map is their sum, and it never grows:</p>
+            <p class="mt-2 text-white">M = Σ OBJ<sub>j</sub> ⊛ S(x<sub>j</sub>, z<sub>j</sub>)</p>
+            <p class="mt-2">Asking where the car was means unbinding by the car and reading where the result peaks:</p>
+            <p class="mt-2 text-white">M ⊛ OBJ⁻¹ ≈ S(x, z) + cross-talk</p>
+            <p class="mt-2">Nothing stores a coordinate. Every extra memory adds cross-talk to the same fixed vector, which is why confidence falls before the answer does.</p>
+            <button id="exp-how-close" class="pointer-events-auto mt-3 uppercase tracking-[0.08em] text-slate-500 hover:text-slate-300 transition-colors">Close</button>
+        </div>
+
+        <button id="exp-exit" class="pointer-events-auto absolute right-6 md:right-10 top-20 md:top-24 font-mono text-[11px] uppercase tracking-[0.08em] text-slate-500 hover:text-slate-300 transition-colors">Exit ×</button>
     </div>
 </div>
 <div class="snap-stop absolute bottom-0 left-0 w-px h-screen pointer-events-none" aria-hidden="true"></div>
@@ -855,6 +900,10 @@ function smooth01(v, a, b) {
             const cue = document.getElementById('hero-cue');
             const hint = document.getElementById('map-hint');
             if (cue) { cue.style.opacity = out; cue.style.pointerEvents = out < .1 ? 'none' : 'auto'; }
+            /* The invitation belongs to the first beat only. Past that the
+               visitor has already been shown the map and the offer is stale. */
+            const expBtn = document.getElementById('exp-start');
+            if (expBtn) { expBtn.style.opacity = out; expBtn.style.pointerEvents = out < .1 ? 'none' : 'auto'; }
             if (hint) hint.style.opacity = capIn;
             const onCognition = heroProgress > .6;
             const lp = document.getElementById('lock-perc');
@@ -1564,8 +1613,11 @@ function smooth01(v, a, b) {
             sim.style.display = mapMode ? 'block' : 'none';
             if (mapMode) {
                 for (let c = 0; c < 16; c++) {
-                    /* components run -1..1; the strip shows magnitude */
-                    strip.children[c].style.background = 'rgba(224,68,94,' + (.12 + Math.abs(hv[c]) * 3.4).toFixed(2) + ')';
+                    /* hv holds PHASES now, not components in -1..1. The old
+                       magnitude scaling saturated every cell the moment the
+                       memory became FHRR. (1+cos)/2 maps a phase onto 0..1,
+                       so the strip shows the real part of each component. */
+                    strip.children[c].style.background = 'rgba(224,68,94,' + (.10 + (1 + Math.cos(hv[c])) * .45).toFixed(2) + ')';
                 }
                 const L = landmarks[i];
                 const v = L && L.sim !== undefined ? L.sim : 0;
@@ -1584,6 +1636,172 @@ function smooth01(v, a, b) {
         for (let i = visible; i < 5; i++) hudSlots[i].style.opacity = '0';
     }
 
+    /* ── ACT TWO: find the car after it disappears ────────────────────────
+       The visitor binds one object into the memory, watches the scene go, then
+       has to ask the memory where it was. The point is not the guess: it is
+       that the answer comes out of a vector rather than a coordinate, so it
+       can be wrong, and gets wronger as the same fixed vector fills up.
+
+       It runs inside the hero's own sticky stage rather than as a section
+       below, because a separate experiment would make the visitor start over
+       from a scene they have already watched. Opting in is a click; leaving is
+       a scroll. Nothing here blocks the page. */
+    const expEl = {
+        ui:     document.getElementById('exp-ui'),
+        start:  document.getElementById('exp-start'),
+        step:   document.getElementById('exp-step'),
+        ask:    document.getElementById('exp-ask'),
+        hint:   document.getElementById('exp-hint'),
+        panel:  document.getElementById('exp-panel'),
+        stats:  document.getElementById('exp-stats'),
+        verdict:document.getElementById('exp-verdict'),
+        more:   document.getElementById('exp-more'),
+        how:    document.getElementById('exp-how'),
+        howPanel: document.getElementById('exp-how-panel'),
+        howClose: document.getElementById('exp-how-close'),
+        exit:   document.getElementById('exp-exit')
+    };
+    const exp = { on: false, stage: null, car: null, guess: null, flashAt: 0, dim: 0, baseCount: 0 };
+
+    const marks = {};
+    function makeMark(color, r, filled) {
+        const m = new THREE.Mesh(
+            filled ? new THREE.CircleGeometry(r, 24) : new THREE.RingGeometry(r * .78, r, 32),
+            new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, transparent: true, opacity: 0, depthWrite: false })
+        );
+        m.rotation.x = -Math.PI / 2;
+        m.position.y = .06;
+        mapGroup.add(m);
+        return m;
+    }
+    marks.truth     = makeMark(0x7CE0C0, 1.9, false);   // where it actually was
+    marks.retrieved = makeMark(0xE0445E, 1.4, true);    // where the memory says
+    marks.guess     = makeMark(0xF2F0EA, 2.4, false);   // where the visitor pointed
+
+    /* The world stops when the experiment starts, so a landmark's displayed z
+       is fixed from that moment. Everything here works in that frozen frame. */
+    const curZ = L => { let z = L.baseZ + wz; return z > 5 ? z - WORLD_DEPTH : z; };
+    const inField = L => { const z = curZ(L); return z > FIELD_CZ - FIELD_D / 2 + 6 && z < FIELD_CZ + FIELD_D / 2 - 6 && Math.abs(L.baseX) < FIELD_W / 2 - 6; };
+
+    function setPrompt(step, ask, hint) {
+        expEl.step.textContent = step; expEl.ask.textContent = ask; expEl.hint.textContent = hint || '';
+    }
+
+    function expEnter() {
+        exp.on = true; exp.stage = 'pick'; exp.car = null; exp.guess = null;
+        exp.baseCount = landmarks.length;
+        distractors.length = 0;
+        expEl.ui.style.display = '';
+        expEl.panel.style.display = 'none';
+        expEl.howPanel.style.display = 'none';
+        document.getElementById('hw-d').textContent = HV_D;
+        setPrompt('Step 1 of 3', 'Pick a car to remember.', 'click one of the marked vehicles');
+        marks.truth.material.opacity = marks.retrieved.material.opacity = marks.guess.material.opacity = 0;
+    }
+
+    function expExit() {
+        exp.on = false; exp.stage = null;
+        expEl.ui.style.display = 'none';
+        distractors.length = 0;
+        marks.truth.material.opacity = marks.retrieved.material.opacity = marks.guess.material.opacity = 0;
+    }
+
+    function expChoose(L) {
+        exp.car = L; exp.stage = 'flash'; exp.flashAt = performance.now();
+        setPrompt('Step 2 of 3', 'Bound. Now watch it go.', L.target.name + ' ⊛ its place → one vector');
+    }
+
+    function expShow() {
+        /* A landmark outside the grid has no representable peak, so the argmax
+           picks up cross-talk and the panel would report a large error as
+           though the memory had filled up. The click path only offers cars
+           inside coverage; this guards the exposed API so a bad reading can
+           never be mistaken for a capacity result. */
+        if (!inField(exp.car)) {
+            expEl.stats.innerHTML = '';
+            expEl.verdict.textContent = 'That object sits outside the field the map covers, so its position is not representable. Nothing to read here.';
+            expEl.panel.style.display = ''; exp.stage = 'result';
+            return;
+        }
+        buildMemory(wz);
+        const r = retrieve(exp.car.target.hv);
+        const tz = curZ(exp.car);
+        const err = Math.hypot(r.x - exp.car.baseX, r.z - tz);
+        const you = exp.guess ? Math.hypot(exp.guess.x - exp.car.baseX, exp.guess.z - tz) : null;
+
+        marks.truth.position.set(exp.car.baseX, .06, tz);
+        marks.retrieved.position.set(r.x, .07, r.z);
+        if (exp.guess) marks.guess.position.set(exp.guess.x, .05, exp.guess.z);
+
+        const row = (k, v, c) => '<div class="flex justify-between gap-3"><dt>' + k + '</dt><dd class="' + (c || 'text-white') + '">' + v + '</dd></div>';
+        expEl.stats.innerHTML =
+            row('bound', memCount + ' objects') +
+            row('memory', HV_D + '-D · fixed') +
+            row('confidence', r.snr.toFixed(1) + 'σ', r.snr > 5 ? 'text-emerald-400' : r.snr > 4 ? 'text-white' : 'text-red-400') +
+            row('memory off by', err.toFixed(1) + ' m', err < 4 ? 'text-emerald-400' : 'text-red-400') +
+            (you !== null ? row('you were off by', you.toFixed(1) + ' m') : '');
+
+        /* Confidence erodes before the answer does, so the two are reported
+           separately. A high-confidence miss is the interesting failure and it
+           has to be nameable when it happens. */
+        expEl.verdict.innerHTML = err < 4
+            ? (r.snr > 4.5
+                ? '<span style="color:#7CE0C0">Found it.</span> <span class="text-slate-400">The peak stands well clear of the cross-talk.</span>'
+                : '<span style="color:#FFB000">Still right, but only just.</span> <span class="text-slate-400">Confidence is falling. Keep going.</span>')
+            : '<span style="color:#E0445E">Confidently wrong.</span> <span class="text-slate-400">The peak is sharp and it is not the car. The bundle is full.</span>';
+
+        expEl.more.textContent = err < 4 ? 'Add more memories' : 'Add more anyway';
+        expEl.panel.style.display = '';
+        exp.stage = 'result';
+        setPrompt('Step 3 of 3', 'This is what it remembers.',
+            'mint = truth · red = retrieved' + (exp.guess ? ' · white = your guess' : ''));
+    }
+
+    /* Scrolling leaves. The alternative - trapping the page until the visitor
+       finishes - is what turns a hero into an obstacle course. The grace
+       period covers the scroll a click can trigger on some browsers, which
+       would otherwise close the experiment on the frame it opened. */
+    let expOpenedAt = 0;
+    window.addEventListener('scroll', () => {
+        if (exp.on && performance.now() - expOpenedAt > 500) expExit();
+    }, { passive: true });
+
+    expEl.start.addEventListener('click', () => { expOpenedAt = performance.now(); expEnter(); });
+    /* Same inspection surface as the memory. The stage transitions are on it
+       because the interaction is otherwise only reachable by clicking a
+       moving 3D scene, which makes it untestable without a real pointer and a
+       settled camera - and an experiment whose result path cannot be driven
+       directly is one whose arithmetic never gets checked. */
+    Object.assign(exp, { enter: expEnter, exit: expExit, choose: expChoose, show: expShow });
+    window.__memory.exp = exp;
+    expEl.exit.addEventListener('click', expExit);
+    expEl.how.addEventListener('click', () => { expEl.howPanel.style.display = ''; });
+    expEl.howClose.addEventListener('click', () => { expEl.howPanel.style.display = 'none'; });
+    expEl.more.addEventListener('click', () => { addDistractors(25); expShow(); });
+
+    renderer.domElement.addEventListener('click', e => {
+        if (!exp.on) return;
+        const r = getRect();
+        if (exp.stage === 'pick') {
+            let best = null, bestD = 90 * 90;
+            for (const L of landmarks) {
+                if (L.target.type !== 'VEHICLE' || !inField(L)) continue;
+                hoverVec.set(L.baseX, .03, curZ(L)).project(camera);
+                const px = (hoverVec.x * .5 + .5) * r.width + r.left;
+                const py = (-hoverVec.y * .5 + .5) * r.height + r.top;
+                const d = (px - e.clientX) ** 2 + (py - e.clientY) ** 2;
+                if (d < bestD) { bestD = d; best = L; }
+            }
+            if (best) expChoose(best);
+        } else if (exp.stage === 'query') {
+            /* Unproject onto the ground plane the field is painted on. */
+            const ndc = new THREE.Vector2(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+            const rc = new THREE.Raycaster(); rc.setFromCamera(ndc, camera);
+            const hit = rc.intersectObject(fieldMesh)[0];
+            if (hit) { exp.guess = { x: hit.point.x, z: hit.point.z }; expShow(); }
+        }
+    });
+
     const clock = new THREE.Clock();
     let wz = 0, blend = 0, flatten = 0, rise = 0;
     (function animate() {
@@ -1591,7 +1809,32 @@ function smooth01(v, a, b) {
         const delta = clock.getDelta();
         vel += (tgtVel - vel) * 10 * delta; tgtVel = 0;
 
-        blend += (heroProgress - blend) * 5 * delta;
+        /* While the experiment runs it drives the stage to the plan view
+           itself, so the visitor is not asked to hold a scroll position with
+           one hand and click with the other. wz already freezes as flatten
+           reaches 1, so the street stops on its own and the frozen frame the
+           experiment measures in stays valid. */
+        blend += ((exp.on ? 1 : heroProgress) - blend) * 5 * delta;
+
+        if (exp.on) {
+            /* The scene fades once a car is chosen: the events go, the
+               remembered landmarks stay. That IS the experiment's premise, so
+               it is driven by stage rather than by scroll. */
+            const wantDim = (exp.stage === 'query' || exp.stage === 'result') ? 1 : 0;
+            exp.dim += (wantDim - exp.dim) * 2.4 * delta;
+
+            if (exp.stage === 'flash' && performance.now() - exp.flashAt > 1400) {
+                exp.stage = 'query';
+                setPrompt('Step 3 of 3', 'Where was the car?', 'click the map where you think it was');
+            }
+            const t = smooth01(exp.dim, 0, 1);
+            marks.truth.material.opacity     = exp.stage === 'result' ? t * .9 : 0;
+            marks.retrieved.material.opacity = exp.stage === 'result' ? t * .95 : 0;
+            marks.guess.material.opacity     = exp.stage === 'result' && exp.guess ? t * .55 : 0;
+        } else if (exp.dim > 0) {
+            exp.dim = Math.max(0, exp.dim - 2.4 * delta);
+        }
+        mat.opacity = .95 - exp.dim * .84;
         /* Stage 1 flatten the world to its footprint, stage 2 rise above it.
            Flatten-then-rise reads as a camera climbing; the reverse reads as
            a shuffle. The flight decays to nothing as the map resolves. */
@@ -1599,7 +1842,14 @@ function smooth01(v, a, b) {
         rise    = smooth01(blend, .28, .60);
         updateInk(smooth01(blend, .15, .52));
 
-        wz += 15 * delta * (1 - flatten); if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
+        /* The street stops the moment the visitor opts in, not gradually as
+           the camera climbs. Everything the experiment measures - which cars
+           are inside the field, where a ring is on screen, what z gets bound
+           into the memory - is computed from wz, and those have to agree with
+           each other and with what is on screen. Freezing on flatten alone
+           left about a second in which they did not. */
+        wz += 15 * delta * (1 - flatten) * (exp.on ? 0 : 1);
+        if (wz > WORLD_DEPTH) wz -= WORLD_DEPTH;
 
         selfDot.material.opacity = THREE.MathUtils.lerp(selfDot.material.opacity, rise * .9, 5 * delta);
 
@@ -1675,8 +1925,11 @@ function smooth01(v, a, b) {
             }
             hovered = best;
 
-            /* hovering takes the query; otherwise it cycles on its own */
-            if (!hovered && now - lastQueryAt > 3.8) {
+            /* hovering takes the query; otherwise it cycles on its own.
+               The experiment owns the query while it runs - a field cycling
+               to a different object underneath the answer would be unreadable. */
+            if (exp.on) hovered = null;
+            if (!exp.on && !hovered && now - lastQueryAt > 3.8) {
                 lastQueryAt = now;
                 const near = landmarks.filter(L => {
                     let z = L.baseZ + wz; if (z > 5) z -= WORLD_DEPTH;
@@ -1685,23 +1938,38 @@ function smooth01(v, a, b) {
                 const pool = near.length ? near : landmarks;
                 autoQ = pool[(pool.indexOf(autoQ) + 1 + pool.length) % pool.length] || pool[0];
             }
-            const want = hovered || autoQ || landmarks[0];
-            if (want !== queried) {
-                queried = want;
-                rebuildField(wz);
-                if (qToken) qToken.textContent = queried.target.name;
-                if (qMode) qMode.textContent = hovered ? 'Hovering · unbind by' : 'Query · unbind by';
-            } else if (Math.abs(wz - fieldWz) > .6) {
-                rebuildField(wz);
+            if (!exp.on) {
+                const want = hovered || autoQ || landmarks[0];
+                if (want !== queried) {
+                    queried = want;
+                    rebuildField(wz);
+                    if (qToken) qToken.textContent = queried.target.name;
+                    if (qMode) qMode.textContent = hovered ? 'Hovering · unbind by' : 'Query · unbind by';
+                } else if (Math.abs(wz - fieldWz) > .6) {
+                    rebuildField(wz);
+                }
             }
 
             for (let i = 0; i < landmarks.length; i++) {
                 const L = landmarks[i];
+                if (exp.stage === 'pick') {
+                    /* Only the cars are pickable, and only the ones inside the
+                       field's coverage - an object the grid cannot represent
+                       would fail retrieval for a reason that has nothing to do
+                       with capacity, which is the one thing being shown. */
+                    const ok = L.target.type === 'VEHICLE' && inField(L);
+                    L.ring.material.opacity = o * (ok ? .95 : .12);
+                    L.ring.material.color.setHex(ok ? 0x7CE0C0 : 0xE0445E);
+                    continue;
+                }
+                L.ring.material.color.setHex(L === exp.car ? 0x7CE0C0 : 0xE0445E);
                 /* a ring's brightness is how well it answers the query */
                 const sim = L.sim || 0;
                 /* lifted ~25%: these read as almost-invisible at ordinary
                    laptop brightness, while still sitting under the headline */
-                L.ring.material.opacity = o * (L === queried ? 1 : Math.max(.22, sim));
+                L.ring.material.opacity = exp.on
+                    ? o * (L === exp.car ? .95 : .18)
+                    : o * (L === queried ? 1 : Math.max(.22, sim));
             }
             fieldMesh.material.opacity = o;
             if (mapLegend) mapLegend.style.opacity = o;
