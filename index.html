@@ -1193,32 +1193,72 @@ function smooth01(v, a, b) {
     mapGroup.visible = false;
     scene.add(mapGroup);
 
-    /* Every landmark carries an object vector, deterministic so the strip in
-       its label never flickers. It is mostly its CLASS with a little instance
-       identity mixed in, which is the whole point: two towers unbind alike
-       without being the same thing. Query one and its siblings answer too. */
-    const HV_D = 16;
-    function lcgVec(seed) {
-        const v = new Float32Array(HV_D);
-        let x = ((seed * 9301 + 49297) % 233280 + 233280) % 233280;
-        for (let i = 0; i < HV_D; i++) { x = (x * 9301 + 49297) % 233280; v[i] = x / 233280 * 2 - 1; }
-        return v;
+    /* Field geometry, declared here because both the memory's grid tables and
+       the distractors' placement are defined in terms of it. */
+    const FW = 80, FH = 72, FIELD_W = 124, FIELD_D = 112, FIELD_CZ = -22;
+
+    /* ── THE MEMORY ───────────────────────────────────────────────────────
+       Fourier Holographic Reduced Representations. A vector is HV_D phases.
+       A point in the plane is encoded by FRACTIONAL BINDING, which is what
+       makes this a Spatial Semantic Pointer rather than a lookup:
+
+           S(x,z)[k] = exp( i ( x*thX[k] + z*thZ[k] ) )
+
+       Binding is phase addition, unbinding is phase subtraction, bundling is
+       complex sum. The entire map is one fixed-size vector:
+
+           M = SUM_j  OBJ_j  (x)  S(x_j, z_j)
+
+       Query it with an object and you get an ESTIMATE of where that object
+       was, never a stored record:
+
+           Q = M (x) OBJ^-1  ~  S(x_q, z_q)  +  cross-talk from every other
+                                               item in the bundle
+
+       This replaces a version that computed dot(queryHV, objHV) and painted a
+       Gaussian at the landmark's own baseX/baseZ. It looked the part, but the
+       position never entered a vector: the memory could not be wrong, and it
+       could not fill up. Capacity was unmeasurable because nothing was stored.
+
+       Axis phases are Gaussian, not uniform. With th ~ N(0, s^2) the expected
+       similarity between S(x,z) and S(x+d,z) is exp(-s^2 d^2 / 2): a clean
+       Gaussian kernel of width 1/s. PHASE_S = 0.35 puts the kernel sigma at
+       2.9 world units, near the 1.3-2.6 the landmark rings already use.
+       Uniform phases give a sinc kernel whose sidelobes are indistinguishable
+       from genuine cross-talk, and telling those apart is the one thing this
+       scene has to do honestly. */
+    const HV_D    = 512;
+    const PHASE_S = 0.35;   // axis phase spread; kernel sigma is 1/PHASE_S
+    /* Object phase = class phase + CLASS_MIX * instance phase. Similarity to
+       the bare class is E[cos(CLASS_MIX * psi)] with psi ~ U(-pi,pi), which is
+       sinc(CLASS_MIX). At 0.5 that is 0.64: two towers unbind alike without
+       being the same thing, which is the behaviour the labels already claim. */
+    const CLASS_MIX = 0.5;
+
+    /* Deterministic throughout: the same street, the same vectors, every load.
+       A hero that reshuffled its own memory between reloads would make any
+       capacity reading unrepeatable. */
+    let _s = 20260909;
+    function rnd() { _s = (_s * 1664525 + 1013904223) >>> 0; return _s / 4294967296; }
+    function gauss() {                       // Box-Muller
+        const u = Math.max(1e-9, rnd());
+        return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd());
     }
-    function unit(v) {
-        let n = 0;
-        for (let i = 0; i < v.length; i++) n += v[i] * v[i];
-        n = Math.sqrt(n) || 1;
-        for (let i = 0; i < v.length; i++) v[i] /= n;
-        return v;
+    function uniPhase(n) { const v = new Float32Array(n); for (let i = 0; i < n; i++) v[i] = (rnd() * 2 - 1) * Math.PI; return v; }
+
+    const thX = new Float32Array(HV_D), thZ = new Float32Array(HV_D);
+    for (let k = 0; k < HV_D; k++) { thX[k] = gauss() * PHASE_S; thZ[k] = gauss() * PHASE_S; }
+
+    const classPhase = {};
+    ['HOUSE', 'VEHICLE', 'SIGNAGE', 'TOWER'].forEach(t => { classPhase[t] = uniPhase(HV_D); });
+
+    /* FHRR similarity between two phase vectors is the mean cosine of their
+       phase difference. Unit vectors by construction, so no normalising. */
+    function phaseSim(a, b) {
+        let s = 0;
+        for (let k = 0; k < HV_D; k++) s += Math.cos(a[k] - b[k]);
+        return s / HV_D;
     }
-    function dot(a, b) {
-        let d = 0;
-        for (let i = 0; i < a.length; i++) d += a[i] * b[i];
-        return d;
-    }
-    const CLASS_SEED = { HOUSE: 11, VEHICLE: 27, SIGNAGE: 43, TOWER: 59 };
-    const classHV = {};
-    Object.keys(CLASS_SEED).forEach(k => { classHV[k] = unit(lcgVec(CLASS_SEED[k])); });
 
     const landmarks = targetCenters.map((t, idx) => {
         /* a landmark seen from further off is pinned down less precisely */
@@ -1231,13 +1271,65 @@ function smooth01(v, a, b) {
         ring.rotation.x = -Math.PI / 2;
         mapGroup.add(ring);
 
-        const cls = classHV[t.type] || classHV.HOUSE;
-        const inst = unit(lcgVec(idx * 7 + 101));
-        const hv = new Float32Array(HV_D);
-        for (let i = 0; i < HV_D; i++) hv[i] = cls[i] * .62 + inst[i] * .38;
-        t.hv = unit(hv);
+        const cp = classPhase[t.type] || classPhase.HOUSE;
+        const inst = uniPhase(HV_D);
+        const ph = new Float32Array(HV_D);
+        for (let k = 0; k < HV_D; k++) ph[k] = cp[k] + CLASS_MIX * inst[k];
+        t.hv = ph;
         return { baseX: t.pos.x, baseZ: t.pos.z, sigma, ring, target: t };
     });
+
+    /* Grid phase tables. The field grid and the axis vectors are both fixed,
+       so cos/sin of x*thX and z*thZ are computed once at load and every query
+       afterwards is multiply-add only. Measured: the transcendentals ARE the
+       cost - the naive form runs 3.4 s per query at HV_D 512 on an 80x72
+       grid, the table form 74 ms, for 28 ms of one-time setup and 622 KB. */
+    const gcX = new Float32Array(FW * HV_D), gsX = new Float32Array(FW * HV_D);
+    const gcZ = new Float32Array(FH * HV_D), gsZ = new Float32Array(FH * HV_D);
+    for (let i = 0; i < FW; i++) {
+        const wx = ((i + .5) / FW - .5) * FIELD_W;
+        for (let k = 0; k < HV_D; k++) { const a = wx * thX[k]; gcX[i * HV_D + k] = Math.cos(a); gsX[i * HV_D + k] = Math.sin(a); }
+    }
+    for (let j = 0; j < FH; j++) {
+        const wz = FIELD_CZ - ((j + .5) / FH - .5) * FIELD_D;
+        for (let k = 0; k < HV_D; k++) { const b = wz * thZ[k]; gcZ[j * HV_D + k] = Math.cos(b); gsZ[j * HV_D + k] = Math.sin(b); }
+    }
+
+    /* Distractors exist so "add more memories" can push the bundle past the
+       point where retrieval fails. They are ordinary bound items - a random
+       object at a random place - not a fudge factor: the peak degrades
+       because the bundle really is carrying them. */
+    const distractors = [];
+    function addDistractors(n) {
+        for (let i = 0; i < n; i++)
+            distractors.push({ hv: uniPhase(HV_D), x: (rnd() - .5) * FIELD_W, z: FIELD_CZ + (rnd() - .5) * FIELD_D });
+    }
+
+    const memRe = new Float32Array(HV_D), memIm = new Float32Array(HV_D);
+    let memCount = 0;
+
+    /* M = SUM_j OBJ_j (x) S(x_j, z_j). Rebuilt whenever the world has moved,
+       because the landmarks' z changes as the street wraps past. */
+    function buildMemory(wzNow) {
+        memRe.fill(0); memIm.fill(0);
+        memCount = 0;
+        for (const L of landmarks) {
+            let z = L.baseZ + wzNow; if (z > 5) z -= WORLD_DEPTH;
+            const ph = L.target.hv;
+            for (let k = 0; k < HV_D; k++) {
+                const p = ph[k] + L.baseX * thX[k] + z * thZ[k];
+                memRe[k] += Math.cos(p); memIm[k] += Math.sin(p);
+            }
+            memCount++;
+        }
+        for (const D of distractors) {
+            for (let k = 0; k < HV_D; k++) {
+                const p = D.hv[k] + D.x * thX[k] + D.z * thZ[k];
+                memRe[k] += Math.cos(p); memIm[k] += Math.sin(p);
+            }
+            memCount++;
+        }
+    }
 
     /* ── THE QUERY FIELD ──────────────────────────────────────────────────
        Unbind the map by a landmark's hypervector and you do not get a
@@ -1245,7 +1337,6 @@ function smooth01(v, a, b) {
        peaking where that landmark is and rippling everywhere else with the
        cross-talk of everything else stored in the same vector. This is that
        field, drawn underneath the events it was built from. */
-    const FW = 80, FH = 72, FIELD_W = 124, FIELD_D = 112, FIELD_CZ = -22;
     const fieldData = new Uint8Array(FW * FH * 4);
     const fieldTex = new THREE.DataTexture(fieldData, FW, FH, THREE.RGBAFormat);
     fieldTex.minFilter = fieldTex.magFilter = THREE.LinearFilter;
@@ -1263,33 +1354,82 @@ function smooth01(v, a, b) {
     let mouseX = -1, mouseY = -1;
     const hoverVec = new THREE.Vector3();
 
-    function rebuildField(wzNow) {
-        const pts = [];
-        for (let i = 0; i < landmarks.length; i++) {
-            const L = landmarks[i];
-            let z = L.baseZ + wzNow; if (z > 5) z -= WORLD_DEPTH;
-            /* unbinding by one object's vector answers for everything that
-               shares its code — strongly for itself, well for its class, and
-               with a little negative cross-talk for everything else */
-            const sim = queried ? dot(queried.target.hv, L.target.hv) : 0;
-            L.sim = sim;
-            pts.push({ x: L.baseX, z, s: L.sigma, w: sim * 1.18 - .17 });
+    const qRe = new Float32Array(HV_D), qIm = new Float32Array(HV_D);
+
+    /* Q = M (x) OBJ^-1, then the field is Re< Q, S(x,z) > over the grid.
+       Unbinding is subtracting the object's phases, i.e. multiplying by the
+       conjugate. Nothing here consults the landmark's coordinates: the peak
+       lands where it lands, and where that is compared with the truth is the
+       whole result the visitor is shown. */
+    function retrieve(objPhase) {
+        for (let k = 0; k < HV_D; k++) {
+            const c = Math.cos(objPhase[k]), s = Math.sin(objPhase[k]);
+            qRe[k] = memRe[k] * c + memIm[k] * s;      // multiply by conj(e^{i phi})
+            qIm[k] = memIm[k] * c - memRe[k] * s;
         }
-        let peak = 1e-6;
+        let peak = 1e-6, pi = 0, pj = 0, pv = -1e9;
         for (let j = 0; j < FH; j++) {
-            const wzp = FIELD_CZ - ((j + .5) / FH - .5) * FIELD_D;
+            const zo = j * HV_D;
             for (let i = 0; i < FW; i++) {
-                const wx = ((i + .5) / FW - .5) * FIELD_W;
+                const xo = i * HV_D;
                 let acc = 0;
-                for (let k = 0; k < pts.length; k++) {
-                    const P = pts[k], dx = wx - P.x, dz = wzp - P.z;
-                    const d2 = dx * dx + dz * dz, r2 = P.s * P.s * 2.6;
-                    if (d2 < r2 * 9) acc += P.w * Math.exp(-d2 / r2);
+                for (let k = 0; k < HV_D; k++) {
+                    const ca = gcX[xo + k], sa = gsX[xo + k], cb = gcZ[zo + k], sb = gsZ[zo + k];
+                    // Re{ Q * conj(S) } with S = e^{i(a+b)}
+                    acc += qRe[k] * (ca * cb - sa * sb) + qIm[k] * (sa * cb + ca * sb);
                 }
+                acc /= HV_D;
                 raw[j * FW + i] = acc;
                 const a = Math.abs(acc); if (a > peak) peak = a;
+                if (acc > pv) { pv = acc; pi = i; pj = j; }
             }
         }
+        /* Confidence is the peak measured against the field's own noise, not
+           the peak's height. Raw height RISES with load - more bundled items
+           put more energy in the vector - so it reads as growing certainty at
+           exactly the point retrieval starts failing. Measured across a
+           capacity sweep: median peak went 1.01 -> 2.40 while the share of
+           objects found within 4 units fell 15/16 -> 1/16. Peak over the
+           field's standard deviation moves the right way. */
+        let sum = 0, sum2 = 0;
+        for (let n = 0; n < FW * FH; n++) { const v = raw[n]; sum += v; sum2 += v * v; }
+        const mean = sum / (FW * FH);
+        const sd = Math.sqrt(Math.max(1e-12, sum2 / (FW * FH) - mean * mean));
+
+        /* Where the memory thinks it is, in world units: the argmax of the
+           retrieved field. This is the answer the experiment scores against. */
+        return {
+            peak,
+            value: pv,
+            snr: (pv - mean) / sd,
+            x: ((pi + .5) / FW - .5) * FIELD_W,
+            z: FIELD_CZ - ((pj + .5) / FH - .5) * FIELD_D
+        };
+    }
+
+    /* Inspection surface. Two reasons it is deliberate rather than debris:
+       the experiment's result panel needs the retrieved coordinate and the
+       error, and the previous implementation was a lookup wearing a memory's
+       clothes precisely because nothing outside could measure whether it
+       retrieved anything. A memory you cannot score is a memory you cannot
+       trust. Also what a researcher reads after pressing "show how it works". */
+    window.__memory = {
+        retrieve, buildMemory, addDistractors, landmarks, distractors,
+        HV_D, PHASE_S, CLASS_MIX,
+        get count() { return memCount; }
+    };
+
+    function rebuildField(wzNow) {
+        buildMemory(wzNow);
+        for (const L of landmarks) {
+            /* The label's SIM strip stays what it always was: how alike two
+               OBJECT vectors are, which is a property of the codes and not of
+               the retrieval. Class-mates score high, strangers near zero. */
+            L.sim = queried ? phaseSim(queried.target.hv, L.target.hv) : 0;
+        }
+        let peak = 1e-6;
+        if (queried) peak = retrieve(queried.target.hv).peak;
+        else { raw.fill(0); }
         for (let n = 0; n < FW * FH; n++) {
             const lin = Math.max(-1, Math.min(1, raw[n] / peak));
             /* gamma lifts the cross-talk ripples so the field reads across the
